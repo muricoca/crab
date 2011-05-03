@@ -1,0 +1,38 @@
+body {
+	margin-top: 1.0em;
+	background-color: #fff;
+	font-family:'Helvetica,Arial,FreeSans';
+	color: #000000;
+	}
+#container {
+	margin: 0 auto; 
+	width: 780px;
+	font-family: Helvetica;
+	}
+h1 { 
+	display:block;
+	font-family:'Inconsolata';
+	font-size: 3.8em;
+	color: #470404;
+	margin-bottom: 3px;
+	}
+h1.crab {
+	display:block;
+	color:#76710d;
+	padding-top:24px;
+	}
+
+#logo  {float:left;}
+h1 .small { font-size: 0.4em;}
+h1 a { text-decoration: none;}
+h2 { font-family:'Josefin Slab';font-size: 1.5em; color: #76710d; }
+h3 { text-align: center; color: #bd7e0f; }
+a { color: #870808;}
+a.top:hover {border-bottom:2px dotted;border-bottom-color:#5c5757;}
+.description {text-align:left; font-family:'Yanone Kaffeesatz';font-size: 1.4em; margin-bottom: 30px;}
+.download { float: right;}
+.image {text-align:left; width:900px;}
+pre.terminal {font-family:'Monaco'; font-size: 13px; /*background: #1c1a1c*/; color: #42c218; padding: 15px;}*/
+hr { border: 0; width: 80%; border-bottom: 1px solid #aaa}
+p {font-family:Helvetica; font-size:17px;}
+p.footer {font-family:'Inconsolata'; font-size:18px;}
