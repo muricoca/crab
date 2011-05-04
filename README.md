@@ -12,7 +12,7 @@
 ## History
   
   The project was started in 2010  by Marcel Caraciolo as a M.S.C related  project, and since then many people interested joined to help in the project.
-  It is currently maintained by a team of volunteers, members of the Muricoca Labs.
+  It is currently maintained by a team of volunteers, members of the Muriçoca Labs.
 
 ## Authors
   
