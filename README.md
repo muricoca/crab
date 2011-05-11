@@ -46,6 +46,7 @@ Please check our [Wiki](https://github.com/muricoca/crab/wiki "Crab Wiki") wiki,
 ## LICENCE (BSD)
 
 Copyright (c) 2011, Muriçoca Labs
+
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
