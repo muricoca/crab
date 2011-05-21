@@ -1,3 +1,5 @@
 *.tmproj
 *.swp
-
+*~
+.#*
+.DS_Store
