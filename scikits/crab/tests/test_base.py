@@ -9,9 +9,6 @@ Base Recommender Models.
 # License: BSD Style.
 
 import unittest
-import sys
-
-sys.path.append('/Users/marcelcaraciolo/Desktop/Orygens/crab/crab/scikits/craba')
 
 from base import BaseRecommender
 
