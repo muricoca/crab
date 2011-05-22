@@ -1,9 +1,7 @@
 import numpy as np
 from numpy import linalg
 from numpy.testing import assert_array_almost_equal, assert_array_equal, run_module_suite, TestCase
-import sys
 
-sys.path.append('/Users/marcelcaraciolo/Desktop/muricoca/crab/crab/scikits/crab/metrics')
 
 from pairwise import euclidean_distances, pearson_correlation, jaccard_coefficient, manhattan_distances,  \
                sorensen_coefficient, tanimoto_coefficient, cosine_distances, spearman_coefficient, loglikehood_coefficient
