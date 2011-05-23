@@ -10,7 +10,7 @@ Base Recommender Models.
 
 import unittest
 
-from base import BaseRecommender
+from ..base import BaseRecommender
 
 #test classes
 

@@ -42,15 +42,18 @@ def euclidean_distances(X, Y, Y_norm_squared=None, squared=False, inverse=True):
 
     Examples
     --------
-    >>> from scikits.learn.recommender.metrics.pairwise import euclidean_distances
+    >>> from scikits.crab.metrics.pairwise import euclidean_distances
     >>> X = [[2.5, 3.5, 3.0, 3.5, 2.5, 3.0],[3.0, 3.5, 1.5, 5.0, 3.5,3.0]]
     >>> # distrance between rows of X
     >>> euclidean_distances(X, X)
-    array([[1., 0.29429806], [0.29429806,1.]])
+	array([[ 1.        ,  0.29429806],
+	       [ 0.29429806,  1.        ]])
     >>> # get distance to origin
     >>> X = [[1.0, 0.0],[1.0,1.0]]
     >>> euclidean_distances(X, [[0.0, 0.0]])
-    array( [[ 0.5 ],[0.41421356]] )
+	array([[ 0.5       ],
+	      [ 0.41421356]])
+
     """
     # should not need X_norm_squared because if you could precompute that as
     # well as Y, then you should just pre-compute the output and not even
@@ -113,15 +116,15 @@ def pearson_correlation(X,Y):
 
     Examples
     --------
-    >>> from scikits.learn.recommender.metrics.pairwise import pearson_correlation
+    >>> from scikits.crab.metrics.pairwise import pearson_correlation
     >>> X = [[2.5, 3.5, 3.0, 3.5, 2.5, 3.0],[2.5, 3.5, 3.0, 3.5, 2.5, 3.0]]
     >>> # distance between rows of X
     >>> pearson_correlation(X, X)
     array([[ 1., 1.],
            [ 1., 1.]])
     >>> pearson_correlation(X, [[3.0, 3.5, 1.5, 5.0, 3.5,3.0]])
-    array([[ 0.3960590        ],
-           [ 0.3960590 ]])
+	array([[ 0.39605902],
+	           [ 0.39605902]])
     """
     # should not need X_norm_squared because if you could precompute that as
     # well as Y, then you should just pre-compute the output and not even
@@ -168,16 +171,17 @@ def jaccard_coefficient(X,Y):
 
     Examples
     --------
-    >>> from scikits.learn.recommender.metrics.pairwise import jaccard_coefficient
-    >>> X = [[2.5, 3.5, 3.0, 3.5, 2.5, 3.0],[2.5, 3.5, 3.0, 3.5, 2.5, 3.0]]
+    >>> from scikits.crab.metrics.pairwise import jaccard_coefficient
+    >>> X = [['a', 'b', 'c', 'd'],['e', 'f','g']]
     >>> # distance between rows of X
     >>> jaccard_coefficient(X, X)
-    array([[ 1.],
-           [ 1.]])
-    >>> jaccard_coefficient(X, [[3.0, 3.5, 1.5, 5.0, 3.5,3.0]])
-    array([[ 0.3960590        ],
-           [ 0.3960590 ]])
-    """
+   	array([[ 1.,  0.],
+	       [ 0.,  1.]])
+
+    >>> jaccard_coefficient(X, [['a', 'b', 'c', 'k']])
+	array([[ 0.6],
+	      [ 0. ]])
+	"""
     # should not need X_norm_squared because if you could precompute that as
     # well as Y, then you should just pre-compute the output and not even
     # call this function.
@@ -225,15 +229,15 @@ def manhattan_distances(X,Y):
 
     Examples
     --------
-    >>> from scikits.learn.recommender.metrics.pairwise import manhattan_distances
+    >>> from scikits.crab.metrics.pairwise  import manhattan_distances
     >>> X = [[2.5, 3.5, 3.0, 3.5, 2.5, 3.0],[2.5, 3.5, 3.0, 3.5, 2.5, 3.0]]
     >>> # distance between rows of X
     >>> manhattan_distances(X, X)
-    array([[ 1. , 1.],
-           [ 1., 1.]])
+	array([[ 1.,  1.],
+	       [ 1.,  1.]])
     >>> manhattan_distances(X, [[3.0, 3.5, 1.5, 5.0, 3.5,3.0]])
-    array([[ 0.25        ],
-           [ 0.25 ]])
+	array([[ 0.25],
+	      [ 0.25]])
     """
     # should not need X_norm_squared because if you could precompute that as
     # well as Y, then you should just pre-compute the output and not even
@@ -280,15 +284,15 @@ def sorensen_coefficient(X,Y):
 
     Examples
     --------
-    >>> from scikits.learn.recommender.metrics.pairwise import sorensen_coefficient
+    >>> from scikits.crab.metrics.pairwise import sorensen_coefficient
     >>> X = [['a', 'b', 'c', 'd'],['e', 'f','g']]
     >>> # distance between rows of X
     >>> sorensen_coefficient(X, X)
-    array([[ 1. , 0.],
-           [ 0., 1.]])
+	array([[ 1.,  0.],
+	      [ 0.,  1.]])
     >>> sorensen_coefficient(X, [['a', 'b', 'c', 'k']])
-    array([[ 0.75        ],
-           [ 0. ]])
+	array([[ 0.75], [ 0.  ]])
+
     """
     # should not need X_norm_squared because if you could precompute that as
     # well as Y, then you should just pre-compute the output and not even
@@ -339,15 +343,16 @@ def tanimoto_coefficient(X,Y):
 
     Examples
     --------
-    >>> from scikits.learn.recommender.metrics.pairwise import tanimoto_coefficient
+    >>> from scikits.crab.metrics.pairwise  import tanimoto_coefficient
     >>> X =  [['a', 'b', 'c', 'd'],['e', 'f','g']]
     >>> # distance between rows of X
     >>> tanimoto_coefficient(X, X)
-    array([[ 1., 0.],
-           [0. ,1.]])
+	array([[ 1.,  0.],
+	       [ 0.,  1.]])
     >>> tanimoto_coefficient(X, [['a', 'b', 'c', 'k']])
-    array([[ 0.25        ],
-           [ 0.25 ]])
+    array([[ 0.6],
+           [ 0. ]])
+
     """
     # should not need X_norm_squared because if you could precompute that as
     # well as Y, then you should just pre-compute the output and not even
@@ -396,15 +401,16 @@ def cosine_distances(X,Y):
 
     Examples
     --------
-    >>> from scikits.learn.recommender.metrics.pairwise import cosine_distances
+    >>> from scikits.crab.metrics.pairwise  import cosine_distances
     >>> X = [[2.5, 3.5, 3.0, 3.5, 2.5, 3.0],[2.5, 3.5, 3.0, 3.5, 2.5, 3.0]]
     >>> # distance between rows of X
     >>> cosine_distances(X, X)
-    array([[ 1.],
-           [ 1.]])
+	array([[ 1.,  1.],
+	      [ 1.,  1.]])
     >>> cosine_distances(X, [[3.0, 3.5, 1.5, 5.0, 3.5,3.0]])
-    array([[ 0.960646301        ],
-           [ 0.960646301 ]])
+	array([[ 0.9606463],
+	       [ 0.9606463]])
+
     """
     # should not need X_norm_squared because if you could precompute that as
     # well as Y, then you should just pre-compute the output and not even
@@ -445,15 +451,15 @@ def spearman_coefficient(X,Y):
 
     Examples
     --------
-    >>> from scikits.learn.recommender.metrics.pairwise import spearman_coefficient
-    >>> X = [[2.5, 3.5, 3.0, 3.5, 2.5, 3.0],[2.5, 3.5, 3.0, 3.5, 2.5, 3.0]]
+    >>> from scikits.crab.metrics.pairwise  import spearman_coefficient
+    >>> X = [[('a',2.5),('b', 3.5), ('c',3.0), ('d',3.5)],[ ('e', 2.5),('f', 3.0), ('g', 2.5), ('h', 4.0)] ]
     >>> # distance between rows of X
     >>> spearman_coefficient(X, X)
-    array([[ 1.],
-           [ 1.]])
-    >>> spearman_coefficient(X, [[3.0, 3.5, 1.5, 5.0, 3.5,3.0]])
-    array([[ 0.25        ],
-           [ 0.25 ]])
+	array([[ 1.,  0.],
+           [ 0.,  1.]])
+    >>> spearman_coefficient(X, [[('a',2.5),('b', 3.5), ('c',3.0), ('k',3.5)]])
+	array([[ 1.],
+	       [ 0.]])
     """
     # should not need X_norm_squared because if you could precompute that as
     # well as Y, then you should just pre-compute the output and not even
@@ -517,16 +523,17 @@ def loglikehood_coefficient(n_items,X,Y):
 
     Examples
     --------
-    >>> from scikits.learn.recommender.metrics.pairwise import loglikehood_coefficient
+    >>> from scikits.crab.metrics.pairwise import loglikehood_coefficient
     >>> X = [['a', 'b', 'c', 'd'],  ['e', 'f','g', 'h']]
     >>> # distance between rows of X
     >>> n_items = 7
     >>> loglikehood_coefficient(n_items,X, X)
-    array([[ 1. , 0.],
-           [ 0. , 1.]])
+    array([[ 1.,  0.],
+	      [ 0.,  1.]])
     >>> n_items = 8
-    >>> loglikehood_coefficient(n_items, X, [['a', 'b', 'c', 'k']]
-    array([[0.67668852], [0.]])
+    >>> loglikehood_coefficient(n_items, X, [['a', 'b', 'c', 'k']])
+	array([[ 0.67668852],
+	      [ 0.        ]])
 
 
     References
