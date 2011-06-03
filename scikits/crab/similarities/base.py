@@ -47,35 +47,32 @@ class BaseSimilarity(object):
         self.num_best = num_best
 
 
-    def get_similarity(self,X,Y):
+    def get_similarity(self,source_id,target_id):
         """
-        Return similarity of a vector `X` to a specific vector `Y` in the model.
-        The vector is assumed to be either of unit length or empty.
-        
+        Return similarity of the `source_id` to a specific `target_id` in the model.        
         """
         raise NotImplementedError("cannot instantiate Abstract Base Class")
 
     
-    def get_similarities(self,X):
+    def get_similarities(self,source_id):
         """
         
-        Return similarity of a vector `X` to all vectors in the model.
-        The vector is assumed to be either of unit length or empty.
+        Return similarity of the `source_id` to all sources in the model.
         
         """
         raise NotImplementedError("cannot instantiate Abstract Base Class")
         
 
-    def __getitem__(self,X):
+    def __getitem__(self,source_id):
         """
-        Get similarities of a vector `X` to all items in the model
+        Get similarities of the `source_id` to all sources in the model.
         """
-        allSims = self.get_similarities(vec)
+        all_sims = self.get_similarities(vec)
         
-        #return either all similarities as a list, or only self.numBest most similar, depending on settings from the constructor
+        #return either all similarities as a list, or only self.num_best most similar, depending on settings from the constructor
         
         if self.num_best is None:
-            return allSims
+            return all_sims
         else:
             tops = [(label, sim) for label, sim in allSims]
             tops = sorted(tops, key = lambda item: -item[1]) # sort by -sim => highest sim first
