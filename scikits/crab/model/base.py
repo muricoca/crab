@@ -8,46 +8,46 @@ from exceptions import NotImplementedError
 
 class BaseDataModel(object):
     
-    def user_IDs(self):
+    def user_ids(self):
         '''
-        Return all user IDs in the model, in order
-        '''
-        raise NotImplementedError
-
-    def item_IDs(self):
-        '''
-        Return a iterator of all item IDs in the model, in order
+        Return all user ids in the model, in order
         '''
         raise NotImplementedError
 
-    def preferences_from_user(self, user_ID, order_by_ID=True):
+    def item_ids(self):
         '''
-        Return user's preferences, ordered by user ID (if order_by_id is True) 
+        Return a iterator of all item ids in the model, in order
+        '''
+        raise NotImplementedError
+
+    def preferences_from_user(self, user_id, order_by_id=True):
+        '''
+        Return user's preferences, ordered by user id (if order_by_id is True) 
         or by the preference values (if order_by_id is False), as an array.
         '''
         raise NotImplementedError
 
-    def items_from_user(self, user_ID):
+    def items_from_user(self, user_id):
         '''
-        Return IDs of items user expresses a preference for 
+        Return ids of items user expresses a preference for 
         '''
         raise NotImplementedError
     
-    def preferences_for_item(self, item_ID, order_by_id=True):
+    def preferences_for_item(self, item_id, order_by_id=True):
         '''
         Return all existing Preferences expressed for that item, 
-        ordered by user ID (if order_by_id is True) or by the preference values 
+        ordered by user id (if order_by_id is True) or by the preference values 
         (if order_by_id is False), as an array.
         '''
         raise NotImplementedError
     
-    def preference_value(self, user_ID, item_ID):
+    def preference_value(self, user_id, item_id):
         '''
         Retrieves the preference value for a single user and item.
         '''
         raise NotImplementedError
     
-    def preference_time(self, user_ID, item_ID):
+    def preference_time(self, user_id, item_id):
         '''
         Retrieves the time at which a preference value from a user and item was set, if known.
         Time is expressed in the usual way, as a number of milliseconds since the epoch.
@@ -66,13 +66,13 @@ class BaseDataModel(object):
         '''
         raise NotImplementedError
     
-    def set_preference(self, user_ID, item_ID,value):
+    def set_preference(self, user_id, item_id, value):
         '''
         Sets a particular preference (item plus rating) for a user.
         '''
         raise NotImplementedError
     
-    def remove_preference(self, user_ID, item_ID):
+    def remove_preference(self, user_id, item_id):
         '''
         Removes a particular preference for a user.
         '''
