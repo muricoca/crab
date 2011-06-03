@@ -3,7 +3,6 @@
 """ 
 Base Data Models.
 """
-from exceptions import NotImplementedError
 
 
 class BaseDataModel(object):
