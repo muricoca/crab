@@ -32,7 +32,7 @@ try:
 except:
     pass
 
-__all__ = ['metrics', 'similarities']
+__all__ = ['metrics', 'similarities', 'models']
 
 
 __version__ = '0.1.git'
