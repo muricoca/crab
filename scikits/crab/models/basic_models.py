@@ -144,7 +144,7 @@ class DictPreferenceDataModel(BaseDataModel):
         self._item_ids = np.unique(self._item_ids)
         self._item_ids.sort()
         
-        self.max_pref = - np.inf
+        self.max_pref = -np.inf
         self.min_pref = np.inf
         
         self.dataset_T = {}

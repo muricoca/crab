@@ -28,6 +28,30 @@ movies={'Marcel Caraciolo': {'Lady in the Water': 2.5, 'Snakes on a Plane': 3.5,
 'Maria Gabriela': {}}
 
 
-def test_DictPreferenceDataModel():
+def test_create_DictPreferenceDataModel():
+	#Empty Dataset
+	model = DictPreferenceDataModel({})
+	assert_equals(model.dataset,{})
+	
+	assert_array_equal(np.array([]),model.user_ids())
+	assert_array_equal(np.array([]),model.item_ids())
+	assert_equals(True,model.has_preference_values())
+	assert_equals(0,model.users_count())
+	assert_equals(0,model.items_count())
+	assert_equals(-np.inf,model.maximum_preference_value())
+	assert_equals(np.inf,model.minimum_preference_value())
+	
+	
+	#DataSet
 	model = DictPreferenceDataModel(movies)
-	assert_equals(model.dataset, movies)
+	assert_equals(model.dataset,movies)	
+	assert_array_equal(np.array(['Leopoldo Pires', 'Lorena Abreu', 'Luciana Nunes','Marcel Caraciolo', 'Maria Gabriela', 'Penny Frewman', 'Sheldom',
+	       'Steve Gates'],  dtype='|S16'),model.user_ids())
+	assert_array_equal(np.array(['Just My Luck', 'Lady in the Water', 'Snakes on a Plane',
+		       'Superman Returns', 'The Night Listener', 'You, Me and Dupree']),model.item_ids())
+	assert_equals(True,model.has_preference_values())
+	assert_equals(8,model.users_count())
+	assert_equals(6,model.items_count())
+	assert_equals(5.0,model.maximum_preference_value())
+	assert_equals(1.0,model.minimum_preference_value())
+	
