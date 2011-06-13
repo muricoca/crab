@@ -10,7 +10,7 @@ Several Basic Data models.
 
 import numpy as np
 from .base import BaseDataModel
-
+from .utils import UserNotFoundError, ItemNotFoundError
 
 ###############################################################################
 # DictDataModel
@@ -186,7 +186,7 @@ class DictPreferenceDataModel(BaseDataModel):
         user_preferences = self.dataset.get(user_id,None)
         
         if user_preferences is None:
-            raise UserNotFoundError('user_id in the model not found')
+            raise UserNotFoundError
         
         user_preferences = user_preferences.items()
         
@@ -195,8 +195,7 @@ class DictPreferenceDataModel(BaseDataModel):
         else:
             user_preferences.sort(key = lambda user_pref: user_pref[0])
          
-        return np.asanyarray(user_preferences)      
-
+        return np.asanyarray(user_preferences,dtype=[('item_ids', (str,35)), ('preferences', float)])      
 
     def items_from_user(self, user_id):
         '''
@@ -206,7 +205,7 @@ class DictPreferenceDataModel(BaseDataModel):
                  Return IDs of items user expresses a preference for    
         '''
         preferences = self.preferences_from_user(user_id)
-        return [key in key,value in preferences]
+        return [key for key,value in preferences]
         
     def preferences_for_item(self, item_id, order_by_id=True):
         '''
@@ -227,7 +226,7 @@ class DictPreferenceDataModel(BaseDataModel):
         else:
             item_preferences.sort(key = lambda item_pref: item_pref[0])
                 
-        return np.asanyarray(item_preferences)
+        return np.asanyarray(item_preferences, dtype=[('user_ids', (str,35)), ('preferences', float)])
     
     
     def preference_value(self, user_id, item_id):
@@ -238,8 +237,11 @@ class DictPreferenceDataModel(BaseDataModel):
                      Retrieves the preference value for a single user and item.
         '''
         preferences =  self.dataset.get(user_id,None)
-        if user_preferences is None:
+        if preferences is None:
             raise UserNotFoundError('user_id in the model not found')
+
+        if item_id not in self.dataset_T:
+            raise ItemNotFoundError
 
         return preferences.get(item_id,np.inf)      
     
@@ -268,9 +270,12 @@ class DictPreferenceDataModel(BaseDataModel):
         self
             Sets a particular preference (item plus rating) for a user.
         '''
-        user_preferences = self.dataset[user_id]
+        user_preferences = self.dataset.get(user_id,None)
         if user_preferences is None:
             raise UserNotFoundError('user_id in the model not found')
+
+        if item_id not in self.dataset_T:
+            raise ItemNotFoundError
             
         self.dataset[user_id][item_id] = value
         self.build_model()  
@@ -282,10 +287,13 @@ class DictPreferenceDataModel(BaseDataModel):
         self
             Removes a particular preference for a user.
         '''
-        user_preferences = self.dataset[user_id]
+        user_preferences = self.dataset.get(user_id,None)
         if user_preferences is None:
             raise UserNotFoundError('user_id in the model not found')
-            
+
+        if item_id not in self.dataset_T:
+            raise ItemNotFoundError
+
         del self.dataset[user_id][item_id]
         self.build_model()
     
