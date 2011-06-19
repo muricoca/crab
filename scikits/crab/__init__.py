@@ -3,7 +3,7 @@ Crab
 Recommendation System module in python
 =================================
 
-scikits.recommender is a Python module integrating classique recommendation 
+scikits.recommender is a Python module integrating classique recommendation
 algorithms in the tightly-nit world of scientific Python
 packages (numpy, scipy, matplotlib).
 
@@ -17,7 +17,7 @@ See http://github.com/muricoca/crab for complete documentation.
 
 try:
     from numpy.testing import nosetester
-    
+
     class NoseTester(nosetester.NoseTester):
         """
         Subclass numpy's NoseTester to add doctests by default
@@ -36,6 +36,3 @@ __all__ = ['metrics', 'similarities', 'models']
 
 
 __version__ = '0.1.git'
-
-
-
