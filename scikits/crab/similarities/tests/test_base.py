@@ -1,6 +1,6 @@
 #-*- coding:utf-8 -*-
 
-""" 
+"""
 Base Similarity Models.
 """
 
@@ -14,11 +14,12 @@ from ..base import BaseSimilarity
 
 #test classes
 
+
 class MySimilarity(BaseSimilarity):
-    def __init__(self,model,distance):
-        BaseSimilarity.__init__(self,model,distance)
-    
-################################################################################
+    def __init__(self, model, distance):
+        BaseSimilarity.__init__(self, model, distance)
+
+###############################################################################
 # The tests
 
 
@@ -28,4 +29,3 @@ class testBaseSimilarity(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
-
