@@ -1,6 +1,6 @@
 #-*- coding:utf-8 -*-
 
-""" 
+"""
 Base Recommender Models.
 """
 
@@ -14,18 +14,17 @@ from ..base import BaseRecommender
 
 #test classes
 
+
 class MyRecommender(BaseRecommender):
-    def __init__(self,model):
-        BaseRecommender.__init__(self,model)
-    
-################################################################################
+    def __init__(self, model):
+        BaseRecommender.__init__(self, model)
+
+###############################################################################
 # The tests
 
 
 class testBaseRecommender(unittest.TestCase):
     pass
 
-
 if __name__ == '__main__':
     unittest.main()
-
