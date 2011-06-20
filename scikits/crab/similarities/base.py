@@ -67,13 +67,13 @@ class BaseSimilarity(object):
         """
         Get similarities of the `source_id` to all sources in the model.
         """
-        all_sims = self.get_similarities(vec)
+        all_sims = self.get_similarities(source_id)
         
         #return either all similarities as a list, or only self.num_best most similar, depending on settings from the constructor
         
         if self.num_best is None:
             return all_sims
         else:
-            tops = [(label, sim) for label, sim in allSims]
+            tops = [(label, sim) for label, sim in all_sims]
             tops = sorted(tops, key = lambda item: -item[1]) # sort by -sim => highest sim first
             return tops[ : self.num_best] # return at most numBest top 2-tuples (label, sim)

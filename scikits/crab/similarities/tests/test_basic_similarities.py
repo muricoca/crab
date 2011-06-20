@@ -5,6 +5,8 @@ from numpy.testing import assert_array_almost_equal, assert_array_equal, run_mod
 from nose.tools import assert_raises, assert_equals
 
 from ..basic_similarities import UserSimilarity, ItemSimilarity
+from ...metrics.pairwise import cosine_distances
+from ...models.basic_models import DictPreferenceDataModel
 
 #Simple Movies DataSet
 
@@ -27,3 +29,11 @@ movies={'Marcel Caraciolo': {'Lady in the Water': 2.5, 'Snakes on a Plane': 3.5,
 'Penny Frewman': {'Snakes on a Plane':4.5,'You, Me and Dupree':1.0,'Superman Returns':4.0},
 'Maria Gabriela': {}}
 
+model = DictPreferenceDataModel(movies)
+
+def test_get_similarities_UserSimilarity():
+	#Cosine
+	similarity = UserSimilarity(model,cosine_distances,3)
+	assert_equals([('Marcel Caraciolo', 1.0), ('Steve Gates', 0.98183138566416928), 
+	                 ('Luciana Nunes', 0.96064630139802409)],similarity['Marcel Caraciolo'])
+	
