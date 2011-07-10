@@ -93,7 +93,7 @@ class UserSimilarity(BaseSimilarity):
        For each object in model, compute the similarity function against all other objects and yield the result. 
        """
        for source_id,preferences in self.model:
-           yield self[source_id]
+           yield source_id,self[source_id]
 
 ###############################################################################
 # Item Similarity

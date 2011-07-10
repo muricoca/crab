@@ -182,3 +182,98 @@ def test_get__item___UserSimilarity():
 
 	assert_array_almost_equal(np.array([[0.28571429]]), similarity['Steve Gates'][7][1])
 	assert_equals('Sheldom', similarity['Steve Gates'][7][0])
+
+
+def test_get_similarities__UserSimilarity():
+
+	similarity = UserSimilarity(model,cosine_distances,3)
+
+	sim =  similarity.get_similarities('Marcel Caraciolo')
+
+	assert_equals(len(sim), model.users_count())
+
+
+	#Pearson Without limits
+	similarity = UserSimilarity(model,pearson_correlation)
+
+	sim =  similarity.get_similarities('Leopoldo Pires')
+
+	assert_equals(len(sim), model.users_count())
+
+
+
+	similarity = UserSimilarity(model,euclidean_distances)
+
+	sim =  similarity.get_similarities('Steve Gates')
+
+	assert_equals(len(sim), model.users_count())
+
+
+
+	similarity = UserSimilarity(model,manhattan_distances,0)
+
+	sim =  similarity.get_similarities('Steve Gates')
+
+	assert_equals(len(sim), model.users_count())
+
+
+	similarity = UserSimilarity(model,manhattan_distances,20)
+
+	sim =  similarity.get_similarities('Steve Gates')
+
+	assert_equals(len(sim), model.users_count())
+
+
+def test__iter__UserSimilarity():
+	similarity = UserSimilarity(model,cosine_distances,3)
+
+	source_ids = []
+	prefs = []
+	for source_id,preferences in similarity:
+		source_ids.append(source_id)
+		prefs.append(preferences)
+	assert_equals(len(source_ids),model.users_count())
+
+	for pref in prefs:
+		assert_equals(len(pref),3)
+
+
+	similarity = UserSimilarity(model,pearson_correlation)
+
+	source_ids = []
+	prefs = []
+	for source_id,preferences in similarity:
+		source_ids.append(source_id)
+		prefs.append(preferences)
+	assert_equals(len(source_ids),model.users_count())
+
+	for pref in prefs:
+		assert_equals(len(pref),model.users_count())
+
+
+	similarity = UserSimilarity(model,manhattan_distances,0)
+
+	source_ids = []
+	prefs = []
+	for source_id,preferences in similarity:
+		source_ids.append(source_id)
+		prefs.append(preferences)
+	assert_equals(len(source_ids),model.users_count())
+
+	for pref in prefs:
+		assert_equals(len(pref),0)
+
+		
+	similarity = UserSimilarity(model,manhattan_distances,20)
+
+	source_ids = []
+	prefs = []
+	for source_id,preferences in similarity:
+		source_ids.append(source_id)
+		prefs.append(preferences)
+	assert_equals(len(source_ids),model.users_count())
+
+	for pref in prefs:
+		assert_equals(len(pref),model.users_count())
+
+
