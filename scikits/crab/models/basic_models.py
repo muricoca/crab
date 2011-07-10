@@ -273,9 +273,10 @@ class DictPreferenceDataModel(BaseDataModel):
         user_preferences = self.dataset.get(user_id,None)
         if user_preferences is None:
             raise UserNotFoundError('user_id in the model not found')
-
-        if item_id not in self.dataset_T:
-            raise ItemNotFoundError
+        
+        #ALLOW NEW ITEMS
+        #if item_id not in self.dataset_T:
+        #    raise ItemNotFoundError
             
         self.dataset[user_id][item_id] = value
         self.build_model()  
