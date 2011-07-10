@@ -353,3 +353,120 @@ def test_get__item___ItemSimilarity():
 
 	assert_array_almost_equal(np.array([[0.25265031]]), similarity['The Night Listener'][6][1])
 	assert_equals('Superman Returns', similarity['The Night Listener'][6][0])
+
+
+	similarity = ItemSimilarity(model,manhattan_distances,0)
+
+	assert_equals([], similarity['Lady in the Water'])
+
+	similarity = ItemSimilarity(model,manhattan_distances,20)
+
+	assert_array_almost_equal(np.array([[1.]]), similarity['Snakes on a Plane'][1][1])
+	assert_equals('Snakes on a Plane', similarity['Snakes on a Plane'][1][0])
+
+	assert_array_almost_equal(np.array([[0.28571429]]), similarity['Snakes on a Plane'][2][1])
+	assert_equals('Superman Returns', similarity['Snakes on a Plane'][2][0])
+
+	assert_array_almost_equal(np.array([[0.2]]), similarity['Snakes on a Plane'][3][1])
+	assert_equals('Lady in the Water', similarity['Snakes on a Plane'][3][0])
+
+	assert_array_almost_equal(np.array([[0.16666667]]), similarity['Snakes on a Plane'][4][1])
+	assert_equals('The Night Listener', similarity['Snakes on a Plane'][4][0])
+
+	assert_array_almost_equal(np.array([[-0.25]]), similarity['Snakes on a Plane'][5][1])
+	assert_equals('Just My Luck', similarity['Snakes on a Plane'][5][0])
+
+	assert_array_almost_equal(np.array([[-0.33333333]]), similarity['Snakes on a Plane'][6][1])
+	assert_equals('You, Me and Dupree', similarity['Snakes on a Plane'][6][0])
+
+
+
+def test_get_similarities__ItemSimilarity():
+
+	similarity = ItemSimilarity(model,cosine_distances,3)
+
+	sim =  similarity.get_similarities('Snakes on a Plane')
+
+	assert_equals(len(sim), model.items_count())
+
+	#Pearson Without limits
+	similarity = ItemSimilarity(model,pearson_correlation)
+
+	sim =  similarity.get_similarities('Lady in the Water')
+
+	assert_equals(len(sim), model.items_count())
+
+
+	similarity = ItemSimilarity(model,euclidean_distances)
+
+	sim =  similarity.get_similarities('Lady in the Water')
+
+	assert_equals(len(sim), model.items_count())
+
+
+	similarity = ItemSimilarity(model,manhattan_distances,0)
+
+	sim =  similarity.get_similarities('Lady in the Water')
+
+	assert_equals(len(sim), model.items_count())
+
+
+	similarity = ItemSimilarity(model,manhattan_distances,20)
+
+	sim =  similarity.get_similarities('Lady in the Water')
+
+	assert_equals(len(sim), model.items_count())
+
+
+
+def test__iter__ItemSimilarity():
+	similarity = ItemSimilarity(model,cosine_distances,3)
+
+	item_ids = []
+	prefs = []
+	for item_id,preferences in similarity:
+		item_ids.append(item_id)
+		prefs.append(preferences)
+	assert_equals(len(item_ids),model.items_count())
+
+	for pref in prefs:
+		assert_equals(len(pref),3)
+
+
+	similarity = ItemSimilarity(model,pearson_correlation)
+
+	item_ids = []
+	prefs = []
+	for item_id,preferences in similarity:
+		item_ids.append(item_id)
+		prefs.append(preferences)
+	assert_equals(len(item_ids),model.items_count())
+
+	for pref in prefs:
+		assert_equals(len(pref),model.items_count())
+
+
+	similarity = ItemSimilarity(model,manhattan_distances,0)
+
+	item_ids = []
+	prefs = []
+	for item_id,preferences in similarity:
+		item_ids.append(item_id)
+		prefs.append(preferences)
+	assert_equals(len(item_ids),model.items_count())
+
+	for pref in prefs:
+		assert_equals(len(pref),0)
+
+
+	similarity = ItemSimilarity(model,manhattan_distances,20)
+
+	item_ids = []
+	prefs = []
+	for item_id,preferences in similarity:
+		item_ids.append(item_id)
+		prefs.append(preferences)
+	assert_equals(len(item_ids),model.items_count())
+
+	for pref in prefs:
+		assert_equals(len(pref),model.items_count())
