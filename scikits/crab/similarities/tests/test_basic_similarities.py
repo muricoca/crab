@@ -34,18 +34,18 @@ model = DictPreferenceDataModel(movies)
 def test_find_common_elements():
 	source_preferences = model.preferences_from_user('Marcel Caraciolo')
 	target_preferences = model.preferences_from_user('Leopoldo Pires')
-	assert_array_equal(np.array([[2.5,3.5,3.5,3.0]]),find_common_elements(source_preferences,target_preferences)[0])
-	assert_array_equal(np.array([[2.5,3.0,3.5,4.0]]),find_common_elements(source_preferences,target_preferences)[1])
+	assert_array_equal(np.array([[2.5,3.5,3.5,3.0]]),find_common_elements(source_preferences,target_preferences,'item_ids')[0])
+	assert_array_equal(np.array([[2.5,3.0,3.5,4.0]]),find_common_elements(source_preferences,target_preferences, 'item_ids')[1])
 
 	source_preferences = model.preferences_from_user('Marcel Caraciolo')
 	target_preferences = model.preferences_from_user('Luciana Nunes')
-	assert_array_equal( np.array([[ 3. ,  2.5,  3.5,  3.5,  3. ,  2.5]]),find_common_elements(source_preferences,target_preferences)[0])
-	assert_array_equal( np.array([[ 1.5,  3. ,  3.5,  5. ,  3. ,  3.5]]) ,find_common_elements(source_preferences,target_preferences)[1])
+	assert_array_equal( np.array([[ 3. ,  2.5,  3.5,  3.5,  3. ,  2.5]]),find_common_elements(source_preferences,target_preferences, 'item_ids')[0])
+	assert_array_equal( np.array([[ 1.5,  3. ,  3.5,  5. ,  3. ,  3.5]]) ,find_common_elements(source_preferences,target_preferences,'item_ids')[1])
 
 	source_preferences = model.preferences_from_user('Marcel Caraciolo')
 	target_preferences = model.preferences_from_user('Maria Gabriela')
-	assert_array_equal( np.array([[]]),find_common_elements(source_preferences,target_preferences)[0])
-	assert_array_equal( np.array([[]]) ,find_common_elements(source_preferences,target_preferences)[1])
+	assert_array_equal( np.array([[]]),find_common_elements(source_preferences,target_preferences,'item_ids')[0])
+	assert_array_equal( np.array([[]]) ,find_common_elements(source_preferences,target_preferences, 'item_ids')[1])
 
 
 
@@ -263,7 +263,7 @@ def test__iter__UserSimilarity():
 	for pref in prefs:
 		assert_equals(len(pref),0)
 
-		
+
 	similarity = UserSimilarity(model,manhattan_distances,20)
 
 	source_ids = []

@@ -11,10 +11,10 @@ a collection of vectors.
 import numpy as np
 from base import BaseSimilarity
 
-def find_common_elements(source_preferences,target_preferences):
+def find_common_elements(source_preferences,target_preferences,dtype):
   ''' Returns the preferences from both vectors '''
-  src = source_preferences['item_ids']
-  tgt = target_preferences['item_ids']
+  src = source_preferences[dtype]
+  tgt = target_preferences[dtype]
 
   inter = np.intersect1d(src,tgt)
 
@@ -74,19 +74,13 @@ class UserSimilarity(BaseSimilarity):
        source_preferences = self.model.preferences_from_user(source_id)
        target_preferences = self.model.preferences_from_user(target_id)
 
-
-       src,tgt = find_common_elements(source_preferences,target_preferences)
-
-       #print source_id,src,target_id,tgt
+       src,tgt = find_common_elements(source_preferences,target_preferences,'item_ids')
 
        #evaluate the similarity between the two users vectors.
-
        return self.distance(src,tgt) if not src.shape[1] == 0 and not tgt.shape[1] == 0 else np.array([[np.nan]])
 
    def get_similarities(self,source_id):
-    
        return[ (other_id,self.get_similarity(source_id,other_id))  for other_id,v in self.model] 
-
 
    def __iter__(self):
        """
@@ -137,8 +131,10 @@ class ItemSimilarity(BaseSimilarity):
         source_preferences = self.model.preferences_for_item(source_id)
         target_preferences = self.model.preferences_for_item(target_id)
 
+        src,tgt = find_common_elements(source_preferences,target_preferences,'source_ids')
+
         #Evaluate the similarity between the two users vectors. 
-        return self.distance(source_preferences,target_preferences)
+        return self.distance(src,tgt) if not src.shape[1] == 0 and not tgt.shape[1] == 0 else np.array([[np.nan]])
 
     def get_similarities(self,source_id):
         return [ (other_id,self.get_similarity(source_id,other_id)) for other_id,v in self.model.item_ids() ]
