@@ -4,8 +4,8 @@ from numpy.testing import assert_array_almost_equal, assert_array_equal, run_mod
 
 from nose.tools import assert_raises, assert_equals
 
-from ..basic_similarities import UserSimilarity, ItemSimilarity
-from ...metrics.pairwise import cosine_distances
+from ..basic_similarities import UserSimilarity, ItemSimilarity, find_common_elements
+from ...metrics.pairwise import cosine_distances, pearson_correlation, euclidean_distances, manhattan_distances
 from ...models.basic_models import DictPreferenceDataModel
 
 #Simple Movies DataSet
@@ -31,9 +31,154 @@ movies={'Marcel Caraciolo': {'Lady in the Water': 2.5, 'Snakes on a Plane': 3.5,
 
 model = DictPreferenceDataModel(movies)
 
-def test_get_similarities_UserSimilarity():
-	#Cosine
+def test_find_common_elements():
+	source_preferences = model.preferences_from_user('Marcel Caraciolo')
+	target_preferences = model.preferences_from_user('Leopoldo Pires')
+	assert_array_equal(np.array([[2.5,3.5,3.5,3.0]]),find_common_elements(source_preferences,target_preferences)[0])
+	assert_array_equal(np.array([[2.5,3.0,3.5,4.0]]),find_common_elements(source_preferences,target_preferences)[1])
+
+	source_preferences = model.preferences_from_user('Marcel Caraciolo')
+	target_preferences = model.preferences_from_user('Luciana Nunes')
+	assert_array_equal( np.array([[ 3. ,  2.5,  3.5,  3.5,  3. ,  2.5]]),find_common_elements(source_preferences,target_preferences)[0])
+	assert_array_equal( np.array([[ 1.5,  3. ,  3.5,  5. ,  3. ,  3.5]]) ,find_common_elements(source_preferences,target_preferences)[1])
+
+	source_preferences = model.preferences_from_user('Marcel Caraciolo')
+	target_preferences = model.preferences_from_user('Maria Gabriela')
+	assert_array_equal( np.array([[]]),find_common_elements(source_preferences,target_preferences)[0])
+	assert_array_equal( np.array([[]]) ,find_common_elements(source_preferences,target_preferences)[1])
+
+
+
+
+
+def test_get__item___UserSimilarity():
+	#Cosine #With limits
 	similarity = UserSimilarity(model,cosine_distances,3)
-	assert_equals([('Marcel Caraciolo', 1.0), ('Steve Gates', 0.98183138566416928), 
-	                 ('Luciana Nunes', 0.96064630139802409)],similarity['Marcel Caraciolo'])
+
+	#print similarity['Marcel Caraciolo']
+
+
+	assert_array_equal(np.array([[1.]]), similarity['Marcel Caraciolo'][0][1])
+	assert_equals('Marcel Caraciolo', similarity['Marcel Caraciolo'][0][0])
+
+	assert_array_almost_equal(np.array([[0.99127583]]), similarity['Marcel Caraciolo'][1][1])
+	assert_equals('Sheldom', similarity['Marcel Caraciolo'][1][0])
+
+	assert_array_almost_equal(np.array([[0.98658676]]), similarity['Marcel Caraciolo'][2][1])
+	assert_equals('Lorena Abreu', similarity['Marcel Caraciolo'][2][0])
+
+
+	#Pearson Without limits
+	similarity = UserSimilarity(model,pearson_correlation)
+
+	#print similarity['Leopoldo Pires']
+
+	assert_array_equal(np.array([[1.]]), similarity['Leopoldo Pires'][0][1])
+	assert_equals('Leopoldo Pires', similarity['Leopoldo Pires'][0][0])
+
+	assert_array_almost_equal(np.array([[1.]]), similarity['Leopoldo Pires'][1][1])
+	assert_equals('Lorena Abreu', similarity['Leopoldo Pires'][1][0])
+
+	assert_array_almost_equal(np.array([[0.40451992]]), similarity['Leopoldo Pires'][2][1])
+	assert_equals('Marcel Caraciolo', similarity['Leopoldo Pires'][2][0])
+
+	assert_array_almost_equal(np.array([[ 0.2045983]]), similarity['Leopoldo Pires'][3][1])
+	assert_equals('Luciana Nunes', similarity['Leopoldo Pires'][3][0])
+
+	assert_array_almost_equal(np.array([[np.nan]]), similarity['Leopoldo Pires'][4][1])
+	assert_equals('Maria Gabriela', similarity['Leopoldo Pires'][4][0])
+
+	assert_array_almost_equal(np.array([[0.13483997]]), similarity['Leopoldo Pires'][5][1])
+	assert_equals('Sheldom', similarity['Leopoldo Pires'][5][0])
+
+	assert_array_almost_equal(np.array([[-0.25819889]]), similarity['Leopoldo Pires'][6][1])
+	assert_equals('Steve Gates', similarity['Leopoldo Pires'][6][0])
+
+	assert_array_almost_equal(np.array([[-1.]]), similarity['Leopoldo Pires'][7][1])
+	assert_equals('Penny Frewman', similarity['Leopoldo Pires'][7][0])
+
+
+
+	similarity = UserSimilarity(model,euclidean_distances)
+
+	assert_array_equal(np.array([[1.]]), similarity['Steve Gates'][0][1])
+	assert_equals('Steve Gates', similarity['Steve Gates'][0][0])
+
+	assert_array_almost_equal(np.array([[0.41421356]]), similarity['Steve Gates'][1][1])
+	assert_equals('Marcel Caraciolo', similarity['Steve Gates'][1][0])
+
+	assert_array_almost_equal(np.array([[0.4]]), similarity['Steve Gates'][2][1])
+	assert_equals('Penny Frewman', similarity['Steve Gates'][2][0])
+
+	assert_array_almost_equal(np.array([[0.38742589]]), similarity['Steve Gates'][3][1])
+	assert_equals('Leopoldo Pires', similarity['Steve Gates'][3][0])
+
+	assert_array_almost_equal(np.array([[0.31451986]]), similarity['Steve Gates'][4][1])
+	assert_equals('Lorena Abreu', similarity['Steve Gates'][4][0])
+
+	assert_array_almost_equal(np.array([[0.2779263]]), similarity['Steve Gates'][5][1])
+	assert_equals('Luciana Nunes', similarity['Steve Gates'][5][0])
+
+	assert_array_almost_equal(np.array([[np.nan]]), similarity['Steve Gates'][6][1])
+	assert_equals('Maria Gabriela', similarity['Steve Gates'][6][0])
+
+	assert_array_almost_equal(np.array([[0.28571429]]), similarity['Steve Gates'][7][1])
+	assert_equals('Sheldom', similarity['Steve Gates'][7][0])
+
+
+	similarity = UserSimilarity(model,manhattan_distances,0)
+
+	assert_equals([], similarity['Steve Gates'])
+
+	similarity = UserSimilarity(model,manhattan_distances,20)
 	
+	assert_array_equal(np.array([[1.]]), similarity['Steve Gates'][0][1])
+	assert_equals('Steve Gates', similarity['Steve Gates'][0][0])
+
+	assert_array_almost_equal(np.array([[0.5]]), similarity['Steve Gates'][1][1])
+	assert_equals('Marcel Caraciolo', similarity['Steve Gates'][1][0])
+
+	assert_array_almost_equal(np.array([[0.3]]), similarity['Steve Gates'][2][1])
+	assert_equals('Sheldom', similarity['Steve Gates'][2][0])
+
+	assert_array_almost_equal(np.array([[0.25]]), similarity['Steve Gates'][3][1])
+	assert_equals('Leopoldo Pires', similarity['Steve Gates'][3][0])
+
+	assert_array_almost_equal(np.array([[0.25]]), similarity['Steve Gates'][4][1])
+	assert_equals('Luciana Nunes', similarity['Steve Gates'][4][0])
+
+	assert_array_almost_equal(np.array([[0.1]]), similarity['Steve Gates'][5][1])
+	assert_equals('Lorena Abreu', similarity['Steve Gates'][5][0])
+
+	assert_array_almost_equal(np.array([[np.nan]]), similarity['Steve Gates'][6][1])
+	assert_equals('Maria Gabriela', similarity['Steve Gates'][6][0])
+
+	assert_array_almost_equal(np.array([[0.16666667]]), similarity['Steve Gates'][7][1])
+	assert_equals('Penny Frewman', similarity['Steve Gates'][7][0])
+
+
+	similarity = UserSimilarity(model,euclidean_distances)
+
+	assert_array_equal(np.array([[1.]]), similarity['Steve Gates'][0][1])
+	assert_equals('Steve Gates', similarity['Steve Gates'][0][0])
+
+	assert_array_almost_equal(np.array([[0.41421356]]), similarity['Steve Gates'][1][1])
+	assert_equals('Marcel Caraciolo', similarity['Steve Gates'][1][0])
+
+	assert_array_almost_equal(np.array([[0.4]]), similarity['Steve Gates'][2][1])
+	assert_equals('Penny Frewman', similarity['Steve Gates'][2][0])
+
+	assert_array_almost_equal(np.array([[0.38742589]]), similarity['Steve Gates'][3][1])
+	assert_equals('Leopoldo Pires', similarity['Steve Gates'][3][0])
+
+	assert_array_almost_equal(np.array([[0.31451986]]), similarity['Steve Gates'][4][1])
+	assert_equals('Lorena Abreu', similarity['Steve Gates'][4][0])
+
+	assert_array_almost_equal(np.array([[0.2779263]]), similarity['Steve Gates'][5][1])
+	assert_equals('Luciana Nunes', similarity['Steve Gates'][5][0])
+
+	assert_array_almost_equal(np.array([[np.nan]]), similarity['Steve Gates'][6][1])
+	assert_equals('Maria Gabriela', similarity['Steve Gates'][6][0])
+
+	assert_array_almost_equal(np.array([[0.28571429]]), similarity['Steve Gates'][7][1])
+	assert_equals('Sheldom', similarity['Steve Gates'][7][0])

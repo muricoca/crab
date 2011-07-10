@@ -11,6 +11,27 @@ a collection of vectors.
 import numpy as np
 from base import BaseSimilarity
 
+def find_common_elements(source_preferences,target_preferences):
+  ''' Returns the preferences from both vectors '''
+  src = source_preferences['item_ids']
+  tgt = target_preferences['item_ids']
+
+  inter = np.intersect1d(src,tgt)
+
+  src_final = []
+  tgt_final = []
+
+  for item,pref in source_preferences:
+      if item in inter:
+          src_final.append(pref)
+  
+  for item,pref in target_preferences:
+      if item in inter:
+          tgt_final.append(pref)
+  
+  return np.asarray([src_final]), np.asarray([tgt_final])        
+
+
 ###############################################################################
 # User Similarity
 
@@ -52,13 +73,21 @@ class UserSimilarity(BaseSimilarity):
    def get_similarity(self,source_id,target_id):
        source_preferences = self.model.preferences_from_user(source_id)
        target_preferences = self.model.preferences_from_user(target_id)
-       print source_preferences, target_preferences
+
+
+       src,tgt = find_common_elements(source_preferences,target_preferences)
+
+       #print source_id,src,target_id,tgt
+
        #evaluate the similarity between the two users vectors.
-       return self.distance(source_preferences,target_preferences)
+
+       return self.distance(src,tgt) if not src.shape[1] == 0 and not tgt.shape[1] == 0 else np.array([[np.nan]])
 
    def get_similarities(self,source_id):
-       return [ (other_id,self.get_similarity(source_id,other_id))  for other_id,v in self.model]
-       
+    
+       return[ (other_id,self.get_similarity(source_id,other_id))  for other_id,v in self.model] 
+
+
    def __iter__(self):
        """
        For each object in model, compute the similarity function against all other objects and yield the result. 
@@ -112,7 +141,7 @@ class ItemSimilarity(BaseSimilarity):
         return self.distance(source_preferences,target_preferences)
 
     def get_similarities(self,source_id):
-        return [ (other_id,self.get_similarity(source_id,other_id))  for other_id,v in self.model.item_ids()]
+        return [ (other_id,self.get_similarity(source_id,other_id)) for other_id,v in self.model.item_ids() ]
 
     def __iter__(self):
         """
