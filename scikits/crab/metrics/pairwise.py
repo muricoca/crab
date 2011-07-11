@@ -264,7 +264,6 @@ def manhattan_distances(X, Y):
         raise ValueError("Incompatible dimension for X and Y matrices")
 
     XDY = np.sum(np.abs(X - Y), axis=1)[:, np.newaxis]
-
     if X.shape[0] >= 2 and Y.shape[0] >= 2:
         XDY_T = np.sum(np.abs(X - Y[::-1]), axis=1)[:, np.newaxis]
         XDY = np.array([XDY.flatten(), XDY_T.flatten()])
