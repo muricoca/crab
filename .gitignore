@@ -1,6 +1,10 @@
 *.pyc
 *.tmproj
 *.swp
+<<<<<<< HEAD
 *~
 .#*
 .DS_Store
+=======
+*.pyc
+>>>>>>> metrics_pairwise

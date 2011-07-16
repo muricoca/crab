@@ -22,7 +22,7 @@ class BaseRecommender(BaseEstimator):
     Attributes
     ----------
 
-     `model`:  DataModel  
+     model:  DataModel  
           Defines the data model where data is fetched.
 
     """
