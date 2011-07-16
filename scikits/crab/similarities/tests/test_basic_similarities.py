@@ -87,7 +87,7 @@ def test_get__item___UserSimilarity():
 
 	#print similarity['Leopoldo Pires']
 
-	assert_array_equal(np.array([[1.]]), similarity['Leopoldo Pires'][0][1])
+	assert_array_almost_equal(np.array([[1.]]), similarity['Leopoldo Pires'][0][1])
 	assert_equals('Leopoldo Pires', similarity['Leopoldo Pires'][0][0])
 
 	assert_array_almost_equal(np.array([[1.]]), similarity['Leopoldo Pires'][1][1])
