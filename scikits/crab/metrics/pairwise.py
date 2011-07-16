@@ -10,8 +10,9 @@ sets of points.
 # License: BSD Style.
 
 import numpy as np
+import scipy.spatial.distance as ssd
 
-def euclidean_distances(X, Y, Y_norm_squared=None, squared=False, inverse=True):
+def euclidean_distances(X, Y, squared=False, inverse=True):
     """
     Considering the rows of X (and Y=X) as vectors, compute the
     distance matrix between each pair of vectors.
@@ -67,33 +68,15 @@ def euclidean_distances(X, Y, Y_norm_squared=None, squared=False, inverse=True):
     if X.shape[1] != Y.shape[1]:
         raise ValueError("Incompatible dimension for X and Y matrices")
 
-    XX = np.sum(X * X, axis=1)[:, np.newaxis]
-    if X is Y: # shortcut in the common case euclidean_distances(X, X)
-        YY = XX.T
-    elif Y_norm_squared is None:
-        YY = Y.copy()
-        YY **= 2
-        YY = np.sum(YY, axis=1)[np.newaxis, :]
-    else:
-        YY = np.asanyarray(Y_norm_squared)
-        if YY.shape != (Y.shape[0],):
-            raise ValueError("Incompatible dimension for Y and Y_norm_squared")
-        YY = YY[np.newaxis, :]
-
-    # TODO:
-    # a faster cython implementation would do the dot product first,
-    # and then add XX, add YY, and do the clipping of negative values in
-    # a single pass over the output matrix.
-    distances = XX + YY # Using broadcasting
-    distances -= 2 * np.dot(X, Y.T)
-    distances = np.maximum(distances, 0)
     if squared:
-        return distances
-    else:
-        result = np.divide(1.0,(1.0 + np.sqrt(distances))) if inverse else np.sqrt(distances)
-        return result
+        return ssd.cdist(X,Y,'sqeuclidean')
+        
+    XY = ssd.cdist(X,Y)
+    return  np.divide(1.0,(1.0 + XY)) if inverse else XY
 
 euclidian_distances = euclidean_distances # both spelling for backward compat
+
+
 
 def pearson_correlation(X,Y):
     """
@@ -137,17 +120,11 @@ def pearson_correlation(X,Y):
     
     if X.shape[1] != Y.shape[1]:
         raise ValueError("Incompatible dimension for X and Y matrices")
+    
+    XY = ssd.cdist(X,Y,'correlation',2)
+    
+    return 1 - XY
 
-    sum1 = np.sum(X, axis=1)[:, np.newaxis]
-    sum2 = np.sum(Y,axis=1)[:, np.newaxis]
-
-    sum1q = np.sum(X * X, axis=1)[:, np.newaxis]
-    sum2q = np.sum(Y * Y, axis=1)[:, np.newaxis]
-    XY = np.dot(X,Y.T)
-
-    num = XY - (np.dot(sum1,sum2.T)/float(X.shape[1]))
-    den = np.sqrt(np.dot((sum1q-np.power(sum1,2)/float(X.shape[1])),(sum2q-np.power(sum2,2)/float(X.shape[1])).T  ))
-    return np.divide(num,den)
 
 
 def jaccard_coefficient(X,Y):
@@ -182,6 +159,7 @@ def jaccard_coefficient(X,Y):
 	array([[ 0.6],
 	      [ 0. ]])
 	"""
+
     # should not need X_norm_squared because if you could precompute that as
     # well as Y, then you should just pre-compute the output and not even
     # call this function.
@@ -250,13 +228,11 @@ def manhattan_distances(X,Y):
 
     if X.shape[1] != Y.shape[1]:
         raise ValueError("Incompatible dimension for X and Y matrices")
-   
-    XDY = np.sum(np.abs(X-Y),axis=1)[:,np.newaxis]
+    
+    XY = ssd.cdist(X,Y,'cityblock')
 
-    if X.shape[0] >= 2 and Y.shape[0] >= 2:
-        XDY_T = np.sum(np.abs(X-Y[::-1]),axis=1)[:, np.newaxis]
-        XDY = np.array([ XDY.flatten(), XDY_T.flatten() ])
-    return 1.0 - (XDY/float(X.shape[1]))
+    return 1.0 - (XY/float(X.shape[1]))
+
 
 
 def sorensen_coefficient(X,Y):
@@ -423,12 +399,9 @@ def cosine_distances(X,Y):
 
     if X.shape[1] != Y.shape[1]:
         raise ValueError("Incompatible dimension for X and Y matrices")
-    #TODO: Check if it is possible to optimize this function
 
-    XX = np.sum(X*X,axis=1)[:,np.newaxis]
-    YY = np.sum(Y*Y,axis=1)[:,np.newaxis]
+    return 1. - ssd.cdist(X,Y,'cosine')
 
-    return np.dot(X,Y.T) / np.dot(np.sqrt(XX) ,np.sqrt(YY).T)
 
 def spearman_coefficient(X,Y):
     """
@@ -465,10 +438,10 @@ def spearman_coefficient(X,Y):
     # well as Y, then you should just pre-compute the output and not even
     # call this function.
     if X is Y:
-        X = Y = np.asanyarray(X, dtype=[('x', 'S1'), ('y', float)])
+        X = Y = np.asanyarray(X, dtype=[('x', 'S30'), ('y', float)])
     else:
-        X = np.asanyarray(X,  dtype=[('x', 'S1'), ('y', float)])
-        Y = np.asanyarray(Y,  dtype=[('x', 'S1'), ('y', float)])
+        X = np.asanyarray(X,  dtype=[('x', 'S30'), ('y', float)])
+        Y = np.asanyarray(Y,  dtype=[('x', 'S30'), ('y', float)])
 
     if X.shape[1] != Y.shape[1]:
         raise ValueError("Incompatible dimension for X and Y matrices")

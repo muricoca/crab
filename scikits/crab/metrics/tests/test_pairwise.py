@@ -322,7 +322,7 @@ def test_manthattan_distances():
 
     X = [[0,1],[1,1]]
     D = manhattan_distances(X,X)
-    assert_array_almost_equal(D,[[1., 1.], [0.5, 0.5]])    
+    assert_array_almost_equal(D,[[1., 0.5], [0.5, 1.]])    
 
     X = [[0,1],[1,1]]
     Y = [[0,0]]
