@@ -4,7 +4,7 @@ from numpy.testing import assert_array_almost_equal, assert_array_equal, run_mod
 
 from nose.tools import assert_raises, assert_equals
 
-from ..basic_models import DictPreferenceDataModel
+from ..data_models import DictPreferenceDataModel
 from ..utils import UserNotFoundError, ItemNotFoundError
 
 #Simple Movies DataSet

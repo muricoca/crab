@@ -75,7 +75,7 @@ class DictPreferenceDataModel(BaseDataModel):
 
     Examples
     ---------
-    >>> from scikits.crab.models.basic_models import DictPreferenceDataModel
+    >>> from scikits.crab.models.data_models import DictPreferenceDataModel
     >>> model = DictPreferenceDataModel({})
     >>> #empty dataset
     >>> model.user_ids()
@@ -323,4 +323,4 @@ class DictPreferenceDataModel(BaseDataModel):
         self.min_preference:  float
                               Returns the minimum preference value that is possible in the current problem domain being evaluated
         '''
-        return self.min_pref                             
+        return self.min_pref
