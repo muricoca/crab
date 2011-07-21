@@ -87,7 +87,7 @@ class DictPreferenceDataModel(BaseDataModel):
 
     Examples
     ---------
-    >>> from scikits.crab.models.basic_models import DictPreferenceDataModel
+    >>> from scikits.crab.models.data_models import DictPreferenceDataModel
     >>> model = DictPreferenceDataModel({})
     >>> #empty dataset
     >>> model.user_ids()
