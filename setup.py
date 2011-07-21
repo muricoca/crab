@@ -2,7 +2,7 @@
 
 import os
 
-descr = """Crab is a ﬂexible, fast recommender engine for Python. The engine
+descr = """Crab is a flexible, fast recommender engine for Python. The engine
   aims to provide a rich set of components from which you can construct a
   customized recommender system from a set of algorithms."""
 
