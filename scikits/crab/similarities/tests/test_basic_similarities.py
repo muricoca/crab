@@ -6,7 +6,7 @@ from nose.tools import assert_raises, assert_equals
 
 from ..basic_similarities import UserSimilarity, ItemSimilarity, find_common_elements
 from ...metrics.pairwise import cosine_distances, pearson_correlation, euclidean_distances, manhattan_distances
-from ...models.basic_models import DictPreferenceDataModel
+from ...models.data_models import DictPreferenceDataModel
 
 #Simple Movies DataSet
 
