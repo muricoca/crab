@@ -203,20 +203,10 @@ def test_basic_methods_MatrixPreferenceDataModel():
     assert_equals(6,model.items_count())
     assert_equals(5.0,model.maximum_preference_value())
     assert_equals(1.0,model.minimum_preference_value())
-    print model.preferences_from_user('Leopoldo Pires')
+    assert_equals([('Just My Luck', 3.0), ('Lady in the Water', 2.5),
+             ('Snakes on a Plane', 3.5), ('Superman Returns', 1.0),
+             ('The Night Listener', 3.0), ('You, Me and Dupree', 2.5)], model['Marcel Caraciolo'])
 
-
-
-
-    '''
-    assert_array_equal(np.array(
-            [('Just My Luck', 3.0), ('Lady in the Water', 2.5),
-             ('Snakes on a Plane', 3.5), ('Superman Returns', 3.5),
-             ('The Night Listener', 3.0), ('You, Me and Dupree', 2.5)],
-              dtype=[('item_ids', '|S35'), ('preferences', '<f8')]),model['Marcel Caraciolo'])
-    elements =  [ pref  for pref in model ]
-    assert_equals('Leopoldo Pires', elements[0][0])
-    assert_array_equal(np.array([('Lady in the Water', 2.5), ('Snakes on a Plane', 3.0),
-           ('Superman Returns', 3.5), ('The Night Listener', 4.0)], 
-          dtype=[('item_ids', '|S35'), ('preferences', '<f8')]), elements[0][1])
-    '''
+    elements = [pref  for pref in model]
+    assert_array_equal([('Just My Luck', np.NaN), ('Lady in the Water', 2.5), ('Snakes on a Plane', 3.0), \
+         ('Superman Returns', 3.5), ('The Night Listener', 4.0), ('You, Me and Dupree', np.NaN)], elements[0][1])

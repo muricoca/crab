@@ -438,7 +438,7 @@ class MatrixPreferenceDataModel(BaseDataModel):
         '''
         return self._item_ids
 
-    def preferences_from_user(self, user_id, order_by_id=False):
+    def preferences_from_user(self, user_id, order_by_id=True):
         '''
         Returns
         -------
