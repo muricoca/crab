@@ -454,10 +454,14 @@ class MatrixPreferenceDataModel(BaseDataModel):
 
         preferences = self.index[user_id_loc]
         #think in a way to return as numpy array and how to remove the nan values efficiently.
+        data = zip(self._item_ids, preferences.flatten())
+
         if order_by_id:
-            return zip(self._item_ids, preferences.flatten())
+            return [(item_id, preference)  for item_id, preference in data \
+                         if not np.isnan(preference)]
         else:
-            return sorted(zip(self._item_ids, preferences.flatten()), key=lambda item: -item[1])
+            return sorted([(item_id, preference)  for item_id, preference in data \
+                         if not np.isnan(preference)], key=lambda item: - item[1])
 
     def has_preference_values(self):
         '''
@@ -506,3 +510,91 @@ class MatrixPreferenceDataModel(BaseDataModel):
                   Return total number of items known to the model.
         '''
         return self._item_ids.size
+
+    def items_from_user(self, user_id):
+        '''
+        Returns
+        -------
+        items_from_user : numpy array of shape [item_id,..]
+                 Return IDs of items user expresses a preference for
+        '''
+        preferences = self.preferences_from_user(user_id)
+        return [key for key, value in preferences]
+
+    def preferences_for_item(self, item_id, order_by_id=True):
+        '''
+        Returns
+        -------
+        preferences: numpy array of shape [(item_id,preference)]
+                     Return all existing Preferences expressed for that item,
+        '''
+        item_id_loc = np.where(self._item_ids == item_id)
+        if not item_id_loc[0].size:
+            #item_id not found
+            raise ItemNotFoundError('Item not found')
+        preferences = self.index[:, item_id_loc]
+
+        #think in a way to return as numpy array and how to remove the nan values efficiently.
+        data = zip(self._user_ids, preferences.flatten())
+        if order_by_id:
+            return [(user_id, preference)  for user_id, preference in data \
+                         if not np.isnan(preference)]
+        else:
+            return sorted([(user_id, preference)  for user_id, preference in data \
+                         if not np.isnan(preference)], key=lambda user: - user[1])
+
+    def preference_value(self, user_id, item_id):
+        '''
+        Returns
+        -------
+        preference:  float
+                     Retrieves the preference value for a single user and item.
+        '''
+        item_id_loc = np.where(self._item_ids == item_id)
+        user_id_loc = np.where(self._user_ids == user_id)
+
+        if not user_id_loc[0].size:
+            raise UserNotFoundError('user_id in the model not found')
+
+        if not item_id_loc[0].size:
+            raise ItemNotFoundError('item_id in the model not found')
+
+        return self.index[user_id_loc, item_id_loc].flatten()[0]
+
+    def set_preference(self, user_id, item_id, value):
+        '''
+        Returns
+        --------
+        self
+            Sets a particular preference (item plus rating) for a user.
+        '''
+        user_id_loc = np.where(self._user_ids == user_id)
+        if not user_id_loc[0].size:
+            raise UserNotFoundError('user_id in the model not found')
+
+        #ALLOW NEW ITEMS
+        #if not item_id_loc[0].size:
+        #    raise ItemNotFoundError('item_id in the model not found')
+
+        #How not use the dataset in memory ?!
+        self.dataset[user_id][item_id] = value
+        self.build_model()
+
+    def remove_preference(self, user_id, item_id):
+        '''
+        Returns
+        --------
+        self
+            Removes a particular preference for a user.
+        '''
+        user_id_loc = np.where(self._user_ids == user_id)
+        item_id_loc = np.where(self._item_ids == item_id)
+
+        if not user_id_loc[0].size:
+            raise UserNotFoundError('user_id in the model not found')
+
+        if not item_id_loc[0].size:
+            raise ItemNotFoundError('item_id in the model not found')
+
+        del self.dataset[user_id][item_id]
+        self.build_model()

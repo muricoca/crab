@@ -208,5 +208,92 @@ def test_basic_methods_MatrixPreferenceDataModel():
              ('The Night Listener', 3.0), ('You, Me and Dupree', 2.5)], model['Marcel Caraciolo'])
 
     elements = [pref  for pref in model]
-    assert_array_equal([('Just My Luck', np.NaN), ('Lady in the Water', 2.5), ('Snakes on a Plane', 3.0), \
-         ('Superman Returns', 3.5), ('The Night Listener', 4.0), ('You, Me and Dupree', np.NaN)], elements[0][1])
+    assert_array_equal([('Lady in the Water', 2.5), ('Snakes on a Plane', 3.0), \
+         ('Superman Returns', 3.5), ('The Night Listener', 4.0)], elements[0][1])
+
+
+def test_preferences_from_user_exists_MatrixPreferenceDataModel():
+    model = MatrixPreferenceDataModel(movies)
+    #ordered by item_id
+    assert_array_equal(np.array([('Just My Luck', 3.0), ('Snakes on a Plane', 3.5),
+       ('Superman Returns', 4.0), ('The Night Listener', 4.5), ('You, Me and Dupree', 2.5)]),
+        model.preferences_from_user('Lorena Abreu'))
+
+    #ordered by rating (reverse)
+    assert_array_equal(np.array([('The Night Listener', 4.5), ('Superman Returns', 4.0), \
+       ('Snakes on a Plane', 3.5),('Just My Luck', 3.0), ('You, Me and Dupree', 2.5)]), \
+          model.preferences_from_user('Lorena Abreu', order_by_id=False))
+
+
+def test_preferences_from_user_exists_no_preferences_MatrixPreferenceDataModel():
+    model = MatrixPreferenceDataModel(movies)
+    assert_array_equal(np.array([]),model.preferences_from_user('Maria Gabriela'))
+
+
+def test_preferences_from_user_non_existing_user_MatrixPreferenceDataModel():
+    model = MatrixPreferenceDataModel(movies)
+    assert_raises(UserNotFoundError,model.preferences_from_user,'Flavia')
+
+
+def test_item_ids_from_user_MatrixPreferenceDataModel():
+    model = MatrixPreferenceDataModel(movies)
+    assert_array_equal(np.array(['Just My Luck', 'Lady in the Water', 'Snakes on a Plane',
+           'Superman Returns', 'The Night Listener', 'You, Me and Dupree']),
+      model.items_from_user('Marcel Caraciolo'))
+
+
+def test_preferences_for_item_existing_item_MatrixPreferenceDataModel():
+    model = MatrixPreferenceDataModel(movies)
+    #ordered by item_id
+    assert_array_equal(np.array([('Leopoldo Pires', 3.5), ('Lorena Abreu', 4.0), \
+           ('Luciana Nunes', 5.0), ('Marcel Caraciolo', 1.0), \
+           ('Penny Frewman', 4.0), ('Sheldom', 5.0), ('Steve Gates', 3.0)]),
+       model.preferences_for_item('Superman Returns'))
+    #ordered by rating (reverse)
+    assert_array_equal(np.array([('Luciana Nunes', 5.0), ('Sheldom', 5.0),('Lorena Abreu', 4.0), \
+           ('Penny Frewman', 4.0), ('Leopoldo Pires', 3.5), \
+           ('Steve Gates', 3.0), ('Marcel Caraciolo', 1.0)]),
+           model.preferences_for_item('Superman Returns', order_by_id=False))
+
+
+def test_preferences_for_item_existing_item_no_preferences_MatrixPreferenceDataModel():
+    model = MatrixPreferenceDataModel(movies)
+    assert_array_equal(np.array([]), model.preferences_for_item, 'The Night Listener')
+
+
+def test_preferences_for_item_non_existing_item_MatrixPreferenceDataModel():
+    model = MatrixPreferenceDataModel(movies)
+    assert_raises(ItemNotFoundError,model.preferences_for_item,'Back to the future')
+
+
+def test_preference_value_MatrixPreferenceDataModel():
+    model = MatrixPreferenceDataModel(movies)
+    assert_equals(1.0,model.preference_value('Marcel Caraciolo', 'Superman Returns'))
+
+
+def test_preference_value__invalid_MatrixPreferenceDataModel():
+    model = MatrixPreferenceDataModel(movies)
+    assert_raises(UserNotFoundError,model.preference_value,'Flavia', 'Superman Returns')
+    assert_raises(ItemNotFoundError,model.preference_value,'Marcel Caraciolo', 'Back to the future')
+    assert_array_equal(np.nan,model.preference_value('Maria Gabriela', 'The Night Listener'))
+
+
+def test_set_preference_value_MatrixPreferenceDataModel():
+    #Add
+    model = MatrixPreferenceDataModel(movies)
+    model.set_preference('Maria Gabriela','Superman Returns', 2.0)
+    assert_equals(2.0,model.preference_value('Maria Gabriela', 'Superman Returns'))
+    #Edit
+    model = MatrixPreferenceDataModel(movies)
+    model.set_preference('Marcel Caraciolo','Superman Returns', 1.0)
+    assert_equals(1.0,model.preference_value('Marcel Caraciolo', 'Superman Returns'))
+    #invalid
+    assert_raises(UserNotFoundError,model.set_preference,'Carlos','Superman Returns', 2.0)
+    #assert_raises(ItemNotFoundError,model.set_preference,'Marcel Caraciolo','Indiana Jones', 1.0)
+
+
+def test_remove_preference_value_MatrixPreferenceDataModel():
+    model = MatrixPreferenceDataModel(movies)
+    model.remove_preference('Maria Gabriela','Superman Returns')
+    assert_array_equal(np.nan,model.preference_value('Maria Gabriela','Superman Returns'))
+    assert_raises(ItemNotFoundError,model.remove_preference,'Marcel Caraciolo','Indiana Jones')
