@@ -28,6 +28,7 @@ def find_common_elements(source_preferences, target_preferences):
 ###############################################################################
 # User Similarity
 
+
 class UserSimilarity(BaseSimilarity):
     '''
     Returns the degree of similarity, of two users, based on the their preferences.
@@ -56,6 +57,37 @@ class UserSimilarity(BaseSimilarity):
     get_similarities()
     Return similarity of the `source_id` to all sources in the model.
 
+    Examples
+    ---------
+    >>> from scikits.crab.models.data_models import DictPreferenceDataModel
+    >>> from scikits.crab.metrics.pairwise import cosine_distances
+    >>> from scikits.crab.similarities.basic_similarities import UserSimilarity
+    >>> movies = {'Marcel Caraciolo': {'Lady in the Water': 2.5, \
+     'Snakes on a Plane': 3.5, \
+     'Just My Luck': 3.0, 'Superman Returns': 3.5, 'You, Me and Dupree': 2.5, \
+     'The Night Listener': 3.0}, \
+     'Paola Pow': {'Lady in the Water': 3.0, 'Snakes on a Plane': 3.5, \
+     'Just My Luck': 1.5, 'Superman Returns': 5.0, 'The Night Listener': 3.0, \
+     'You, Me and Dupree': 3.5}, \
+    'Leopoldo Pires': {'Lady in the Water': 2.5, 'Snakes on a Plane': 3.0, \
+     'Superman Returns': 3.5, 'The Night Listener': 4.0}, \
+    'Lorena Abreu': {'Snakes on a Plane': 3.5, 'Just My Luck': 3.0, \
+     'The Night Listener': 4.5, 'Superman Returns': 4.0, \
+     'You, Me and Dupree': 2.5}, \
+    'Steve Gates': {'Lady in the Water': 3.0, 'Snakes on a Plane': 4.0, \
+     'Just My Luck': 2.0, 'Superman Returns': 3.0, 'The Night Listener': 3.0, \
+     'You, Me and Dupree': 2.0}, \
+    'Sheldom': {'Lady in the Water': 3.0, 'Snakes on a Plane': 4.0, \
+     'The Night Listener': 3.0, 'Superman Returns': 5.0, \
+     'You, Me and Dupree': 3.5}, \
+    'Penny Frewman': {'Snakes on a Plane':4.5,'You, Me and Dupree':1.0, \
+    'Superman Returns':4.0}, \
+    'Maria Gabriela': {}}
+    >>> model = DictPreferenceDataModel(movies)
+    >>> similarity = UserSimilarity(model, cosine_distances, 3)
+    >>> similarity['Marcel Caraciolo']
+    [('Marcel Caraciolo', array([[ 1.]])), ('Lorena Abreu', array([[ 0.98658676]])),\
+     ('Leopoldo Pires', array([[ 0.9859858]]))]
    '''
 
     def __init__(self, model, distance, num_best=None):
@@ -114,6 +146,37 @@ class ItemSimilarity(BaseSimilarity):
     get_similarities()
     Return similarity of the `source_id` to all sources in the model.
 
+    Examples
+    ---------
+    >>> from scikits.crab.models.data_models import DictPreferenceDataModel
+    >>> from scikits.crab.metrics.pairwise import cosine_distances
+    >>> from scikits.crab.similarities.basic_similarities import ItemSimilarity
+    >>> movies = {'Marcel Caraciolo': {'Lady in the Water': 2.5, \
+     'Snakes on a Plane': 3.5, \
+     'Just My Luck': 3.0, 'Superman Returns': 3.5, 'You, Me and Dupree': 2.5, \
+     'The Night Listener': 3.0}, \
+     'Paola Pow': {'Lady in the Water': 3.0, 'Snakes on a Plane': 3.5, \
+     'Just My Luck': 1.5, 'Superman Returns': 5.0, 'The Night Listener': 3.0, \
+     'You, Me and Dupree': 3.5}, \
+    'Leopoldo Pires': {'Lady in the Water': 2.5, 'Snakes on a Plane': 3.0, \
+     'Superman Returns': 3.5, 'The Night Listener': 4.0}, \
+    'Lorena Abreu': {'Snakes on a Plane': 3.5, 'Just My Luck': 3.0, \
+     'The Night Listener': 4.5, 'Superman Returns': 4.0, \
+     'You, Me and Dupree': 2.5}, \
+    'Steve Gates': {'Lady in the Water': 3.0, 'Snakes on a Plane': 4.0, \
+     'Just My Luck': 2.0, 'Superman Returns': 3.0, 'The Night Listener': 3.0, \
+     'You, Me and Dupree': 2.0}, \
+    'Sheldom': {'Lady in the Water': 3.0, 'Snakes on a Plane': 4.0, \
+     'The Night Listener': 3.0, 'Superman Returns': 5.0, \
+     'You, Me and Dupree': 3.5}, \
+    'Penny Frewman': {'Snakes on a Plane':4.5,'You, Me and Dupree':1.0, \
+    'Superman Returns':4.0}, \
+    'Maria Gabriela': {}}
+    >>> model = DictPreferenceDataModel(movies)
+    >>> similarity = ItemSimilarity(model, cosine_distances, 3)
+    >>> similarity['The Night Listener']
+    [('The Night Listener', array([[ 1.]])), ('Lady in the Water', array([[ 0.98188311]])), \
+            ('Just My Luck', array([[ 0.97489347]]))]
     '''
 
     def __init__(self, model, distance, numBest=None):
@@ -125,7 +188,7 @@ class ItemSimilarity(BaseSimilarity):
 
         #print source_preferences, target_preferences
 
-        src, tgt = find_common_elements(source_preferences, target_preferences, 'user_ids')
+        src, tgt = find_common_elements(source_preferences, target_preferences)
 
         #Evaluate the similarity between the two users vectors.
         return self.distance(src, tgt) if not src.shape[1] == 0 and not tgt.shape[1] == 0 else np.array([[np.nan]])
