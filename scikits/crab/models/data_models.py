@@ -161,8 +161,12 @@ class DictPreferenceDataModel(BaseDataModel):
         self.max_pref = -np.inf
         self.min_pref = np.inf
 
+        #Efficiency must be rewritten
         self.dataset_T = {}
-        for user in self._user_ids:
+        for userno, user in enumerate(self._user_ids):
+            if userno % 2 == 0:
+                logger.debug("PROGRESS: at user_id #%i/%i" %  \
+                    (userno, len(self._user_ids)))
             for item in self.dataset[user]:
                 self.dataset_T.setdefault(item, {})
                 self.dataset_T[item][user] = self.dataset[user][item]
@@ -210,8 +214,7 @@ class DictPreferenceDataModel(BaseDataModel):
         else:
             user_preferences.sort(key=lambda user_pref: user_pref[0])
 
-        return np.asanyarray(user_preferences, dtype=[('item_ids', (str, 35)),\
-                    ('preferences', float)])
+        return user_preferences
 
     def items_from_user(self, user_id):
         '''
@@ -243,8 +246,7 @@ class DictPreferenceDataModel(BaseDataModel):
         else:
             item_preferences.sort(key=lambda item_pref: item_pref[0])
 
-        return np.asanyarray(item_preferences, \
-                dtype=[('user_ids', (str, 35)), ('preferences', float)])
+        return item_preferences
 
     def preference_value(self, user_id, item_id):
         '''
@@ -366,6 +368,51 @@ class MatrixPreferenceDataModel(BaseDataModel):
     ----------
     dataset dict, shape  = {userID:{itemID:preference, itemID2:preference2},
               userID2:{itemID:preference3,itemID4:preference5}}
+
+    Examples
+    ---------
+    >>> from scikits.crab.models.data_models import MatrixPreferenceDataModel
+    >>> model = MatrixPreferenceDataModel({})
+    >>> #empty dataset
+    >>> model.user_ids()
+    array([], dtype=float64)
+    >>> model.item_ids()
+    array([], dtype=float64)
+    >>> movies = {'Marcel Caraciolo': {'Lady in the Water': 2.5, \
+     'Snakes on a Plane': 3.5, \
+     'Just My Luck': 3.0, 'Superman Returns': 3.5, 'You, Me and Dupree': 2.5, \
+     'The Night Listener': 3.0}, \
+     'Paola Pow': {'Lady in the Water': 3.0, 'Snakes on a Plane': 3.5, \
+     'Just My Luck': 1.5, 'Superman Returns': 5.0, 'The Night Listener': 3.0, \
+     'You, Me and Dupree': 3.5}, \
+    'Leopoldo Pires': {'Lady in the Water': 2.5, 'Snakes on a Plane': 3.0, \
+     'Superman Returns': 3.5, 'The Night Listener': 4.0}, \
+    'Lorena Abreu': {'Snakes on a Plane': 3.5, 'Just My Luck': 3.0, \
+     'The Night Listener': 4.5, 'Superman Returns': 4.0, \
+     'You, Me and Dupree': 2.5}, \
+    'Steve Gates': {'Lady in the Water': 3.0, 'Snakes on a Plane': 4.0, \
+     'Just My Luck': 2.0, 'Superman Returns': 3.0, 'The Night Listener': 3.0, \
+     'You, Me and Dupree': 2.0}, \
+    'Sheldom': {'Lady in the Water': 3.0, 'Snakes on a Plane': 4.0, \
+     'The Night Listener': 3.0, 'Superman Returns': 5.0, \
+     'You, Me and Dupree': 3.5}, \
+    'Penny Frewman': {'Snakes on a Plane':4.5,'You, Me and Dupree':1.0, \
+    'Superman Returns':4.0}, \
+    'Maria Gabriela': {}}
+    >>> model = MatrixPreferenceDataModel(movies)
+    >>> #non-empty dataset
+    >>> model.user_ids()
+    array(['Leopoldo Pires', 'Lorena Abreu', 'Marcel Caraciolo',
+               'Maria Gabriela', 'Paola Pow', 'Penny Frewman', 'Sheldom',
+               'Steve Gates'],
+              dtype='|S16')
+    >>> model.item_ids()
+    array(['Just My Luck', 'Lady in the Water', 'Snakes on a Plane',
+               'Superman Returns', 'The Night Listener', 'You, Me and Dupree'],
+              dtype='|S18')
+    >>> model.preferences_from_user('Sheldom')
+    [('Lady in the Water', 3.0), ('Snakes on a Plane', 4.0), ('Superman Returns', 5.0),
+        ('The Night Listener', 3.0), ('You, Me and Dupree', 3.5)]
     '''
     def __init__(self, dataset):
         BaseDataModel.__init__(self)
@@ -561,7 +608,8 @@ class MatrixPreferenceDataModel(BaseDataModel):
 
         return self.index[user_id_loc, item_id_loc].flatten()[0]
 
-    def set_preference(self, user_id, item_id, value):
+    def set_preference(self, user_id, item_id, value
+    ):
         '''
         Returns
         --------
