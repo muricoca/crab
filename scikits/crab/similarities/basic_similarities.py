@@ -1,6 +1,6 @@
 #-*- coding:utf-8 -*-
 
-""" 
+"""
 This module contains functions and classes for computing similarities across
 a collection of vectors.
 """
@@ -11,140 +11,194 @@ a collection of vectors.
 import numpy as np
 from base import BaseSimilarity
 
-def find_common_elements(source_preferences,target_preferences,dtype):
-  ''' Returns the preferences from both vectors '''
-  src = source_preferences[dtype]
-  tgt = target_preferences[dtype]
 
-  inter = np.intersect1d(src,tgt)
+def find_common_elements(source_preferences, target_preferences):
+    ''' Returns the preferences from both vectors '''
+    src = dict(source_preferences)
+    tgt = dict(target_preferences)
+    inter = np.intersect1d(src.keys(), tgt.keys())
 
-  src_final = []
-  tgt_final = []
-
-  for item,pref in source_preferences:
-      if item in inter:
-          src_final.append(pref)
-  
-  for item,pref in target_preferences:
-      if item in inter:
-          tgt_final.append(pref)
-  
-  return np.asarray([src_final]), np.asarray([tgt_final])        
-
+    common_preferences = zip(*[(src[item], tgt[item]) for item in inter \
+            if not np.isnan(src[item]) and not np.isnan(tgt[item])])
+    if common_preferences:
+        return np.asarray([common_preferences[0]]), np.asarray([common_preferences[1]])
+    else:
+        return np.asarray([[]]), np.asarray([[]])
 
 ###############################################################################
 # User Similarity
 
+
 class UserSimilarity(BaseSimilarity):
-   '''
+    '''
     Returns the degree of similarity, of two users, based on the their preferences.
-    Implementations of this class define a notion of similarity between two users. 
-    Implementations should  return values in the range 0.0 to 1.0, with 1.0 representing 
+    Implementations of this class define a notion of similarity between two users.
+    Implementations should  return values in the range 0.0 to 1.0, with 1.0 representing
     perfect similarity.
-    
-    
+
     Parameters
     ----------
-    
     `model`:  DataModel
          Defines the data model where data is fetched.
-    `distance`: Function 
+    `distance`: Function
          Pairwise Function between two vectors.
      `num_best`: int
          If it is left unspecified, similarity queries return a full list (one
          float for every item in the model, including the query item).
 
          If `num_best` is set, queries return `num_best` most similar items, as a
-         sorted list.              
+         sorted list.
 
     Methods
     ---------
-    
-    get_similarity() 
-    Return similarity of the `source_id` to a specific `target_id` in the model.        
-    
+    get_similarity()
+    Return similarity of the `source_id` to a specific `target_id` in the model.
+
     get_similarities()
     Return similarity of the `source_id` to all sources in the model.
-    
+
+    Examples
+    ---------
+    >>> from scikits.crab.models.data_models import DictPreferenceDataModel
+    >>> from scikits.crab.metrics.pairwise import cosine_distances
+    >>> from scikits.crab.similarities.basic_similarities import UserSimilarity
+    >>> movies = {'Marcel Caraciolo': {'Lady in the Water': 2.5, \
+     'Snakes on a Plane': 3.5, \
+     'Just My Luck': 3.0, 'Superman Returns': 3.5, 'You, Me and Dupree': 2.5, \
+     'The Night Listener': 3.0}, \
+     'Paola Pow': {'Lady in the Water': 3.0, 'Snakes on a Plane': 3.5, \
+     'Just My Luck': 1.5, 'Superman Returns': 5.0, 'The Night Listener': 3.0, \
+     'You, Me and Dupree': 3.5}, \
+    'Leopoldo Pires': {'Lady in the Water': 2.5, 'Snakes on a Plane': 3.0, \
+     'Superman Returns': 3.5, 'The Night Listener': 4.0}, \
+    'Lorena Abreu': {'Snakes on a Plane': 3.5, 'Just My Luck': 3.0, \
+     'The Night Listener': 4.5, 'Superman Returns': 4.0, \
+     'You, Me and Dupree': 2.5}, \
+    'Steve Gates': {'Lady in the Water': 3.0, 'Snakes on a Plane': 4.0, \
+     'Just My Luck': 2.0, 'Superman Returns': 3.0, 'The Night Listener': 3.0, \
+     'You, Me and Dupree': 2.0}, \
+    'Sheldom': {'Lady in the Water': 3.0, 'Snakes on a Plane': 4.0, \
+     'The Night Listener': 3.0, 'Superman Returns': 5.0, \
+     'You, Me and Dupree': 3.5}, \
+    'Penny Frewman': {'Snakes on a Plane':4.5,'You, Me and Dupree':1.0, \
+    'Superman Returns':4.0}, \
+    'Maria Gabriela': {}}
+    >>> model = DictPreferenceDataModel(movies)
+    >>> similarity = UserSimilarity(model, cosine_distances, 3)
+    >>> similarity['Marcel Caraciolo']
+    [('Marcel Caraciolo', array([[ 1.]])), ('Lorena Abreu', array([[ 0.98658676]])),\
+     ('Leopoldo Pires', array([[ 0.9859858]]))]
    '''
-   def __init__(self,model,distance,num_best=None):
-       BaseSimilarity.__init__(self,model,distance,num_best)
-   
-   def get_similarity(self,source_id,target_id):
-       source_preferences = self.model.preferences_from_user(source_id)
-       target_preferences = self.model.preferences_from_user(target_id)
 
-       src,tgt = find_common_elements(source_preferences,target_preferences,'item_ids')
+    def __init__(self, model, distance, num_best=None):
+        BaseSimilarity.__init__(self, model, distance, num_best)
 
-       #evaluate the similarity between the two users vectors.
-       return self.distance(src,tgt) if not src.shape[1] == 0 and not tgt.shape[1] == 0 else np.array([[np.nan]])
+    def get_similarity(self, source_id, target_id):
+        source_preferences = self.model.preferences_from_user(source_id)
+        target_preferences = self.model.preferences_from_user(target_id)
 
-   def get_similarities(self,source_id):
-       return[ (other_id,self.get_similarity(source_id,other_id))  for other_id,v in self.model] 
+        src, tgt = find_common_elements(source_preferences, target_preferences)
 
-   def __iter__(self):
-       """
-       For each object in model, compute the similarity function against all other objects and yield the result. 
-       """
-       for source_id,preferences in self.model:
-           yield source_id,self[source_id]
+        #evaluate the similarity between the two users vectors.
+        return self.distance(src, tgt) if not src.shape[1] == 0 and not tgt.shape[1] == 0 else np.array([[np.nan]])
+
+    def get_similarities(self, source_id):
+        return[(other_id, self.get_similarity(source_id, other_id))  for other_id, v in self.model]
+
+    def __iter__(self):
+        """
+        For each object in model, compute the similarity function against all other objects and yield the result.
+        """
+        for source_id, preferences in self.model:
+            yield source_id, self[source_id]
 
 ###############################################################################
 # Item Similarity
 
+
 class ItemSimilarity(BaseSimilarity):
     '''
     Returns the degree of similarity, of two items, based on its preferences by the users.
-    Implementations of this class define a notion of similarity between two items. 
-    Implementations should  return values in the range 0.0 to 1.0, with 1.0 representing 
+    Implementations of this class define a notion of similarity between two items.
+    Implementations should  return values in the range 0.0 to 1.0, with 1.0 representing
     perfect similarity.
-    
+
     Parameters
     ----------
-    
+
     `model`:  DataModel
          Defines the data model where data is fetched.
-    `distance`: Function 
+    `distance`: Function
          Pairwise Function between two vectors.
      `num_best`: int
          If it is left unspecified, similarity queries return a full list (one
          float for every item in the model, including the query item).
 
          If `num_best` is set, queries return `num_best` most similar items, as a
-         sorted list.              
+         sorted list.
 
     Methods
     ---------
-    
-    get_similarity() 
-    Return similarity of the `source_id` to a specific `target_id` in the model.        
-    
+
+    get_similarity()
+    Return similarity of the `source_id` to a specific `target_id` in the model.
+
     get_similarities()
     Return similarity of the `source_id` to all sources in the model.
-    
+
+    Examples
+    ---------
+    >>> from scikits.crab.models.data_models import DictPreferenceDataModel
+    >>> from scikits.crab.metrics.pairwise import cosine_distances
+    >>> from scikits.crab.similarities.basic_similarities import ItemSimilarity
+    >>> movies = {'Marcel Caraciolo': {'Lady in the Water': 2.5, \
+     'Snakes on a Plane': 3.5, \
+     'Just My Luck': 3.0, 'Superman Returns': 3.5, 'You, Me and Dupree': 2.5, \
+     'The Night Listener': 3.0}, \
+     'Paola Pow': {'Lady in the Water': 3.0, 'Snakes on a Plane': 3.5, \
+     'Just My Luck': 1.5, 'Superman Returns': 5.0, 'The Night Listener': 3.0, \
+     'You, Me and Dupree': 3.5}, \
+    'Leopoldo Pires': {'Lady in the Water': 2.5, 'Snakes on a Plane': 3.0, \
+     'Superman Returns': 3.5, 'The Night Listener': 4.0}, \
+    'Lorena Abreu': {'Snakes on a Plane': 3.5, 'Just My Luck': 3.0, \
+     'The Night Listener': 4.5, 'Superman Returns': 4.0, \
+     'You, Me and Dupree': 2.5}, \
+    'Steve Gates': {'Lady in the Water': 3.0, 'Snakes on a Plane': 4.0, \
+     'Just My Luck': 2.0, 'Superman Returns': 3.0, 'The Night Listener': 3.0, \
+     'You, Me and Dupree': 2.0}, \
+    'Sheldom': {'Lady in the Water': 3.0, 'Snakes on a Plane': 4.0, \
+     'The Night Listener': 3.0, 'Superman Returns': 5.0, \
+     'You, Me and Dupree': 3.5}, \
+    'Penny Frewman': {'Snakes on a Plane':4.5,'You, Me and Dupree':1.0, \
+    'Superman Returns':4.0}, \
+    'Maria Gabriela': {}}
+    >>> model = DictPreferenceDataModel(movies)
+    >>> similarity = ItemSimilarity(model, cosine_distances, 3)
+    >>> similarity['The Night Listener']
+    [('The Night Listener', array([[ 1.]])), ('Lady in the Water', array([[ 0.98188311]])), \
+            ('Just My Luck', array([[ 0.97489347]]))]
     '''
 
-    def __init__ (self,model,distance,numBest=None):
-        BaseSimilarity.__init__(self,model,distance,numBest)
+    def __init__(self, model, distance, numBest=None):
+        BaseSimilarity.__init__(self, model, distance, numBest)
 
-    def get_similarity(self,source_id,target_id):
+    def get_similarity(self, source_id, target_id):
         source_preferences = self.model.preferences_for_item(source_id)
         target_preferences = self.model.preferences_for_item(target_id)
 
         #print source_preferences, target_preferences
 
-        src,tgt = find_common_elements(source_preferences,target_preferences,'user_ids')
+        src, tgt = find_common_elements(source_preferences, target_preferences)
 
-        #Evaluate the similarity between the two users vectors. 
-        return self.distance(src,tgt) if not src.shape[1] == 0 and not tgt.shape[1] == 0 else np.array([[np.nan]])
+        #Evaluate the similarity between the two users vectors.
+        return self.distance(src, tgt) if not src.shape[1] == 0 and not tgt.shape[1] == 0 else np.array([[np.nan]])
 
-    def get_similarities(self,source_id):
-        return [ (other_id,self.get_similarity(source_id,other_id)) for other_id in self.model.item_ids() ]
-
+    def get_similarities(self, source_id):
+        return [(other_id, self.get_similarity(source_id, other_id)) for other_id in self.model.item_ids()]
 
     def __iter__(self):
         """
-        For each object in model, compute the similarity function against all other objects and yield the result. 
+        For each object in model, compute the similarity function against all other objects and yield the result.
         """
         for item_id in self.model.item_ids():
             yield item_id, self[item_id]

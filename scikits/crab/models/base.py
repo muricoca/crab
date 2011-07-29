@@ -8,6 +8,7 @@ Base Data Models.
 
 
 class BaseDataModel(object):
+
     def user_ids(self):
         '''
         Return all user ids in the model, in order
@@ -49,10 +50,9 @@ class BaseDataModel(object):
 
     def preference_time(self, user_id, item_id):
         '''
-        Retrieves the time at which a preference value from a user and item was
-        set, if known.
-        Time is expressed in the usual way, as a number of milliseconds since
-        the epoch.
+        Retrieves the time at which a preference value from a user and item
+        was set, if known. Time is expressed in the usual way, as a number
+        of milliseconds since the epoch.
         '''
         raise NotImplementedError("cannot instantiate Abstract Base Class")
 
@@ -82,8 +82,8 @@ class BaseDataModel(object):
 
     def has_preference_values(self):
         '''
-        Return True if this implementation actually it is not a 'boolean' data
-        model, otherwise returns False.
+        Return True if this implementation actually it is not a 'boolean'
+        data model, otherwise returns False.
         '''
         raise NotImplementedError("cannot instantiate Abstract Base Class")
 
