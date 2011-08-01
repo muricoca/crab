@@ -1,8 +1,8 @@
 """
-Generalized Recommender models.
+Generalized Recommender models amd utility classes.
 
 This module contains basic memory recommender interfaces used throughout
-the whole scikit-crab package.
+the whole scikit-crab package as also utility classes.
 
 The interfaces are realized as abstract base classes (ie., some optional
 functionality is provided in the interface itself, so that the interfaces
@@ -14,13 +14,13 @@ can be subclassed).
 #
 # License: BSD Style.
 
-from ..base import MemoryRecommender
+from ..base import MemoryBasedRecommender
 
 #===========================
 #Item-based Recommender Interface
 
 
-class ItemRecommender(MemoryRecommender):
+class ItemRecommender(MemoryBasedRecommender):
 
     def most_similar_items(item_id, how_many):
         '''
@@ -65,7 +65,7 @@ class ItemRecommender(MemoryRecommender):
 #User-based Recommender Interface
 
 
-class UserRecommender(MemoryRecommender):
+class UserRecommender(MemoryBasedRecommender):
 
     def most_similar_users(user_id, how_many):
         '''
@@ -81,3 +81,32 @@ class UserRecommender(MemoryRecommender):
             Desired number of most similar users to find
         '''
         raise NotImplementedError("UserRecommender is an abstract class.")
+
+
+#===========================
+# Base Item Candidate Strategy
+
+
+class BaseCandidateItemsStrategy(object):
+    '''
+    Base implementation for retrieving
+    all items that could possibly be recommended to the user
+    '''
+
+    def candidate_items(user_id, preferences_from_user, data_model):
+        '''
+        Return the candidate items that could possibly be recommended to the user
+
+        Parameters
+        -----------
+        user_id:  int or string
+            ID of user for which to find most similar other users
+
+        preferences_from_user: array, shape = [(item_id,score)]
+                               where score: float and item_id: id or string
+            Possible candidates
+
+        data_model: The data model that will be the source for the possible
+            candidates.
+        '''
+        raise NotImplementedError("BaseCandidateItemsStrategy is an abstract class.")

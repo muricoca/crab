@@ -20,5 +20,5 @@ from ..base import BaseRecommender
 #Memory Based Recommender
 
 
-class MemoryRecommender(BaseRecommender):
+class MemoryBasedRecommender(BaseRecommender):
     pass
