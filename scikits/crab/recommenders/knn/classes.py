@@ -37,7 +37,7 @@ class ItemBasedRecommender(ItemRecommender):
 
     Attributes
     -----------
-    `data_model`: The data model instance that will be data source
+    `model`: The data model instance that will be data source
          for the recommender.
 
     `similarity`: The Item Similarity instance that will be used to
@@ -58,13 +58,13 @@ class ItemBasedRecommender(ItemRecommender):
 
     """
 
-    def __init__(self, data_model, similarity, iss=None):
-        ItemRecommender.__init__(self, data_model)
+    def __init__(self, model, similarity, items_selection_strategy=None):
+        ItemRecommender.__init__(self, model)
         self.similarity = similarity
-        if self.items_selection_strategy is None:
+        if items_selection_strategy is None:
             self.items_selection_strategy = ItemsNeighborhoodStrategy()
         else:
-            self.items_selection_strategy = iss
+            self.items_selection_strategy = items_selection_strategy
 
     def recommend(self, user_id, how_many, **params):
         '''
@@ -82,15 +82,25 @@ class ItemBasedRecommender(ItemRecommender):
                  recommendations.
 
         '''
-        pass
 
-    def estimate_preference(self, **params):
+        self._set_params(**params)
+
+        candidate_items = self.all_other_items(user_id)
+
+        recommendable_items = None
+
+        return recommendable_items
+
+    def estimate_preference(self, user_id, item_id, **params):
         '''
         Return an estimated preference if the user has not expressed a
         preference for the item, or else the user's actual preference for the
         item. If a preference cannot be estimated, returns None.
         '''
-        pass
+        preference = self.model.preference_value(user_id, item_id)
+
+        if preference is not None:
+            return preference
 
     def all_other_items(self, user_id, **params):
         '''
@@ -103,7 +113,7 @@ class ItemBasedRecommender(ItemRecommender):
                  User for which recommendations are to be computed.
         '''
         return self.items_selection_strategy.candidate_items(user_id, \
-                            self.data_model)
+                            self.model)
 
     def most_similar_items(item_id, how_many):
         '''
