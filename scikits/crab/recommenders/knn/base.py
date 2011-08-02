@@ -93,7 +93,7 @@ class BaseCandidateItemsStrategy(object):
     all items that could possibly be recommended to the user
     '''
 
-    def candidate_items(user_id, preferences_from_user, data_model):
+    def candidate_items(user_id, data_model, **params):
         '''
         Return the candidate items that could possibly be recommended to the user
 
@@ -102,11 +102,7 @@ class BaseCandidateItemsStrategy(object):
         user_id:  int or string
             ID of user for which to find most similar other users
 
-        preferences_from_user: array, shape = [(item_id,score)]
-                               where score: float and item_id: id or string
-            Possible candidates
-
         data_model: The data model that will be the source for the possible
-            candidates.
+            candidates
         '''
         raise NotImplementedError("BaseCandidateItemsStrategy is an abstract class.")
