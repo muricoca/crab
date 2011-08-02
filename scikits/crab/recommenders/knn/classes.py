@@ -92,9 +92,9 @@ class ItemBasedRecommender(ItemRecommender):
         '''
         pass
 
-    def all_other_items(self, user_id):
+    def all_other_items(self, user_id, **params):
         '''
-        Return all items in the `model` for which the user has not expressed
+        Return items in the `model` for which the user has not expressed
         the preference and could possibly be recommended to the user.
 
         Parameters
@@ -102,7 +102,8 @@ class ItemBasedRecommender(ItemRecommender):
         user_id: int or string
                  User for which recommendations are to be computed.
         '''
-        pass
+        return self.items_selection_strategy.candidate_items(user_id, \
+                            self.data_model)
 
     def most_similar_items(item_id, how_many):
         '''
@@ -119,7 +120,7 @@ class ItemBasedRecommender(ItemRecommender):
         '''
         pass
 
-    def recommended_because(user_id, item_id, how_many):
+    def recommended_because(user_id, item_id, how_many, **params):
         '''
         Returns the items that were most influential in recommending a given item
         to a given user. In most implementations, this method will return items

@@ -37,7 +37,7 @@ class ItemRecommender(MemoryBasedRecommender):
         '''
         raise NotImplementedError("ItemRecommender is an abstract class.")
 
-    def recommended_because(user_id, item_id, how_many):
+    def recommended_because(user_id, item_id, how_many, **params):
         '''
         Returns the items that were most influential in recommending a given item
         to a given user. In most implementations, this method will return items

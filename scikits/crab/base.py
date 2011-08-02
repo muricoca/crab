@@ -53,7 +53,7 @@ class BaseRecommender(BaseEstimator):
         '''
         raise NotImplementedError("BaseRecommender is an abstract class.")
 
-    def all_other_items(self, user_id):
+    def all_other_items(self, user_id, **params):
         '''
         Return all items in the `model` for which the user has not expressed
         the preference and could possibly be recommended to the user.
