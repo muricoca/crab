@@ -65,3 +65,79 @@ class ItemBasedRecommender(ItemRecommender):
             self.items_selection_strategy = ItemsNeighborhoodStrategy()
         else:
             self.items_selection_strategy = iss
+
+    def recommend(self, user_id, how_many, **params):
+        '''
+        Return a list of recommended items, ordered from most strongly
+        recommend to least.
+
+        Parameters
+        ----------
+        user_id: int or string
+                 User for which recommendations are to be computed.
+        how_many: int
+                 Desired number of recommendations
+        rescorer:  function, optional
+                 Rescoring function to apply before final list of
+                 recommendations.
+
+        '''
+        pass
+
+    def estimate_preference(self, **params):
+        '''
+        Return an estimated preference if the user has not expressed a
+        preference for the item, or else the user's actual preference for the
+        item. If a preference cannot be estimated, returns None.
+        '''
+        pass
+
+    def all_other_items(self, user_id):
+        '''
+        Return all items in the `model` for which the user has not expressed
+        the preference and could possibly be recommended to the user.
+
+        Parameters
+        ----------
+        user_id: int or string
+                 User for which recommendations are to be computed.
+        '''
+        pass
+
+    def most_similar_items(item_id, how_many):
+        '''
+        Return the most similar items to the given item, ordered
+        from most similar to least.
+
+        Parameters
+        -----------
+        item_id:  int or string
+            ID of item for which to find most similar other items
+
+        how_many: int
+            Desired number of most similar items to find
+        '''
+        pass
+
+    def recommended_because(user_id, item_id, how_many):
+        '''
+        Returns the items that were most influential in recommending a given item
+        to a given user. In most implementations, this method will return items
+        that the user prefers and that are similar to the given item.
+
+        Parameters
+        -----------
+        user_id : int or string
+            ID of the user who was recommended the item
+
+        item_id: int or string
+            ID of item that was recommended
+
+        how_many: int
+            Maximum number of items to return.
+
+        Returns
+        ----------
+        The list of items ordered from most influential in recommended the given item to least
+        '''
+        pass
