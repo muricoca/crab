@@ -25,7 +25,7 @@ movies = {'Marcel Caraciolo': {'Lady in the Water': 2.5, 'Snakes on a Plane': 3.
 'Maria Gabriela': {}}
 
 
-def test_create_ItemBasedRecommender(self):
+def test_create_ItemBasedRecommender():
     pass
 
 
