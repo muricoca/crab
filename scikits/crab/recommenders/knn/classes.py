@@ -16,6 +16,7 @@ can be subclassed).
 
 from base import ItemRecommender
 from item_strategies import ItemsNeighborhoodStrategy
+import numpy as np
 
 
 class ItemBasedRecommender(ItemRecommender):
@@ -47,6 +48,10 @@ class ItemBasedRecommender(ItemRecommender):
          can choose for selecting the possible items to recommend.
          default = ItemsNeighborhoodStrategy
 
+    `capper`: bool (default=True)
+        Cap the preferences with maximum and minimum preferences
+        in the model.
+
     Examples
     -----------
 
@@ -58,9 +63,11 @@ class ItemBasedRecommender(ItemRecommender):
 
     """
 
-    def __init__(self, model, similarity, items_selection_strategy=None):
+    def __init__(self, model, similarity, items_selection_strategy=None,
+                capper=True):
         ItemRecommender.__init__(self, model)
         self.similarity = similarity
+        self.capper = capper
         if items_selection_strategy is None:
             self.items_selection_strategy = ItemsNeighborhoodStrategy()
         else:
@@ -93,14 +100,48 @@ class ItemBasedRecommender(ItemRecommender):
 
     def estimate_preference(self, user_id, item_id, **params):
         '''
+        Returns
+        -------
         Return an estimated preference if the user has not expressed a
         preference for the item, or else the user's actual preference for the
         item. If a preference cannot be estimated, returns None.
         '''
         preference = self.model.preference_value(user_id, item_id)
-
-        if preference is not None:
+        if not np.isnan(preference):
             return preference
+
+        #TODO: It needs optimization
+        prefs = self.model.preferences_from_user(user_id)
+        similarities = \
+            np.array([self.similarity.get_similarity(item_id, to_item_id) \
+            for to_item_id, pref in prefs if to_item_id != item_id]).flatten()
+
+        prefs = np.array([pref for it, pref in prefs])
+        prefs_sim = np.sum(prefs[~np.isnan(similarities)] *
+                             similarities[~np.isnan(similarities)])
+        total_similarity = np.sum(similarities)
+
+        #Throw out the estimate if it was based on no data points,
+        #of course, but also if based on
+        #just one. This is a bit of a band-aid on the 'stock'
+        #item-based algorithm for the moment.
+        #The reason is that in this case the estimate is, simply,
+        #the user's rating for one item
+        #that happened to have a defined similarity.
+        #The similarity score doesn't matter, and that
+        #seems like a bad situation.
+        if total_similarity == 0.0 or \
+           not similarities[~np.isnan(similarities)].size:
+            return np.nan
+
+        estimated = prefs_sim / total_similarity
+
+        if self.capper:
+            max_p = self.model.maximum_preference_value()
+            min_p = self.model.minimum_preference_value()
+            estimated = max_p if estimated > max_p else min_p \
+                     if estimated < min_p else estimated
+        return estimated
 
     def all_other_items(self, user_id, **params):
         '''
@@ -132,9 +173,10 @@ class ItemBasedRecommender(ItemRecommender):
 
     def recommended_because(user_id, item_id, how_many, **params):
         '''
-        Returns the items that were most influential in recommending a given item
-        to a given user. In most implementations, this method will return items
-        that the user prefers and that are similar to the given item.
+        Returns the items that were most influential in recommending a
+        given item to a given user. In most implementations, this
+        method will return items that the user prefers and that
+        are similar to the given item.
 
         Parameters
         -----------
@@ -149,6 +191,7 @@ class ItemBasedRecommender(ItemRecommender):
 
         Returns
         ----------
-        The list of items ordered from most influential in recommended the given item to least
+        The list of items ordered from most influential in
+        recommended the given item to least
         '''
         pass

@@ -29,9 +29,6 @@ class BaseRecommender(BaseEstimator):
 
     def recommend(self, user_id, how_many, **params):
         '''
-        Return a list of recommended items, ordered from most strongly
-        recommend to least.
-
         Parameters
         ----------
         user_id: int or string
@@ -42,11 +39,26 @@ class BaseRecommender(BaseEstimator):
                  Rescoring function to apply before final list of
                  recommendations.
 
+        Returns
+        ---------
+        Return a list of recommended items, ordered from most strongly
+        recommend to least.
+
         '''
         raise NotImplementedError("BaseRecommender is an abstract class.")
 
-    def estimate_preference(self, **params):
+    def estimate_preference(self, user_id, item_id, **params):
         '''
+        Parameters
+        ----------
+        user_id: int or string
+                 User for which recommendations are to be computed.
+
+        item_id: int or string
+                Item for which recommendations are to be computed.
+
+        Returns
+        -------
         Return an estimated preference if the user has not expressed a
         preference for the item, or else the user's actual preference for the
         item. If a preference cannot be estimated, returns None.
@@ -55,13 +67,15 @@ class BaseRecommender(BaseEstimator):
 
     def all_other_items(self, user_id, **params):
         '''
-        Return all items in the `model` for which the user has not expressed
-        the preference and could possibly be recommended to the user.
-
         Parameters
         ----------
         user_id: int or string
                  User for which recommendations are to be computed.
+
+        Returns
+        --------
+        Return all items in the `model` for which the user has not expressed
+        the preference and could possibly be recommended to the user.
         '''
         raise NotImplementedError("BaseRecommender is an abstract class.")
 

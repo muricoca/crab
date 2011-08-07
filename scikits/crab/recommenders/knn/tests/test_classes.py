@@ -6,7 +6,8 @@ from ..item_strategies import ItemsNeighborhoodStrategy, AllPossibleItemsStrateg
 from ....similarities.basic_similarities import ItemSimilarity
 from ..classes import ItemBasedRecommender
 from ....models.utils import UserNotFoundError
-from ....metrics.pairwise import cosine_distances
+from ....metrics.pairwise import euclidean_distances
+
 
 movies = {'Marcel Caraciolo': {'Lady in the Water': 2.5, 'Snakes on a Plane': 3.5,
  'Just My Luck': 3.0, 'Superman Returns': 3.5, 'You, Me and Dupree': 2.5,
@@ -33,16 +34,17 @@ matrix_model = MatrixPreferenceDataModel(movies)
 
 def test_create_ItemBasedRecommender():
     items_strategy = AllPossibleItemsStrategy()
-    similarity = ItemSimilarity(dict_model, cosine_distances)
+    similarity = ItemSimilarity(dict_model, euclidean_distances)
     recsys = ItemBasedRecommender(dict_model, similarity, items_strategy)
     assert_equals(recsys.similarity, similarity)
     assert_equals(recsys.items_selection_strategy, items_strategy)
     assert_equals(recsys.model, dict_model)
+    assert_equals(recsys.capper, True)
 
 
 def test_all_other_items_ItemBasedRecommender():
     items_strategy = AllPossibleItemsStrategy()
-    similarity = ItemSimilarity(dict_model, cosine_distances)
+    similarity = ItemSimilarity(dict_model, euclidean_distances)
     recsys = ItemBasedRecommender(dict_model, similarity, items_strategy)
 
     assert_array_equal(np.array(['Lady in the Water']), recsys.all_other_items('Lorena Abreu'))
@@ -53,9 +55,16 @@ def test_all_other_items_ItemBasedRecommender():
 
 def test_estimate_preference_ItemBasedRecommender():
     items_strategy = ItemsNeighborhoodStrategy()
-    similarity = ItemSimilarity(matrix_model, cosine_distances)
+    similarity = ItemSimilarity(matrix_model, euclidean_distances)
     recsys = ItemBasedRecommender(matrix_model, similarity, items_strategy)
     assert_almost_equals(3.5, recsys.estimate_preference('Marcel Caraciolo', 'Superman Returns'))
+    assert_almost_equals(3.14717875510, recsys.estimate_preference('Leopoldo Pires', 'You, Me and Dupree'))
+    #With capper = False
+    recsys = ItemBasedRecommender(matrix_model, similarity, items_strategy, False)
+    assert_almost_equals(3.14717875510, recsys.estimate_preference('Leopoldo Pires', 'You, Me and Dupree'))
+    #Non-Preferences
+    assert_array_equal(np.nan, recsys.estimate_preference('Maria Gabriela', 'You, Me and Dupree'))
+
 
 '''
 
