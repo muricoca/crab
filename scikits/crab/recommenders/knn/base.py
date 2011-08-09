@@ -83,6 +83,7 @@ class UserRecommender(MemoryBasedRecommender):
         raise NotImplementedError("UserRecommender is an abstract class.")
 
 
+
 #===========================
 # Base Item Candidate Strategy
 
