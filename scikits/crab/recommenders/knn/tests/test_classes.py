@@ -1,5 +1,5 @@
 import numpy as np
-from numpy.testing import assert_array_equal
+from numpy.testing import assert_array_equal, assert_array_almost_equal
 from nose.tools import assert_raises, assert_equals, assert_almost_equals
 from ....models.data_models import DictPreferenceDataModel, MatrixPreferenceDataModel
 from ..item_strategies import ItemsNeighborhoodStrategy, AllPossibleItemsStrategy
@@ -155,6 +155,72 @@ def test_recommend_ItemBasedRecommender():
 
     #with_preference
     #recsys = ItemBasedRecommender(dict_model, similarity, items_strategy, True, True)
-    #assert_array_equal(np.array([('Just My Luck', 3.20597319063), \
-    #            ('You, Me and Dupree', 3.14717875510)]), \
+    #assert_array_equal(np.array([('Just My Luck', 3.20597), \
+    #            ('You, Me and Dupree', 3.1471)]), \
     #            recsys.recommend('Leopoldo Pires'))
+
+def test_recommend_because_ItemBasedRecommender():
+    items_strategy = ItemsNeighborhoodStrategy()
+    similarity = ItemSimilarity(matrix_model, euclidean_distances)
+    #Full Recommendation Because
+    recsys = ItemBasedRecommender(matrix_model, similarity, items_strategy)
+    assert_array_equal(np.array(['The Night Listener', 'Superman Returns', \
+    'Snakes on a Plane', 'Lady in the Water']), \
+        recsys.recommended_because('Leopoldo Pires', 'Just My Luck'))
+    #over-items
+    recsys = ItemBasedRecommender(matrix_model, similarity, items_strategy)
+    assert_array_equal(np.array(['The Night Listener', 'Superman Returns', \
+    'Snakes on a Plane', 'Lady in the Water']), \
+        recsys.recommended_because('Leopoldo Pires', 'Just My Luck', 20))
+    #Semi
+    recsys = ItemBasedRecommender(matrix_model, similarity, items_strategy)
+    assert_array_equal(np.array(['The Night Listener', 'Superman Returns']), \
+        recsys.recommended_because('Leopoldo Pires', 'Just My Luck', 2))
+
+    #Non-Existing
+    recsys = ItemBasedRecommender(matrix_model, similarity, items_strategy)
+    assert_array_equal(np.array([]), \
+        recsys.recommended_because('Maria Gabriela', 'Just My Luck', 2))
+
+    #Non-Existing
+    recsys = ItemBasedRecommender(matrix_model, similarity, items_strategy)
+    assert_array_equal(np.array([]), \
+        recsys.recommended_because('Maria Gabriela', 'Just My Luck', 2))
+
+    #with_preference
+    recsys = ItemBasedRecommender(matrix_model, similarity, items_strategy, True, True)
+    assert_array_equal(np.array([('The Night Listener', 4.0), \
+                ('Superman Returns', 3.5)]), \
+                recsys.recommended_because('Leopoldo Pires', 'Just My Luck', 2))
+    #DictModel
+    similarity = ItemSimilarity(dict_model, euclidean_distances)
+    #Full Recommendation Because
+    recsys = ItemBasedRecommender(dict_model, similarity, items_strategy)
+    assert_array_equal(np.array(['The Night Listener', 'Superman Returns', \
+    'Snakes on a Plane', 'Lady in the Water']), \
+        recsys.recommended_because('Leopoldo Pires', 'Just My Luck'))
+    #over-items
+    recsys = ItemBasedRecommender(dict_model, similarity, items_strategy)
+    assert_array_equal(np.array(['The Night Listener', 'Superman Returns', \
+    'Snakes on a Plane', 'Lady in the Water']), \
+        recsys.recommended_because('Leopoldo Pires', 'Just My Luck', 20))
+    #Semi
+    recsys = ItemBasedRecommender(dict_model, similarity, items_strategy)
+    assert_array_equal(np.array(['The Night Listener', 'Superman Returns']), \
+        recsys.recommended_because('Leopoldo Pires', 'Just My Luck', 2))
+
+    #Non-Existing
+    recsys = ItemBasedRecommender(dict_model, similarity, items_strategy)
+    assert_array_equal(np.array([]), \
+        recsys.recommended_because('Maria Gabriela', 'Just My Luck', 2))
+
+    #Non-Existing
+    recsys = ItemBasedRecommender(dict_model, similarity, items_strategy)
+    assert_array_equal(np.array([]), \
+        recsys.recommended_because('Maria Gabriela', 'Just My Luck', 2))
+
+    #with_preference
+    recsys = ItemBasedRecommender(dict_model, similarity, items_strategy, True, True)
+    assert_array_equal(np.array([('The Night Listener', 4.0), \
+                ('Superman Returns', 3.5)]), \
+                recsys.recommended_because('Leopoldo Pires', 'Just My Luck', 2))
