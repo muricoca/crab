@@ -56,12 +56,53 @@ class ItemBasedRecommender(ItemRecommender):
 
     Examples
     -----------
+    >>> from scikits.crab.models.data_models import DictPreferenceDataModel
+    >>> from scikits.crab.recommenders.knn.classes import ItemBasedRecommender
+    >>> from scikits.crab.similarities.basic_similarities import ItemSimilarity
+    >>> from scikits.crab.recommenders.knn.item_strategies import ItemsNeighborhoodStrategy
+    >>> from scikits.crab.metrics.pairwise import euclidean_distances
+    >>> movies = {'Marcel Caraciolo': {'Lady in the Water': 2.5, \
+     'Snakes on a Plane': 3.5, \
+     'Just My Luck': 3.0, 'Superman Returns': 3.5, 'You, Me and Dupree': 2.5, \
+     'The Night Listener': 3.0}, \
+     'Paola Pow': {'Lady in the Water': 3.0, 'Snakes on a Plane': 3.5, \
+     'Just My Luck': 1.5, 'Superman Returns': 5.0, 'The Night Listener': 3.0, \
+     'You, Me and Dupree': 3.5}, \
+    'Leopoldo Pires': {'Lady in the Water': 2.5, 'Snakes on a Plane': 3.0, \
+     'Superman Returns': 3.5, 'The Night Listener': 4.0}, \
+    'Lorena Abreu': {'Snakes on a Plane': 3.5, 'Just My Luck': 3.0, \
+     'The Night Listener': 4.5, 'Superman Returns': 4.0, \
+     'You, Me and Dupree': 2.5}, \
+    'Steve Gates': {'Lady in the Water': 3.0, 'Snakes on a Plane': 4.0, \
+     'Just My Luck': 2.0, 'Superman Returns': 3.0, 'The Night Listener': 3.0, \
+     'You, Me and Dupree': 2.0}, \
+    'Sheldom': {'Lady in the Water': 3.0, 'Snakes on a Plane': 4.0, \
+     'The Night Listener': 3.0, 'Superman Returns': 5.0, \
+     'You, Me and Dupree': 3.5}, \
+    'Penny Frewman': {'Snakes on a Plane':4.5,'You, Me and Dupree':1.0, \
+    'Superman Returns':4.0}, \
+    'Maria Gabriela': {}}
+    >>> model = DictPreferenceDataModel(movies)
+    >>> items_strategy = ItemsNeighborhoodStrategy()
+    >>> similarity = ItemSimilarity(model, euclidean_distances)
+    >>> recsys = ItemBasedRecommender(model, similarity, items_strategy)
+    >>> #Return the recommendations for the given user.
+    >>> recsys.recommend('Leopoldo Pires')
+    array(['Just My Luck', 'You, Me and Dupree'],\
+          dtype='|S18')
+    >>> #Return the 2 explanations for the given recommendation.
+    >>> recsys.recommended_because('Leopoldo Pires', 'Just My Luck',2)
+    array(['The Night Listener', 'Superman Returns'],\
+          dtype='|S18')
 
     Notes
     -----------
+    This UserBasedRecommender does not yet provide
+    suppot for rescorer functions.
 
     References
     -----------
+
 
     """
 
@@ -86,9 +127,6 @@ class ItemBasedRecommender(ItemRecommender):
                  User for which recommendations are to be computed.
         how_many: int
                  Desired number of recommendations (default=None ALL)
-        rescorer:  function, optional
-                 Rescoring function to apply before final list of
-                 recommendations.
 
         '''
         self._set_params(**params)
@@ -102,6 +140,14 @@ class ItemBasedRecommender(ItemRecommender):
 
     def estimate_preference(self, user_id, item_id, **params):
         '''
+        Parameters
+        ----------
+        user_id: int or string
+                 User for which recommendations are to be computed.
+
+        item_id:  int or string
+            ID of item for which wants to find the estimated preference.
+
         Returns
         -------
         Return an estimated preference if the user has not expressed a
@@ -148,13 +194,16 @@ class ItemBasedRecommender(ItemRecommender):
 
     def all_other_items(self, user_id, **params):
         '''
-        Return items in the `model` for which the user has not expressed
-        the preference and could possibly be recommended to the user.
-
         Parameters
         ----------
         user_id: int or string
                  User for which recommendations are to be computed.
+
+        Returns
+        ---------
+        Return items in the `model` for which the user has not expressed
+        the preference and could possibly be recommended to the user.
+
         '''
         return self.items_selection_strategy.candidate_items(user_id, \
                             self.model)
@@ -167,6 +216,10 @@ class ItemBasedRecommender(ItemRecommender):
 
         source_id: int or string
                 item id to compare against.
+
+        how_many: int
+            Desired number of most top items to recommend (default=None ALL)
+
         Returns
         --------
         Return the top N matches
@@ -186,13 +239,15 @@ class ItemBasedRecommender(ItemRecommender):
         sorted_preferences = np.lexsort((preferences,))[::-1]
 
         sorted_preferences = sorted_preferences[0:how_many] \
-             if how_many and sorted_preferences.size > how_many else sorted_preferences
+             if how_many and sorted_preferences.size > how_many \
+                else sorted_preferences
 
         if self.with_preference:
             top_n_recs = np.array([(target_ids[ind], \
                      preferences[ind]) for ind in sorted_preferences])
         else:
-            top_n_recs = np.array([target_ids[ind] for ind in sorted_preferences])
+            top_n_recs = np.array([target_ids[ind]
+                 for ind in sorted_preferences])
 
         return top_n_recs
 
@@ -207,7 +262,7 @@ class ItemBasedRecommender(ItemRecommender):
             ID of item for which to find most similar other items
 
         how_many: int
-            Desired number of most similar items to find default=None (ALL)
+            Desired number of most similar items to find (default=None ALL)
         '''
         old_how_many = self.similarity.num_best
         #+1 since it returns the identity.
@@ -246,7 +301,8 @@ class ItemBasedRecommender(ItemRecommender):
 
         similarities = \
             np.array([self.similarity.get_similarity(item_id, to_item_id) \
-            for to_item_id, pref in preferences if to_item_id != item_id]).flatten()
+            for to_item_id, pref in preferences
+                if to_item_id != item_id]).flatten()
 
         prefs = np.array([pref for it, pref in preferences])
         item_ids = np.array([it for it, pref in preferences])
@@ -257,12 +313,14 @@ class ItemBasedRecommender(ItemRecommender):
         sorted_preferences = np.lexsort((scores,))[::-1]
 
         sorted_preferences = sorted_preferences[0:how_many] \
-             if how_many and sorted_preferences.size > how_many else sorted_preferences
+             if how_many and sorted_preferences.size > how_many \
+                 else sorted_preferences
 
         if self.with_preference:
             top_n_recs = np.array([(item_ids[ind], \
                      prefs[ind]) for ind in sorted_preferences])
         else:
-            top_n_recs = np.array([item_ids[ind] for ind in sorted_preferences])
+            top_n_recs = np.array([item_ids[ind]
+                 for ind in sorted_preferences])
 
         return top_n_recs

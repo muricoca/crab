@@ -1,11 +1,11 @@
 import numpy as np
-from numpy.testing import assert_array_equal, assert_array_almost_equal
+from numpy.testing import assert_array_equal
 from nose.tools import assert_raises, assert_equals, assert_almost_equals
 from ....models.data_models import DictPreferenceDataModel, MatrixPreferenceDataModel
 from ..item_strategies import ItemsNeighborhoodStrategy, AllPossibleItemsStrategy
 from ....similarities.basic_similarities import ItemSimilarity
 from ..classes import ItemBasedRecommender
-from ....models.utils import UserNotFoundError, ItemNotFoundError
+from ....models.utils import ItemNotFoundError
 from ....metrics.pairwise import euclidean_distances
 
 
@@ -182,11 +182,6 @@ def test_recommend_because_ItemBasedRecommender():
     assert_array_equal(np.array([]), \
         recsys.recommended_because('Maria Gabriela', 'Just My Luck', 2))
 
-    #Non-Existing
-    recsys = ItemBasedRecommender(matrix_model, similarity, items_strategy)
-    assert_array_equal(np.array([]), \
-        recsys.recommended_because('Maria Gabriela', 'Just My Luck', 2))
-
     #with_preference
     recsys = ItemBasedRecommender(matrix_model, similarity, items_strategy, True, True)
     assert_array_equal(np.array([('The Night Listener', 4.0), \
@@ -208,11 +203,6 @@ def test_recommend_because_ItemBasedRecommender():
     recsys = ItemBasedRecommender(dict_model, similarity, items_strategy)
     assert_array_equal(np.array(['The Night Listener', 'Superman Returns']), \
         recsys.recommended_because('Leopoldo Pires', 'Just My Luck', 2))
-
-    #Non-Existing
-    recsys = ItemBasedRecommender(dict_model, similarity, items_strategy)
-    assert_array_equal(np.array([]), \
-        recsys.recommended_because('Maria Gabriela', 'Just My Luck', 2))
 
     #Non-Existing
     recsys = ItemBasedRecommender(dict_model, similarity, items_strategy)
