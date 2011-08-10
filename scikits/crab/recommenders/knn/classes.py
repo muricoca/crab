@@ -219,7 +219,7 @@ class ItemBasedRecommender(ItemRecommender):
         return np.array([item for item, pref in similarities \
             if item != item_id])
 
-    def recommended_because(self, user_id, item_id, how_many, **params):
+    def recommended_because(self, user_id, item_id, how_many=None, **params):
         '''
         Returns the items that were most influential in recommending a
         given item to a given user. In most implementations, this
@@ -235,11 +235,34 @@ class ItemBasedRecommender(ItemRecommender):
             ID of item that was recommended
 
         how_many: int
-            Maximum number of items to return.
+            Maximum number of items to return (default=None ALL)
 
         Returns
         ----------
         The list of items ordered from most influential in
         recommended the given item to least
         '''
-        pass
+        preferences = self.model.preferences_from_user(user_id)
+
+        similarities = \
+            np.array([self.similarity.get_similarity(item_id, to_item_id) \
+            for to_item_id, pref in preferences if to_item_id != item_id]).flatten()
+
+        prefs = np.array([pref for it, pref in preferences])
+        item_ids = np.array([it for it, pref in preferences])
+
+        scores = prefs[~np.isnan(similarities)] * \
+             (1.0 + similarities[~np.isnan(similarities)])
+
+        sorted_preferences = np.lexsort((scores,))[::-1]
+
+        sorted_preferences = sorted_preferences[0:how_many] \
+             if how_many and sorted_preferences.size > how_many else sorted_preferences
+
+        if self.with_preference:
+            top_n_recs = np.array([(item_ids[ind], \
+                     prefs[ind]) for ind in sorted_preferences])
+        else:
+            top_n_recs = np.array([item_ids[ind] for ind in sorted_preferences])
+
+        return top_n_recs

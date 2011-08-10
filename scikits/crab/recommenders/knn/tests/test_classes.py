@@ -120,6 +120,10 @@ def test_recommend_ItemBasedRecommender():
     recsys = ItemBasedRecommender(matrix_model, similarity, items_strategy)
     assert_array_equal(np.array([]), recsys.recommend('Maria Gabriela'))
 
+    #Test with params update
+    recsys.recommend(user_id='Maria Gabriela', similarity=similarity)
+    assert_array_equal(np.array([]), recsys.recommend('Maria Gabriela'))
+
     #with_preference
     #recsys = ItemBasedRecommender(matrix_model, similarity, items_strategy, True, True)
     #assert_array_equal(np.array([('Just My Luck', 3.20597319063), \
@@ -145,6 +149,9 @@ def test_recommend_ItemBasedRecommender():
     recsys = ItemBasedRecommender(dict_model, similarity, items_strategy)
     assert_array_equal(np.array([]), recsys.recommend('Maria Gabriela'))
 
+    #Test with params update
+    recsys.recommend(user_id='Maria Gabriela', similarity=similarity)
+    assert_array_equal(np.array([]), recsys.recommend('Maria Gabriela'))
 
     #with_preference
     #recsys = ItemBasedRecommender(dict_model, similarity, items_strategy, True, True)
