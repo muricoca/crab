@@ -32,9 +32,15 @@ class ItemBasedRecommender(ItemRecommender):
     similarity: The Item Similarity instance that will be used to
         score the items that will be recommended.
 
-    iss: The item candidates strategy that you can choose
-        for selecting the possible items to recommend. default =
+    items_selection_strategy: The item candidates strategy that you
+     can choose for selecting the possible items to recommend.
+     default = ItemsNeighborhoodStrategy
 
+    capper: bool (default=True)
+        Cap the preferences with maximum and minimum preferences
+        in the model.
+    with_preference: bool (default=False)
+        Return the recommendations with the estimated preferences if True.
 
     Attributes
     -----------
@@ -102,7 +108,8 @@ class ItemBasedRecommender(ItemRecommender):
 
     References
     -----------
-
+    Item-based collaborative filtering recommendation algorithms by Sarwar
+    http://portal.acm.org/citation.cfm?id=372071
 
     """
 
