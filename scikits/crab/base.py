@@ -22,10 +22,15 @@ class BaseRecommender(BaseEstimator):
      model:  DataModel
           Defines the data model where data is fetched.
 
+     with_preference: bool
+          Defines if the recommendations come along with the
+          estimated preferences. (default= False)
+
     """
 
-    def __init__(self, model):
+    def __init__(self, model, with_preference=False):
         self.model = model
+        self.with_preference = with_preference
 
     def recommend(self, user_id, how_many, **params):
         '''

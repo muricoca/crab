@@ -51,6 +51,8 @@ class ItemBasedRecommender(ItemRecommender):
     `capper`: bool (default=True)
         Cap the preferences with maximum and minimum preferences
         in the model.
+    `with_preference`: bool (default=False)
+        Return the recommendations with the estimated preferences if True.
 
     Examples
     -----------
@@ -64,8 +66,8 @@ class ItemBasedRecommender(ItemRecommender):
     """
 
     def __init__(self, model, similarity, items_selection_strategy=None,
-                capper=True):
-        ItemRecommender.__init__(self, model)
+                capper=True, with_preference=False):
+        ItemRecommender.__init__(self, model, with_preference)
         self.similarity = similarity
         self.capper = capper
         if items_selection_strategy is None:
@@ -73,7 +75,7 @@ class ItemBasedRecommender(ItemRecommender):
         else:
             self.items_selection_strategy = items_selection_strategy
 
-    def recommend(self, user_id, how_many, **params):
+    def recommend(self, user_id, how_many=None, **params):
         '''
         Return a list of recommended items, ordered from most strongly
         recommend to least.
@@ -83,22 +85,20 @@ class ItemBasedRecommender(ItemRecommender):
         user_id: int or string
                  User for which recommendations are to be computed.
         how_many: int
-                 Desired number of recommendations
+                 Desired number of recommendations (default=None ALL)
         rescorer:  function, optional
                  Rescoring function to apply before final list of
                  recommendations.
 
         '''
-
         self._set_params(**params)
 
         candidate_items = self.all_other_items(user_id)
 
-        recommendable_items = None
+        recommendable_items = self._top_matches(user_id, \
+                 candidate_items, how_many)
 
         return recommendable_items
-
-        return preferences
 
     def estimate_preference(self, user_id, item_id, **params):
         '''
@@ -114,6 +114,7 @@ class ItemBasedRecommender(ItemRecommender):
 
         #TODO: It needs optimization
         prefs = self.model.preferences_from_user(user_id)
+
         similarities = \
             np.array([self.similarity.get_similarity(item_id, to_item_id) \
             for to_item_id, pref in prefs if to_item_id != item_id]).flatten()
@@ -171,19 +172,29 @@ class ItemBasedRecommender(ItemRecommender):
         Return the top N matches
         It can be user_ids or item_ids.
         '''
-        estimate_preferences = np.vectorize(self._estimate_score_for_item)
+        #Empty target_ids
+        if target_ids.size == 0:
+            return np.array([])
+
+        estimate_preferences = np.vectorize(self.estimate_preference)
+
         preferences = estimate_preferences(source_id, target_ids)
 
         preferences = preferences[~np.isnan(preferences)]
         target_ids = target_ids[~np.isnan(preferences)]
 
-        sorted_preferences = np.lexsort((preferences,)).ravel(order='C')
-        top_n_recs = [target_ids[ind] for ind in sorted_preferences]
+        sorted_preferences = np.lexsort((preferences,))[::-1]
 
-        return top_n_recs[0:how_many] \
-                if top_n_recs and how_many and \
-                top_n_recs.size > how_many else top_n_recs \
-                     if top_n_recs else np.array([])
+        sorted_preferences = sorted_preferences[0:how_many] \
+             if how_many and sorted_preferences.size > how_many else sorted_preferences
+
+        if self.with_preference:
+            top_n_recs = np.array([(target_ids[ind], \
+                     preferences[ind]) for ind in sorted_preferences])
+        else:
+            top_n_recs = np.array([target_ids[ind] for ind in sorted_preferences])
+
+        return top_n_recs
 
     def most_similar_items(self, item_id, how_many=None):
         '''
@@ -200,7 +211,8 @@ class ItemBasedRecommender(ItemRecommender):
         '''
         old_how_many = self.similarity.num_best
         #+1 since it returns the identity.
-        self.similarity.num_best = how_many + 1 if how_many is not None else None
+        self.similarity.num_best = how_many + 1 \
+                    if how_many is not None else None
         similarities = self.similarity[item_id]
         self.similarity.num_best = old_how_many
 

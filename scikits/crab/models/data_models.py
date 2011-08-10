@@ -262,7 +262,7 @@ class DictPreferenceDataModel(BaseDataModel):
         if item_id not in self.dataset_T:
             raise ItemNotFoundError
 
-        return preferences.get(item_id, np.inf)
+        return preferences.get(item_id, np.nan)
 
     def users_count(self):
         '''

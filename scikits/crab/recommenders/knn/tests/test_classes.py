@@ -61,10 +61,20 @@ def test_estimate_preference_ItemBasedRecommender():
     assert_almost_equals(3.14717875510, recsys.estimate_preference('Leopoldo Pires', 'You, Me and Dupree'))
     #With capper = False
     recsys = ItemBasedRecommender(matrix_model, similarity, items_strategy, False)
-    #assert_almost_equals(3.14717875510, recsys.estimate_preference('Leopoldo Pires', 'You, Me and Dupree'))
+    assert_almost_equals(3.14717875510, recsys.estimate_preference('Leopoldo Pires', 'You, Me and Dupree'))
     #Non-Preferences
-    #assert_array_equal(np.nan, recsys.estimate_preference('Maria Gabriela', 'You, Me and Dupree'))
+    assert_array_equal(np.nan, recsys.estimate_preference('Maria Gabriela', 'You, Me and Dupree'))
 
+    items_strategy = ItemsNeighborhoodStrategy()
+    similarity = ItemSimilarity(dict_model, euclidean_distances)
+    recsys = ItemBasedRecommender(dict_model, similarity, items_strategy)
+    assert_almost_equals(3.5, recsys.estimate_preference('Marcel Caraciolo', 'Superman Returns'))
+    assert_almost_equals(3.14717875510, recsys.estimate_preference('Leopoldo Pires', 'You, Me and Dupree'))
+    #With capper = False
+    recsys = ItemBasedRecommender(dict_model, similarity, items_strategy, False)
+    assert_almost_equals(3.14717875510, recsys.estimate_preference('Leopoldo Pires', 'You, Me and Dupree'))
+    #Non-Preferences
+    assert_array_equal(np.nan, recsys.estimate_preference('Maria Gabriela', 'You, Me and Dupree'))
 
 def test_most_similar_items_ItemBasedRecommender():
     items_strategy = ItemsNeighborhoodStrategy()
@@ -89,66 +99,55 @@ def test_most_similar_items_ItemBasedRecommender():
             recsys.most_similar_items('Just My Luck', 0))
 
 
+def test_recommend_ItemBasedRecommender():
+    items_strategy = ItemsNeighborhoodStrategy()
+    similarity = ItemSimilarity(matrix_model, euclidean_distances)
+    #Empty Recommendation
+    recsys = ItemBasedRecommender(matrix_model, similarity, items_strategy)
+    assert_array_equal(np.array([]), recsys.recommend('Marcel Caraciolo'))
 
-'''
+    #Semi Recommendation
+    recsys = ItemBasedRecommender(matrix_model, similarity, items_strategy)
+    assert_array_equal(np.array(['Just My Luck', 'You, Me and Dupree']), \
+        recsys.recommend('Leopoldo Pires'))
 
+    #Semi Recommendation
+    recsys = ItemBasedRecommender(matrix_model, similarity, items_strategy)
+    assert_array_equal(np.array(['Just My Luck']), \
+        recsys.recommend('Leopoldo Pires', 1))
 
-    def test_local_estimatePreference(self):
-        userID = 'Marcel Caraciolo'
-        itemID = 'Superman Returns'
-        recSys = ItemRecommender(self.model,self.similarity,self.strategy,True)
-        self.assertAlmostEquals(3.5,recSys.estimatePreference(userID=userID,similarity=self.similarity,itemID=itemID))
+    #Empty Recommendation
+    recsys = ItemBasedRecommender(matrix_model, similarity, items_strategy)
+    assert_array_equal(np.array([]), recsys.recommend('Maria Gabriela'))
 
+    #with_preference
+    #recsys = ItemBasedRecommender(matrix_model, similarity, items_strategy, True, True)
+    #assert_array_equal(np.array([('Just My Luck', 3.20597319063), \
+    #            ('You, Me and Dupree', 3.14717875510)]), \
+    #            recsys.recommend('Leopoldo Pires'))
 
-    def test_local_not_existing_estimatePreference(self):
-        userID = 'Leopoldo Pires'
-        itemID = 'You, Me and Dupree'
-        recSys = ItemRecommender(self.model,self.similarity,self.strategy,True)
-        self.assertAlmostEquals(3.14717875510,recSys.estimatePreference(userID=userID,similarity=self.similarity,itemID=itemID))
+    similarity = ItemSimilarity(dict_model, euclidean_distances)
+    #Empty Recommendation
+    recsys = ItemBasedRecommender(dict_model, similarity, items_strategy)
+    assert_array_equal(np.array([]), recsys.recommend('Marcel Caraciolo'))
 
+    #Semi Recommendation
+    recsys = ItemBasedRecommender(dict_model, similarity, items_strategy)
+    assert_array_equal(np.array(['Just My Luck', 'You, Me and Dupree']), \
+        recsys.recommend('Leopoldo Pires'))
 
-    def test_local_not_existing_capper_False_estimatePreference(self):
-        userID = 'Leopoldo Pires'
-        itemID = 'You, Me and Dupree'
-        recSys = ItemRecommender(self.model,self.similarity,self.strategy,False)
-        self.assertAlmostEquals(3.14717875510,recSys.estimatePreference(userID=userID,similarity=self.similarity,itemID=itemID))
+    #Semi Recommendation
+    recsys = ItemBasedRecommender(dict_model, similarity, items_strategy)
+    assert_array_equal(np.array(['Just My Luck']), \
+        recsys.recommend('Leopoldo Pires', 1))
 
-
-    def test_local_not_existing_rescorer_estimatePreference(self):
-        userID = 'Leopoldo Pires'
-        itemID = 'You, Me and Dupree'
-        recSys = ItemRecommender(self.model,self.similarity,self.strategy,False)
-        scorer = TanHScorer()
-        self.assertAlmostEquals(3.1471787551,recSys.estimatePreference(userID=userID,similarity=self.similarity,itemID=itemID,rescorer=scorer))
-
-
-    def test_empty_recommend(self):
-        userID = 'Marcel Caraciolo'
-        recSys = ItemRecommender(self.model,self.similarity,self.strategy,False)
-        self.assertEquals([],recSys.recommend(userID,4))
-
-
-    def test_recommend(self):
-        userID = 'Leopoldo Pires'
-        recSys = ItemRecommender(self.model,self.similarity,self.strategy,False)
-        self.assertEquals(['Just My Luck', 'You, Me and Dupree'],recSys.recommend(userID,4))
-
-
-    def test_full_recommend(self):
-        userID = 'Maria Gabriela'
-        recSys = ItemRecommender(self.model,self.similarity,self.strategy,False)
-        self.assertEquals([],recSys.recommend(userID,4))
+    #Empty Recommendation
+    recsys = ItemBasedRecommender(dict_model, similarity, items_strategy)
+    assert_array_equal(np.array([]), recsys.recommend('Maria Gabriela'))
 
 
-    def test_semi_recommend(self):
-        userID = 'Leopoldo Pires'
-        recSys = ItemRecommender(self.model,self.similarity,self.strategy,False)
-        self.assertEquals(['Just My Luck'],recSys.recommend(userID,1))
-
-
-    def test_recommendedBecause(self):
-        userID = 'Leopoldo Pires'
-        itemID = 'Just My Luck'
-        recSys = ItemRecommender(self.model,self.similarity,self.strategy,False)
-        self.assertEquals(['The Night Listener', 'Superman Returns'],recSys.recommendedBecause(userID,itemID,2))
-'''
+    #with_preference
+    #recsys = ItemBasedRecommender(dict_model, similarity, items_strategy, True, True)
+    #assert_array_equal(np.array([('Just My Luck', 3.20597319063), \
+    #            ('You, Me and Dupree', 3.14717875510)]), \
+    #            recsys.recommend('Leopoldo Pires'))
