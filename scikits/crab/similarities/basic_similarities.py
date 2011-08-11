@@ -59,7 +59,7 @@ class UserSimilarity(BaseSimilarity):
 
     Examples
     ---------
-    >>> from scikits.crab.models.data_models import DictPreferenceDataModel
+    >>> from scikits.crab.models.classes import DictPreferenceDataModel
     >>> from scikits.crab.metrics.pairwise import cosine_distances
     >>> from scikits.crab.similarities.basic_similarities import UserSimilarity
     >>> movies = {'Marcel Caraciolo': {'Lady in the Water': 2.5, \
@@ -148,7 +148,7 @@ class ItemSimilarity(BaseSimilarity):
 
     Examples
     ---------
-    >>> from scikits.crab.models.data_models import DictPreferenceDataModel
+    >>> from scikits.crab.models.classes import DictPreferenceDataModel
     >>> from scikits.crab.metrics.pairwise import cosine_distances
     >>> from scikits.crab.similarities.basic_similarities import ItemSimilarity
     >>> movies = {'Marcel Caraciolo': {'Lady in the Water': 2.5, \

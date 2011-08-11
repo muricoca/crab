@@ -1,7 +1,7 @@
 import numpy as np
 from numpy.testing import assert_array_equal
 from nose.tools import assert_raises
-from ....models.data_models import DictPreferenceDataModel, MatrixPreferenceDataModel
+from ....models.classes import DictPreferenceDataModel, MatrixPreferenceDataModel
 from ..item_strategies import ItemsNeighborhoodStrategy, AllPossibleItemsStrategy
 from ....models.utils import UserNotFoundError
 

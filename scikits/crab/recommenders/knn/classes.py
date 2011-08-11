@@ -62,7 +62,7 @@ class ItemBasedRecommender(ItemRecommender):
 
     Examples
     -----------
-    >>> from scikits.crab.models.data_models import DictPreferenceDataModel
+    >>> from scikits.crab.models.classes import DictPreferenceDataModel
     >>> from scikits.crab.recommenders.knn.classes import ItemBasedRecommender
     >>> from scikits.crab.similarities.basic_similarities import ItemSimilarity
     >>> from scikits.crab.recommenders.knn.item_strategies import ItemsNeighborhoodStrategy
