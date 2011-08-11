@@ -8,7 +8,6 @@ Base Similarity Models.
 #License: BSD Style
 
 
-
 class BaseSimilarity(object):
     """
     Base Class for similarity that searches over a set of items/users.
@@ -44,6 +43,9 @@ class BaseSimilarity(object):
     def __init__(self, model, distance, num_best=None):
         self.model = model
         self.distance = distance
+        self._set_num_best(num_best)
+
+    def _set_num_best(self, num_best):
         self.num_best = num_best
 
     def get_similarity(self, source_id, target_id):
@@ -67,8 +69,10 @@ class BaseSimilarity(object):
         """
         all_sims = self.get_similarities(source_id)
 
-        #return either all similarities as a list, or only self.num_best most similar, depending on settings from the constructor
-        tops =  sorted(all_sims,key= lambda x: -x[1])
+        #return either all similarities as a list,
+        #or only self.num_best most similar,
+        #depending on settings from the constructor
+        tops = sorted(all_sims, key=lambda x: -x[1])
 
         # return at most numBest top 2-tuples (label, sim)
-        return tops [ : self.num_best] if self.num_best is not None else tops
+        return tops[:self.num_best] if self.num_best is not None else tops

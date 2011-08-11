@@ -262,7 +262,7 @@ class DictPreferenceDataModel(BaseDataModel):
         if item_id not in self.dataset_T:
             raise ItemNotFoundError
 
-        return preferences.get(item_id, np.inf)
+        return preferences.get(item_id, np.nan)
 
     def users_count(self):
         '''
@@ -485,6 +485,25 @@ class MatrixPreferenceDataModel(BaseDataModel):
         '''
         return self._item_ids
 
+    def preference_values_from_user(self, user_id):
+        '''
+        Returns
+        --------
+        Return user's preferences values as an array
+
+        Notes
+        --------
+        This method is a particular method in MatrixDataModel
+        '''
+        user_id_loc = np.where(self._user_ids == user_id)
+        if not user_id_loc[0].size:
+            #user_id not found
+            raise UserNotFoundError
+
+        preferences = self.index[user_id_loc]
+
+        return preferences
+
     def preferences_from_user(self, user_id, order_by_id=True):
         '''
         Returns
@@ -494,12 +513,8 @@ class MatrixPreferenceDataModel(BaseDataModel):
          or by the preference values (if order_by_id is False), as an array.
 
         '''
-        user_id_loc = np.where(self._user_ids == user_id)
-        if not user_id_loc[0].size:
-            #user_id not found
-            raise UserNotFoundError
+        preferences = self.preference_values_from_user(user_id)
 
-        preferences = self.index[user_id_loc]
         #think in a way to return as numpy array and how to remove the nan values efficiently.
         data = zip(self._item_ids, preferences.flatten())
 

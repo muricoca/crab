@@ -128,7 +128,7 @@ def test_preference_value__invalid_DictPreferenceDataModel():
     model = DictPreferenceDataModel(movies)
     assert_raises(UserNotFoundError, model.preference_value, 'Flavia', 'Superman Returns')
     assert_raises(ItemNotFoundError, model.preference_value, 'Marcel Caraciolo', 'Back to the future')
-    assert_equals(np.inf, model.preference_value('Maria Gabriela', 'The Night Listener'))
+    assert_array_equal(np.nan, model.preference_value('Maria Gabriela', 'The Night Listener'))
 
 
 def test_set_preference_value_DictPreferenceDataModel():
@@ -148,7 +148,7 @@ def test_set_preference_value_DictPreferenceDataModel():
 def test_remove_preference_value__DictPreferenceDataModel():
     model = DictPreferenceDataModel(movies)
     model.remove_preference('Maria Gabriela', 'Superman Returns')
-    assert_equals(np.inf, model.preference_value('Maria Gabriela', 'Superman Returns'))
+    assert_array_equal(np.nan, model.preference_value('Maria Gabriela', 'Superman Returns'))
     assert_raises(ItemNotFoundError, model.remove_preference, 'Marcel Caraciolo', 'Indiana Jones')
 
 movies = {'Marcel Caraciolo': {'Lady in the Water': 2.5, 'Snakes on a Plane': 3.5,

@@ -179,8 +179,8 @@ class ItemSimilarity(BaseSimilarity):
             ('Just My Luck', array([[ 0.97489347]]))]
     '''
 
-    def __init__(self, model, distance, numBest=None):
-        BaseSimilarity.__init__(self, model, distance, numBest)
+    def __init__(self, model, distance, num_best=None):
+        BaseSimilarity.__init__(self, model, distance, num_best)
 
     def get_similarity(self, source_id, target_id):
         source_preferences = self.model.preferences_for_item(source_id)

@@ -19,19 +19,21 @@ class BaseRecommender(BaseEstimator):
 
     Attributes
     ----------
-     model:  DataModel  
+     model:  DataModel
           Defines the data model where data is fetched.
+
+     with_preference: bool
+          Defines if the recommendations come along with the
+          estimated preferences. (default= False)
 
     """
 
-    def __init__(self, model):
+    def __init__(self, model, with_preference=False):
         self.model = model
+        self.with_preference = with_preference
 
     def recommend(self, user_id, how_many, **params):
         '''
-        Return a list of recommended items, ordered from most strongly
-        recommend to least.
-
         Parameters
         ----------
         user_id: int or string
@@ -42,26 +44,43 @@ class BaseRecommender(BaseEstimator):
                  Rescoring function to apply before final list of
                  recommendations.
 
+        Returns
+        ---------
+        Return a list of recommended items, ordered from most strongly
+        recommend to least.
+
         '''
         raise NotImplementedError("BaseRecommender is an abstract class.")
 
-    def estimate_preference(self, **params):
+    def estimate_preference(self, user_id, item_id, **params):
         '''
+        Parameters
+        ----------
+        user_id: int or string
+                 User for which recommendations are to be computed.
+
+        item_id: int or string
+                Item for which recommendations are to be computed.
+
+        Returns
+        -------
         Return an estimated preference if the user has not expressed a
         preference for the item, or else the user's actual preference for the
         item. If a preference cannot be estimated, returns None.
         '''
         raise NotImplementedError("BaseRecommender is an abstract class.")
 
-    def all_other_items(self, user_id):
+    def all_other_items(self, user_id, **params):
         '''
-        Return all items in the `model` for which the user has not expressed
-        the preference and could possibly be recommended to the user.
-
         Parameters
         ----------
         user_id: int or string
                  User for which recommendations are to be computed.
+
+        Returns
+        --------
+        Return all items in the `model` for which the user has not expressed
+        the preference and could possibly be recommended to the user.
         '''
         raise NotImplementedError("BaseRecommender is an abstract class.")
 
@@ -97,3 +116,13 @@ class BaseRecommender(BaseEstimator):
 
         '''
         self.model.remove_preference(user_id, item_id)
+
+    def _top_matches(self, ** params):
+        '''
+        Returns
+        --------
+        array of shape [n_item_ids]
+        Return the top N matches
+        It can be user_ids or item_ids
+        '''
+        raise NotImplementedError("BaseRecommender is an abstract class.")
