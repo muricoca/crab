@@ -182,7 +182,6 @@ def jaccard_coefficient(X, Y):
         i += 1
 
     #XY = np.array([ [np.intersect1d(y,x).size / (float(len(x)) + len(y) - np.intersect1d(y,x).size)]  for y in Y  for x in X]) 
-
     return np.array(result)
 
 

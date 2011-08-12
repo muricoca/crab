@@ -334,7 +334,7 @@ def test_basic_methods_DictBooleanPrefDataModel():
     assert_equals(False, model.has_preference_values())
     assert_equals(8, model.users_count())
     assert_equals(6, model.items_count())
-    assert_equals(['Just My Luck', 'Lady in the Water',
+    assert_array_equal(['Just My Luck', 'Lady in the Water',
              'Snakes on a Plane', 'Superman Returns',
              'The Night Listener', 'You, Me and Dupree'], model['Marcel Caraciolo'])
     elements = [pref  for pref in model]

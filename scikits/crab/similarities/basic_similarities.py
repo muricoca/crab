@@ -16,6 +16,7 @@ def find_common_elements(source_preferences, target_preferences):
     ''' Returns the preferences from both vectors '''
     src = dict(source_preferences)
     tgt = dict(target_preferences)
+
     inter = np.intersect1d(src.keys(), tgt.keys())
 
     common_preferences = zip(*[(src[item], tgt[item]) for item in inter \
@@ -23,7 +24,7 @@ def find_common_elements(source_preferences, target_preferences):
     if common_preferences:
         return np.asarray([common_preferences[0]]), np.asarray([common_preferences[1]])
     else:
-        return np.asarray([[]]), np.asarray([[]])
+            return np.asarray([[]]), np.asarray([[]])
 
 ###############################################################################
 # User Similarity
@@ -97,10 +98,18 @@ class UserSimilarity(BaseSimilarity):
         source_preferences = self.model.preferences_from_user(source_id)
         target_preferences = self.model.preferences_from_user(target_id)
 
-        src, tgt = find_common_elements(source_preferences, target_preferences)
+        if self.model.has_preference_values():
+            source_preferences, target_preferences = \
+                find_common_elements(source_preferences, target_preferences)
+
+        if source_preferences.ndim == 1 and target_preferences.ndim == 1:
+            source_preferences = np.asarray([source_preferences])
+            target_preferences = np.asarray([target_preferences])
 
         #evaluate the similarity between the two users vectors.
-        return self.distance(src, tgt) if not src.shape[1] == 0 and not tgt.shape[1] == 0 else np.array([[np.nan]])
+        return self.distance(source_preferences, target_preferences) \
+            if not source_preferences.shape[1] == 0 \
+                and not target_preferences.shape[1] == 0 else np.array([[np.nan]])
 
     def get_similarities(self, source_id):
         return[(other_id, self.get_similarity(source_id, other_id))  for other_id, v in self.model]
@@ -186,12 +195,18 @@ class ItemSimilarity(BaseSimilarity):
         source_preferences = self.model.preferences_for_item(source_id)
         target_preferences = self.model.preferences_for_item(target_id)
 
-        #print source_preferences, target_preferences
+        if self.model.has_preference_values():
+            source_preferences, target_preferences = \
+                find_common_elements(source_preferences, target_preferences)
 
-        src, tgt = find_common_elements(source_preferences, target_preferences)
+        if source_preferences.ndim == 1 and target_preferences.ndim == 1:
+            source_preferences = np.asarray([source_preferences])
+            target_preferences = np.asarray([target_preferences])
 
         #Evaluate the similarity between the two users vectors.
-        return self.distance(src, tgt) if not src.shape[1] == 0 and not tgt.shape[1] == 0 else np.array([[np.nan]])
+        return self.distance(source_preferences, target_preferences) \
+            if not source_preferences.shape[1] == 0 and \
+                not target_preferences.shape[1] == 0 else np.array([[np.nan]])
 
     def get_similarities(self, source_id):
         return [(other_id, self.get_similarity(source_id, other_id)) for other_id in self.model.item_ids()]

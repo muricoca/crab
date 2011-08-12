@@ -355,7 +355,10 @@ class DictBooleanPrefDataModel(BaseDataModel):
     This class expects a simple dictionary where each
     element contains a userID, followed by the itemIDs
     where the itemIDs represents the preference
-    for that item and optional timestamp.
+    for that item and optional timestamp. It also can
+    receive the dict with the preference values used
+    at DictPreferenceDataModel, since it will convert
+    to the standard one:
 
     {user_id:[item_id, item_id2, item_id3],
        user_id2:{item_id, item_id3, item_id5}}
@@ -458,7 +461,7 @@ class DictBooleanPrefDataModel(BaseDataModel):
 
     def __init__(self, dataset):
         BaseDataModel.__init__(self)
-        self.dataset = dataset
+        self.dataset = self._load_dataset(dataset)
         self.build_model()
 
     def __getitem__(self, user_id):
@@ -467,6 +470,24 @@ class DictBooleanPrefDataModel(BaseDataModel):
     def __iter__(self):
         for index, user in enumerate(self.user_ids()):
             yield user, self[user]
+
+    def _load_dataset(self, dataset):
+        '''
+        Returns
+        -------
+        dataset: dict of shape {user_id:[item_id,item_id2,...]}
+
+        Load the dataset which the input can be the
+        {user_id:{item_id:preference,...},...}
+        or the {user_id:[item_id,item_id2,...],...}
+        '''
+        if dataset:
+            key = dataset.keys()[0]
+            if isinstance(dataset[key], dict):
+                for key in dataset:
+                    dataset[key] = dataset[key].keys()
+
+        return dataset
 
     def build_model(self):
         '''
@@ -530,7 +551,7 @@ class DictBooleanPrefDataModel(BaseDataModel):
         #Since there is no scores, return only by id.
         user_preferences.sort()
 
-        return user_preferences
+        return np.asanyarray(user_preferences)
 
     def items_from_user(self, user_id):
         '''
@@ -557,7 +578,7 @@ class DictBooleanPrefDataModel(BaseDataModel):
         #Since there is no scores, return only by id.
         item_preferences.sort()
 
-        return item_preferences
+        return np.asanyarray(item_preferences)
 
     def preference_value(self, user_id, item_id):
         '''
