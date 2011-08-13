@@ -4,7 +4,7 @@ from nose.tools import assert_raises, assert_equals
 from ..basic_similarities import UserSimilarity, ItemSimilarity, find_common_elements
 from ...metrics.pairwise import cosine_distances, \
     pearson_correlation, euclidean_distances, manhattan_distances, jaccard_coefficient, \
-    sorensen_coefficient
+    sorensen_coefficient, loglikehood_coefficient
 from ...models.classes import DictPreferenceDataModel, MatrixPreferenceDataModel, DictBooleanPrefDataModel
 
 #Simple Movies DataSet
@@ -137,6 +137,64 @@ def test_get__item___UserSimilarity():
     assert_array_almost_equal(np.array([[-1.]]), similarity['Leopoldo Pires'][7][1])
     assert_equals('Penny Frewman', similarity['Leopoldo Pires'][7][0])
 
+    #Euclidean Without limits
+    similarity = UserSimilarity(model, euclidean_distances)
+
+    assert_array_equal(np.array([[1.]]), similarity['Steve Gates'][0][1])
+    assert_equals('Steve Gates', similarity['Steve Gates'][0][0])
+
+    assert_array_almost_equal(np.array([[0.41421356]]), similarity['Steve Gates'][1][1])
+    assert_equals('Marcel Caraciolo', similarity['Steve Gates'][1][0])
+
+    assert_array_almost_equal(np.array([[0.4]]), similarity['Steve Gates'][2][1])
+    assert_equals('Penny Frewman', similarity['Steve Gates'][2][0])
+
+    assert_array_almost_equal(np.array([[0.38742589]]), similarity['Steve Gates'][3][1])
+    assert_equals('Leopoldo Pires', similarity['Steve Gates'][3][0])
+
+    assert_array_almost_equal(np.array([[0.31451986]]), similarity['Steve Gates'][4][1])
+    assert_equals('Lorena Abreu', similarity['Steve Gates'][4][0])
+
+    assert_array_almost_equal(np.array([[0.2779263]]), similarity['Steve Gates'][5][1])
+    assert_equals('Luciana Nunes', similarity['Steve Gates'][5][0])
+
+    assert_array_almost_equal(np.array([[np.nan]]), similarity['Steve Gates'][6][1])
+    assert_equals('Maria Gabriela', similarity['Steve Gates'][6][0])
+
+    assert_array_almost_equal(np.array([[0.28571429]]), similarity['Steve Gates'][7][1])
+    assert_equals('Sheldom', similarity['Steve Gates'][7][0])
+
+    #Manhattan Without limits
+    similarity = UserSimilarity(model, manhattan_distances, 0)
+
+    assert_equals([], similarity['Steve Gates'])
+
+    similarity = UserSimilarity(model, manhattan_distances, 20)
+
+    assert_array_equal(np.array([[1.]]), similarity['Steve Gates'][0][1])
+    assert_equals('Steve Gates', similarity['Steve Gates'][0][0])
+
+    assert_array_almost_equal(np.array([[0.5]]), similarity['Steve Gates'][1][1])
+    assert_equals('Marcel Caraciolo', similarity['Steve Gates'][1][0])
+
+    assert_array_almost_equal(np.array([[0.3]]), similarity['Steve Gates'][2][1])
+    assert_equals('Sheldom', similarity['Steve Gates'][2][0])
+
+    assert_array_almost_equal(np.array([[0.25]]), similarity['Steve Gates'][3][1])
+    assert_equals('Leopoldo Pires', similarity['Steve Gates'][3][0])
+
+    assert_array_almost_equal(np.array([[0.25]]), similarity['Steve Gates'][4][1])
+    assert_equals('Luciana Nunes', similarity['Steve Gates'][4][0])
+
+    assert_array_almost_equal(np.array([[0.1]]), similarity['Steve Gates'][5][1])
+    assert_equals('Lorena Abreu', similarity['Steve Gates'][5][0])
+
+    assert_array_almost_equal(np.array([[np.nan]]), similarity['Steve Gates'][6][1])
+    assert_equals('Maria Gabriela', similarity['Steve Gates'][6][0])
+
+    assert_array_almost_equal(np.array([[0.16666667]]), similarity['Steve Gates'][7][1])
+    assert_equals('Penny Frewman', similarity['Steve Gates'][7][0])
+
     #Cosine #With limits
     #MatrixModel
     model = MatrixPreferenceDataModel(movies)
@@ -178,6 +236,64 @@ def test_get__item___UserSimilarity():
     assert_array_almost_equal(np.array([[-1.]]), similarity['Leopoldo Pires'][7][1])
     assert_equals('Penny Frewman', similarity['Leopoldo Pires'][7][0])
 
+    #Euclidean Without limits
+    similarity = UserSimilarity(model, euclidean_distances)
+
+    assert_array_equal(np.array([[1.]]), similarity['Steve Gates'][0][1])
+    assert_equals('Steve Gates', similarity['Steve Gates'][0][0])
+
+    assert_array_almost_equal(np.array([[0.41421356]]), similarity['Steve Gates'][1][1])
+    assert_equals('Marcel Caraciolo', similarity['Steve Gates'][1][0])
+
+    assert_array_almost_equal(np.array([[0.4]]), similarity['Steve Gates'][2][1])
+    assert_equals('Penny Frewman', similarity['Steve Gates'][2][0])
+
+    assert_array_almost_equal(np.array([[0.38742589]]), similarity['Steve Gates'][3][1])
+    assert_equals('Leopoldo Pires', similarity['Steve Gates'][3][0])
+
+    assert_array_almost_equal(np.array([[0.31451986]]), similarity['Steve Gates'][4][1])
+    assert_equals('Lorena Abreu', similarity['Steve Gates'][4][0])
+
+    assert_array_almost_equal(np.array([[0.2779263]]), similarity['Steve Gates'][5][1])
+    assert_equals('Luciana Nunes', similarity['Steve Gates'][5][0])
+
+    assert_array_almost_equal(np.array([[np.nan]]), similarity['Steve Gates'][6][1])
+    assert_equals('Maria Gabriela', similarity['Steve Gates'][6][0])
+
+    assert_array_almost_equal(np.array([[0.28571429]]), similarity['Steve Gates'][7][1])
+    assert_equals('Sheldom', similarity['Steve Gates'][7][0])
+
+    #Manhattan Without limits
+    similarity = UserSimilarity(model, manhattan_distances, 0)
+
+    assert_equals([], similarity['Steve Gates'])
+
+    similarity = UserSimilarity(model, manhattan_distances, 20)
+
+    assert_array_equal(np.array([[1.]]), similarity['Steve Gates'][0][1])
+    assert_equals('Steve Gates', similarity['Steve Gates'][0][0])
+
+    assert_array_almost_equal(np.array([[0.5]]), similarity['Steve Gates'][1][1])
+    assert_equals('Marcel Caraciolo', similarity['Steve Gates'][1][0])
+
+    assert_array_almost_equal(np.array([[0.3]]), similarity['Steve Gates'][2][1])
+    assert_equals('Sheldom', similarity['Steve Gates'][2][0])
+
+    assert_array_almost_equal(np.array([[0.25]]), similarity['Steve Gates'][3][1])
+    assert_equals('Leopoldo Pires', similarity['Steve Gates'][3][0])
+
+    assert_array_almost_equal(np.array([[0.25]]), similarity['Steve Gates'][4][1])
+    assert_equals('Luciana Nunes', similarity['Steve Gates'][4][0])
+
+    assert_array_almost_equal(np.array([[0.1]]), similarity['Steve Gates'][5][1])
+    assert_equals('Lorena Abreu', similarity['Steve Gates'][5][0])
+
+    assert_array_almost_equal(np.array([[np.nan]]), similarity['Steve Gates'][6][1])
+    assert_equals('Maria Gabriela', similarity['Steve Gates'][6][0])
+
+    assert_array_almost_equal(np.array([[0.16666667]]), similarity['Steve Gates'][7][1])
+    assert_equals('Penny Frewman', similarity['Steve Gates'][7][0])
+
     #BooleanDictModel
     model = DictBooleanPrefDataModel(movies)
     similarity = UserSimilarity(model, jaccard_coefficient, 3)
@@ -217,125 +333,37 @@ def test_get__item___UserSimilarity():
     assert_array_almost_equal(np.array([[0.]]), similarity['Leopoldo Pires'][7][1])
     assert_equals('Maria Gabriela', similarity['Leopoldo Pires'][7][0])
 
-    '''
+    #loglikehood with limits
 
-    #Euclidean Without limits
-    similarity = UserSimilarity(model, euclidean_distances)
-
-    assert_array_equal(np.array([[1.]]), similarity['Steve Gates'][0][1])
-    assert_equals('Steve Gates', similarity['Steve Gates'][0][0])
-
-    assert_array_almost_equal(np.array([[0.41421356]]), similarity['Steve Gates'][1][1])
-    assert_equals('Marcel Caraciolo', similarity['Steve Gates'][1][0])
-
-    assert_array_almost_equal(np.array([[0.4]]), similarity['Steve Gates'][2][1])
-    assert_equals('Penny Frewman', similarity['Steve Gates'][2][0])
-
-    assert_array_almost_equal(np.array([[0.38742589]]), similarity['Steve Gates'][3][1])
-    assert_equals('Leopoldo Pires', similarity['Steve Gates'][3][0])
-
-    assert_array_almost_equal(np.array([[0.31451986]]), similarity['Steve Gates'][4][1])
-    assert_equals('Lorena Abreu', similarity['Steve Gates'][4][0])
-
-    assert_array_almost_equal(np.array([[0.2779263]]), similarity['Steve Gates'][5][1])
-    assert_equals('Luciana Nunes', similarity['Steve Gates'][5][0])
-
-    assert_array_almost_equal(np.array([[np.nan]]), similarity['Steve Gates'][6][1])
-    assert_equals('Maria Gabriela', similarity['Steve Gates'][6][0])
-
-    assert_array_almost_equal(np.array([[0.28571429]]), similarity['Steve Gates'][7][1])
-    assert_equals('Sheldom', similarity['Steve Gates'][7][0])
-
-    #MatrixModel
-    similarity = UserSimilarity(model_matrix, euclidean_distances)
-
-    assert_array_equal(np.array([[1.]]), similarity['Steve Gates'][0][1])
-    assert_equals('Steve Gates', similarity['Steve Gates'][0][0])
-
-    assert_array_almost_equal(np.array([[0.41421356]]), similarity['Steve Gates'][1][1])
-    assert_equals('Marcel Caraciolo', similarity['Steve Gates'][1][0])
-
-    assert_array_almost_equal(np.array([[0.4]]), similarity['Steve Gates'][2][1])
-    assert_equals('Penny Frewman', similarity['Steve Gates'][2][0])
-
-    assert_array_almost_equal(np.array([[0.38742589]]), similarity['Steve Gates'][3][1])
-    assert_equals('Leopoldo Pires', similarity['Steve Gates'][3][0])
-
-    assert_array_almost_equal(np.array([[0.31451986]]), similarity['Steve Gates'][4][1])
-    assert_equals('Lorena Abreu', similarity['Steve Gates'][4][0])
-
-    assert_array_almost_equal(np.array([[0.2779263]]), similarity['Steve Gates'][5][1])
-    assert_equals('Luciana Nunes', similarity['Steve Gates'][5][0])
-
-    assert_array_almost_equal(np.array([[np.nan]]), similarity['Steve Gates'][6][1])
-    assert_equals('Maria Gabriela', similarity['Steve Gates'][6][0])
-
-    assert_array_almost_equal(np.array([[0.28571429]]), similarity['Steve Gates'][7][1])
-    assert_equals('Sheldom', similarity['Steve Gates'][7][0])
-
-    #Manhattan Without limits
-    #DictModel
-    similarity = UserSimilarity(model, manhattan_distances, 0)
-
+    similarity = UserSimilarity(model, loglikehood_coefficient, 0)
     assert_equals([], similarity['Steve Gates'])
 
-    similarity = UserSimilarity(model, manhattan_distances, 20)
+    similarity = UserSimilarity(model, loglikehood_coefficient, 20)
 
     assert_array_equal(np.array([[1.]]), similarity['Steve Gates'][0][1])
-    assert_equals('Steve Gates', similarity['Steve Gates'][0][0])
+    assert_equals('Luciana Nunes', similarity['Steve Gates'][0][0])
 
-    assert_array_almost_equal(np.array([[0.5]]), similarity['Steve Gates'][1][1])
+    assert_array_almost_equal(np.array([[1.]]), similarity['Steve Gates'][1][1])
     assert_equals('Marcel Caraciolo', similarity['Steve Gates'][1][0])
 
-    assert_array_almost_equal(np.array([[0.3]]), similarity['Steve Gates'][2][1])
-    assert_equals('Sheldom', similarity['Steve Gates'][2][0])
+    assert_array_almost_equal(np.array([[1.]]), similarity['Steve Gates'][2][1])
+    assert_equals('Steve Gates', similarity['Steve Gates'][2][0])
 
-    assert_array_almost_equal(np.array([[0.25]]), similarity['Steve Gates'][3][1])
-    assert_equals('Leopoldo Pires', similarity['Steve Gates'][3][0])
+    assert_array_almost_equal(np.array([[0.74804989]]), similarity['Steve Gates'][3][1])
+    assert_equals('Lorena Abreu', similarity['Steve Gates'][3][0])
 
-    assert_array_almost_equal(np.array([[0.25]]), similarity['Steve Gates'][4][1])
-    assert_equals('Luciana Nunes', similarity['Steve Gates'][4][0])
+    assert_array_almost_equal(np.array([[0.74804989]]), similarity['Steve Gates'][4][1])
+    assert_equals('Sheldom', similarity['Steve Gates'][4][0])
 
-    assert_array_almost_equal(np.array([[0.1]]), similarity['Steve Gates'][5][1])
-    assert_equals('Lorena Abreu', similarity['Steve Gates'][5][0])
+    assert_array_almost_equal(np.array([[0.65783229]]), similarity['Steve Gates'][5][1])
+    assert_equals('Leopoldo Pires', similarity['Steve Gates'][5][0])
 
-    assert_array_almost_equal(np.array([[np.nan]]), similarity['Steve Gates'][6][1])
-    assert_equals('Maria Gabriela', similarity['Steve Gates'][6][0])
+    assert_array_almost_equal(np.array([[0.55415805]]), similarity['Steve Gates'][6][1])
+    assert_equals('Penny Frewman', similarity['Steve Gates'][6][0])
 
-    assert_array_almost_equal(np.array([[0.16666667]]), similarity['Steve Gates'][7][1])
-    assert_equals('Penny Frewman', similarity['Steve Gates'][7][0])
+    assert_array_almost_equal(np.array([[0.0]]), similarity['Steve Gates'][7][1])
+    assert_equals('Maria Gabriela', similarity['Steve Gates'][7][0])
 
-    #MatrixModel
-    similarity = UserSimilarity(model_matrix, manhattan_distances, 0)
-
-    assert_equals([], similarity['Steve Gates'])
-
-    similarity = UserSimilarity(model_matrix, manhattan_distances, 20)
-
-    assert_array_equal(np.array([[1.]]), similarity['Steve Gates'][0][1])
-    assert_equals('Steve Gates', similarity['Steve Gates'][0][0])
-
-    assert_array_almost_equal(np.array([[0.5]]), similarity['Steve Gates'][1][1])
-    assert_equals('Marcel Caraciolo', similarity['Steve Gates'][1][0])
-
-    assert_array_almost_equal(np.array([[0.3]]), similarity['Steve Gates'][2][1])
-    assert_equals('Sheldom', similarity['Steve Gates'][2][0])
-
-    assert_array_almost_equal(np.array([[0.25]]), similarity['Steve Gates'][3][1])
-    assert_equals('Leopoldo Pires', similarity['Steve Gates'][3][0])
-
-    assert_array_almost_equal(np.array([[0.25]]), similarity['Steve Gates'][4][1])
-    assert_equals('Luciana Nunes', similarity['Steve Gates'][4][0])
-
-    assert_array_almost_equal(np.array([[0.1]]), similarity['Steve Gates'][5][1])
-    assert_equals('Lorena Abreu', similarity['Steve Gates'][5][0])
-
-    assert_array_almost_equal(np.array([[np.nan]]), similarity['Steve Gates'][6][1])
-    assert_equals('Maria Gabriela', similarity['Steve Gates'][6][0])
-
-    assert_array_almost_equal(np.array([[0.16666667]]), similarity['Steve Gates'][7][1])
-    assert_equals('Penny Frewman', similarity['Steve Gates'][7][0])
-    '''
 
 '''
 def test_get_similarities__UserSimilarity():

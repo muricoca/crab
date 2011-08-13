@@ -10,6 +10,7 @@ a collection of vectors.
 
 import numpy as np
 from base import BaseSimilarity
+from ..metrics.pairwise import loglikehood_coefficient
 
 
 def find_common_elements(source_preferences, target_preferences):
@@ -105,6 +106,12 @@ class UserSimilarity(BaseSimilarity):
         if source_preferences.ndim == 1 and target_preferences.ndim == 1:
             source_preferences = np.asarray([source_preferences])
             target_preferences = np.asarray([target_preferences])
+
+        if self.distance == loglikehood_coefficient:
+            return self.distance(self.model.items_count(), \
+                source_preferences, target_preferences) \
+            if not source_preferences.shape[1] == 0 and \
+                not target_preferences.shape[1] == 0 else np.array([[np.nan]])
 
         #evaluate the similarity between the two users vectors.
         return self.distance(source_preferences, target_preferences) \
@@ -202,6 +209,12 @@ class ItemSimilarity(BaseSimilarity):
         if source_preferences.ndim == 1 and target_preferences.ndim == 1:
             source_preferences = np.asarray([source_preferences])
             target_preferences = np.asarray([target_preferences])
+
+        if self.distance == loglikehood_coefficient:
+            return self.distance(self.model.items_count(), \
+                source_preferences, target_preferences) \
+            if not source_preferences.shape[1] == 0 and \
+                not target_preferences.shape[1] == 0 else np.array([[np.nan]])
 
         #Evaluate the similarity between the two users vectors.
         return self.distance(source_preferences, target_preferences) \
