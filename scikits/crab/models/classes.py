@@ -151,11 +151,11 @@ class DictPreferenceDataModel(BaseDataModel):
         self._user_ids = np.asanyarray(self.dataset.keys())
         self._user_ids.sort()
 
-        self._item_ids = np.array([])
+        self._item_ids = []
         for items in self.dataset.itervalues():
-            self._item_ids = np.append(self._item_ids, items.keys())
+            self._item_ids.extend(items.keys())
 
-        self._item_ids = np.unique(self._item_ids)
+        self._item_ids = np.unique(np.array(self._item_ids))
         self._item_ids.sort()
 
         self.max_pref = -np.inf
@@ -500,11 +500,11 @@ class DictBooleanPrefDataModel(BaseDataModel):
         self._user_ids = np.asanyarray(self.dataset.keys())
         self._user_ids.sort()
 
-        self._item_ids = np.array([])
+        self._item_ids = []
         for items in self.dataset.itervalues():
-            self._item_ids = np.append(self._item_ids, items)
+            self._item_ids.extend(items)
 
-        self._item_ids = np.unique(self._item_ids)
+        self._item_ids = np.unique(np.array(self._item_ids))
         self._item_ids.sort()
 
         #Efficiency must be rewritten
@@ -757,11 +757,11 @@ class MatrixPreferenceDataModel(BaseDataModel):
         self._user_ids.sort()
 
         #Is it important to store as numpy array ?
-        self._item_ids = np.asanyarray([])
+        self._item_ids = []
         for items in self.dataset.itervalues():
-            self._item_ids = np.append(self._item_ids, items.keys())
+            self._item_ids.extend(items.keys())
 
-        self._item_ids = np.unique(self._item_ids)
+        self._item_ids = np.unique(np.array(self._item_ids))
         self._item_ids.sort()
 
         self.max_pref = -np.inf
