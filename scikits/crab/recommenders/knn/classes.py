@@ -306,13 +306,20 @@ class ItemBasedRecommender(ItemRecommender):
         '''
         preferences = self.model.preferences_from_user(user_id)
 
-        similarities = \
-            np.array([self.similarity.get_similarity(item_id, to_item_id) \
-            for to_item_id, pref in preferences
-                if to_item_id != item_id]).flatten()
-
-        prefs = np.array([pref for it, pref in preferences])
-        item_ids = np.array([it for it, pref in preferences])
+        if self.model.has_preference_values():
+            similarities = \
+                np.array([self.similarity.get_similarity(item_id, to_item_id) \
+                    for to_item_id, pref in preferences
+                        if to_item_id != item_id]).flatten()
+            prefs = np.array([pref for it, pref in preferences])
+            item_ids = np.array([it for it, pref in preferences])
+        else:
+            similarities = \
+                np.array([self.similarity.get_similarity(item_id, to_item_id) \
+                for to_item_id in preferences
+                    if to_item_id != item_id]).flatten()
+            prefs = np.array([1.0 for it in preferences])
+            item_ids = np.array(preferences)
 
         scores = prefs[~np.isnan(similarities)] * \
              (1.0 + similarities[~np.isnan(similarities)])

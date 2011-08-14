@@ -158,7 +158,7 @@ def jaccard_coefficient(X, Y):
 
     >>> jaccard_coefficient(X, [['a', 'b', 'c', 'k']])
     array([[ 0.6],
-             0. ]])
+           [ 0. ]])
     """
     # should not need X_norm_squared because if you could precompute that as
     # well as Y, then you should just pre-compute the output and not even

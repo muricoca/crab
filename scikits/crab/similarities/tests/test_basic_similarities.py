@@ -738,9 +738,9 @@ def test_get__item___ItemSimilarity():
     assert_array_almost_equal(np.array([[-0.33333333]]), similarity['Snakes on a Plane'][6][1])
     assert_equals('You, Me and Dupree', similarity['Snakes on a Plane'][6][0])
 
-'''
 
 def test_get_similarities__ItemSimilarity():
+    model = DictPreferenceDataModel(movies)
     #DictModel
     similarity = ItemSimilarity(model, cosine_distances, 3)
 
@@ -774,24 +774,26 @@ def test_get_similarities__ItemSimilarity():
     assert_equals(len(sim), model.items_count())
 
     #MatrixModel
-    similarity = ItemSimilarity(model_matrix, cosine_distances, 3)
+    model = MatrixPreferenceDataModel(movies)
+
+    similarity = ItemSimilarity(model, cosine_distances, 3)
 
     sim = similarity.get_similarities('Snakes on a Plane')
 
-    assert_equals(len(sim), model_matrix.items_count())
+    assert_equals(len(sim), model.items_count())
 
     #Pearson Without limits
-    similarity = ItemSimilarity(model_matrix, pearson_correlation)
+    similarity = ItemSimilarity(model, pearson_correlation)
 
     sim = similarity.get_similarities('Lady in the Water')
 
-    assert_equals(len(sim), model_matrix.items_count())
+    assert_equals(len(sim), model.items_count())
 
-    similarity = ItemSimilarity(model_matrix, euclidean_distances)
+    similarity = ItemSimilarity(model, euclidean_distances)
 
     sim = similarity.get_similarities('Lady in the Water')
 
-    assert_equals(len(sim), model_matrix.items_count())
+    assert_equals(len(sim), model.items_count())
 
     similarity = ItemSimilarity(model, manhattan_distances, 0)
 
@@ -799,14 +801,49 @@ def test_get_similarities__ItemSimilarity():
 
     assert_equals(len(sim), model.items_count())
 
-    similarity = ItemSimilarity(model_matrix, manhattan_distances, 20)
+    similarity = ItemSimilarity(model, manhattan_distances, 20)
 
     sim = similarity.get_similarities('Lady in the Water')
 
-    assert_equals(len(sim), model_matrix.items_count())
+    assert_equals(len(sim), model.items_count())
+
+    #DictBooleanPreference
+    model = DictBooleanPrefDataModel(movies)
+
+    similarity = ItemSimilarity(model, jaccard_coefficient, 3)
+
+    sim = similarity.get_similarities('Snakes on a Plane')
+
+    assert_equals(len(sim), model.items_count())
+
+    #Pearson Without limits
+    similarity = ItemSimilarity(model, sorensen_coefficient)
+
+    sim = similarity.get_similarities('Lady in the Water')
+
+    assert_equals(len(sim), model.items_count())
+
+    similarity = ItemSimilarity(model, loglikehood_coefficient)
+
+    sim = similarity.get_similarities('Lady in the Water')
+
+    assert_equals(len(sim), model.items_count())
+
+    similarity = ItemSimilarity(model, loglikehood_coefficient, 0)
+
+    sim = similarity.get_similarities('Lady in the Water')
+
+    assert_equals(len(sim), model.items_count())
+
+    similarity = ItemSimilarity(model, sorensen_coefficient, 20)
+
+    sim = similarity.get_similarities('Lady in the Water')
+
+    assert_equals(len(sim), model.items_count())
 
 
 def test__iter__ItemSimilarity():
+    model = DictPreferenceDataModel(movies)
     #DictModel
     similarity = ItemSimilarity(model, cosine_distances, 3)
 
@@ -857,53 +894,151 @@ def test__iter__ItemSimilarity():
         assert_equals(len(pref), model.items_count())
 
     #MATRIXMODEL
-    similarity = ItemSimilarity(model_matrix, cosine_distances, 3)
+    model = MatrixPreferenceDataModel(movies)
+    similarity = ItemSimilarity(model, cosine_distances, 3)
 
     item_ids = []
     prefs = []
     for item_id, preferences in similarity:
         item_ids.append(item_id)
         prefs.append(preferences)
-    assert_equals(len(item_ids), model_matrix.items_count())
+    assert_equals(len(item_ids), model.items_count())
 
     for pref in prefs:
         assert_equals(len(pref), 3)
 
-    similarity = ItemSimilarity(model_matrix, pearson_correlation)
+    similarity = ItemSimilarity(model, pearson_correlation)
 
     item_ids = []
     prefs = []
     for item_id, preferences in similarity:
         item_ids.append(item_id)
         prefs.append(preferences)
-    assert_equals(len(item_ids), model_matrix.items_count())
+    assert_equals(len(item_ids), model.items_count())
 
     for pref in prefs:
-        assert_equals(len(pref), model_matrix.items_count())
+        assert_equals(len(pref), model.items_count())
 
-    similarity = ItemSimilarity(model_matrix, manhattan_distances, 0)
+    similarity = ItemSimilarity(model, manhattan_distances, 0)
 
     item_ids = []
     prefs = []
     for item_id, preferences in similarity:
         item_ids.append(item_id)
         prefs.append(preferences)
-    assert_equals(len(item_ids), model_matrix.items_count())
+    assert_equals(len(item_ids), model.items_count())
 
     for pref in prefs:
         assert_equals(len(pref), 0)
 
-    similarity = ItemSimilarity(model_matrix, manhattan_distances, 20)
+    similarity = ItemSimilarity(model, manhattan_distances, 20)
 
     item_ids = []
     prefs = []
     for item_id, preferences in similarity:
         item_ids.append(item_id)
         prefs.append(preferences)
-    assert_equals(len(item_ids), model_matrix.items_count())
+    assert_equals(len(item_ids), model.items_count())
 
     for pref in prefs:
-        assert_equals(len(pref), model_matrix.items_count())
+        assert_equals(len(pref), model.items_count())
 
+    #DictModel
+    model = DictPreferenceDataModel(movies)
+    similarity = ItemSimilarity(model, cosine_distances, 3)
 
-'''
+    item_ids = []
+    prefs = []
+    for item_id, preferences in similarity:
+        item_ids.append(item_id)
+        prefs.append(preferences)
+    assert_equals(len(item_ids), model.items_count())
+
+    for pref in prefs:
+        assert_equals(len(pref), 3)
+
+    similarity = ItemSimilarity(model, pearson_correlation)
+
+    item_ids = []
+    prefs = []
+    for item_id, preferences in similarity:
+        item_ids.append(item_id)
+        prefs.append(preferences)
+    assert_equals(len(item_ids), model.items_count())
+
+    for pref in prefs:
+        assert_equals(len(pref), model.items_count())
+
+    similarity = ItemSimilarity(model, manhattan_distances, 0)
+
+    item_ids = []
+    prefs = []
+    for item_id, preferences in similarity:
+        item_ids.append(item_id)
+        prefs.append(preferences)
+    assert_equals(len(item_ids), model.items_count())
+
+    for pref in prefs:
+        assert_equals(len(pref), 0)
+
+    similarity = ItemSimilarity(model, manhattan_distances, 20)
+
+    item_ids = []
+    prefs = []
+    for item_id, preferences in similarity:
+        item_ids.append(item_id)
+        prefs.append(preferences)
+    assert_equals(len(item_ids), model.items_count())
+
+    for pref in prefs:
+        assert_equals(len(pref), model.items_count())
+
+    #DictBoolean
+    model = DictBooleanPrefDataModel(movies)
+    similarity = ItemSimilarity(model, sorensen_coefficient, 3)
+
+    item_ids = []
+    prefs = []
+    for item_id, preferences in similarity:
+        item_ids.append(item_id)
+        prefs.append(preferences)
+    assert_equals(len(item_ids), model.items_count())
+
+    for pref in prefs:
+        assert_equals(len(pref), 3)
+
+    similarity = ItemSimilarity(model, jaccard_coefficient)
+
+    item_ids = []
+    prefs = []
+    for item_id, preferences in similarity:
+        item_ids.append(item_id)
+        prefs.append(preferences)
+    assert_equals(len(item_ids), model.items_count())
+
+    for pref in prefs:
+        assert_equals(len(pref), model.items_count())
+
+    similarity = ItemSimilarity(model, loglikehood_coefficient, 0)
+
+    item_ids = []
+    prefs = []
+    for item_id, preferences in similarity:
+        item_ids.append(item_id)
+        prefs.append(preferences)
+    assert_equals(len(item_ids), model.items_count())
+
+    for pref in prefs:
+        assert_equals(len(pref), 0)
+
+    similarity = ItemSimilarity(model, sorensen_coefficient, 20)
+
+    item_ids = []
+    prefs = []
+    for item_id, preferences in similarity:
+        item_ids.append(item_id)
+        prefs.append(preferences)
+    assert_equals(len(item_ids), model.items_count())
+
+    for pref in prefs:
+        assert_equals(len(pref), model.items_count())
