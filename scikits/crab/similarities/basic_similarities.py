@@ -110,7 +110,7 @@ class UserSimilarity(BaseSimilarity):
         if self.distance == loglikehood_coefficient:
             return self.distance(self.model.items_count(), \
                 source_preferences, target_preferences) \
-            if not source_preferences.shape[1] == 0 and \
+                if not source_preferences.shape[1] == 0 and \
                 not target_preferences.shape[1] == 0 else np.array([[np.nan]])
 
         #evaluate the similarity between the two users vectors.
@@ -213,8 +213,8 @@ class ItemSimilarity(BaseSimilarity):
         if self.distance == loglikehood_coefficient:
             return self.distance(self.model.items_count(), \
                 source_preferences, target_preferences) \
-            if not source_preferences.shape[1] == 0 and \
-                not target_preferences.shape[1] == 0 else np.array([[np.nan]])
+                if not source_preferences.shape[1] == 0 and \
+                    not target_preferences.shape[1] == 0 else np.array([[np.nan]])
 
         #Evaluate the similarity between the two users vectors.
         return self.distance(source_preferences, target_preferences) \

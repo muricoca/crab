@@ -365,8 +365,9 @@ def test_get__item___UserSimilarity():
     assert_equals('Maria Gabriela', similarity['Steve Gates'][7][0])
 
 
-'''
 def test_get_similarities__UserSimilarity():
+    model = DictPreferenceDataModel(movies)
+
     #DictModel
     similarity = UserSimilarity(model, cosine_distances, 3)
 
@@ -374,29 +375,12 @@ def test_get_similarities__UserSimilarity():
 
     assert_equals(len(sim), model.users_count())
 
-    #MatrixModel
-    similarity = UserSimilarity(model_matrix, cosine_distances, 3)
-
-    sim = similarity.get_similarities('Marcel Caraciolo')
-
-    assert_equals(len(sim), model_matrix.users_count())
-
-    #Pearson Without limits
-    #DictModel
     similarity = UserSimilarity(model, pearson_correlation)
 
     sim = similarity.get_similarities('Leopoldo Pires')
 
     assert_equals(len(sim), model.users_count())
 
-    #MatrixModel
-    similarity = UserSimilarity(model_matrix, pearson_correlation)
-
-    sim = similarity.get_similarities('Leopoldo Pires')
-
-    assert_equals(len(sim), model_matrix.users_count())
-
-    #DictModel
     similarity = UserSimilarity(model, euclidean_distances)
 
     sim = similarity.get_similarities('Steve Gates')
@@ -416,26 +400,75 @@ def test_get_similarities__UserSimilarity():
     assert_equals(len(sim), model.users_count())
 
     #MatrixModel
-    similarity = UserSimilarity(model_matrix, euclidean_distances)
+    model = MatrixPreferenceDataModel(movies)
+
+    similarity = UserSimilarity(model, cosine_distances, 3)
+
+    sim = similarity.get_similarities('Marcel Caraciolo')
+
+    assert_equals(len(sim), model.users_count())
+
+    similarity = UserSimilarity(model, pearson_correlation)
+
+    sim = similarity.get_similarities('Leopoldo Pires')
+
+    assert_equals(len(sim), model.users_count())
+
+    similarity = UserSimilarity(model, euclidean_distances)
 
     sim = similarity.get_similarities('Steve Gates')
 
-    assert_equals(len(sim), model_matrix.users_count())
+    assert_equals(len(sim), model.users_count())
 
-    similarity = UserSimilarity(model_matrix, manhattan_distances, 0)
-
-    sim = similarity.get_similarities('Steve Gates')
-
-    assert_equals(len(sim), model_matrix.users_count())
-
-    similarity = UserSimilarity(model_matrix, manhattan_distances, 20)
+    similarity = UserSimilarity(model, manhattan_distances, 0)
 
     sim = similarity.get_similarities('Steve Gates')
 
-    assert_equals(len(sim), model_matrix.users_count())
+    assert_equals(len(sim), model.users_count())
+
+    similarity = UserSimilarity(model, manhattan_distances, 20)
+
+    sim = similarity.get_similarities('Steve Gates')
+
+    assert_equals(len(sim), model.users_count())
+
+    #BooleanDictModel
+    model = DictBooleanPrefDataModel(movies)
+
+    similarity = UserSimilarity(model, sorensen_coefficient, 3)
+
+    sim = similarity.get_similarities('Marcel Caraciolo')
+
+    assert_equals(len(sim), model.users_count())
+
+    similarity = UserSimilarity(model, loglikehood_coefficient)
+
+    sim = similarity.get_similarities('Leopoldo Pires')
+
+    assert_equals(len(sim), model.users_count())
+
+    similarity = UserSimilarity(model, jaccard_coefficient)
+
+    sim = similarity.get_similarities('Steve Gates')
+
+    assert_equals(len(sim), model.users_count())
+
+    similarity = UserSimilarity(model, loglikehood_coefficient, 0)
+
+    sim = similarity.get_similarities('Steve Gates')
+
+    assert_equals(len(sim), model.users_count())
+
+    similarity = UserSimilarity(model, sorensen_coefficient, 20)
+
+    sim = similarity.get_similarities('Steve Gates')
+
+    assert_equals(len(sim), model.users_count())
 
 
 def test__iter__UserSimilarity():
+    model = DictPreferenceDataModel(movies)
+
     similarity = UserSimilarity(model, cosine_distances, 3)
 
     source_ids = []
@@ -485,56 +518,58 @@ def test__iter__UserSimilarity():
         assert_equals(len(pref), model.users_count())
 
     #MatrixModel
-    similarity = UserSimilarity(model_matrix, cosine_distances, 3)
+    model = MatrixPreferenceDataModel(movies)
+    similarity = UserSimilarity(model, cosine_distances, 3)
 
     source_ids = []
     prefs = []
     for source_id, preferences in similarity:
         source_ids.append(source_id)
         prefs.append(preferences)
-    assert_equals(len(source_ids), model_matrix.users_count())
+    assert_equals(len(source_ids), model.users_count())
 
     for pref in prefs:
         assert_equals(len(pref), 3)
 
-    similarity = UserSimilarity(model_matrix, pearson_correlation)
+    similarity = UserSimilarity(model, pearson_correlation)
 
     source_ids = []
     prefs = []
     for source_id, preferences in similarity:
         source_ids.append(source_id)
         prefs.append(preferences)
-    assert_equals(len(source_ids), model_matrix.users_count())
+    assert_equals(len(source_ids), model.users_count())
 
     for pref in prefs:
-        assert_equals(len(pref), model_matrix.users_count())
+        assert_equals(len(pref), model.users_count())
 
-    similarity = UserSimilarity(model_matrix, manhattan_distances, 0)
+    similarity = UserSimilarity(model, manhattan_distances, 0)
 
     source_ids = []
     prefs = []
     for source_id, preferences in similarity:
         source_ids.append(source_id)
         prefs.append(preferences)
-    assert_equals(len(source_ids), model_matrix.users_count())
+    assert_equals(len(source_ids), model.users_count())
 
     for pref in prefs:
         assert_equals(len(pref), 0)
 
-    similarity = UserSimilarity(model_matrix, manhattan_distances, 20)
+    similarity = UserSimilarity(model, manhattan_distances, 20)
 
     source_ids = []
     prefs = []
     for source_id, preferences in similarity:
         source_ids.append(source_id)
         prefs.append(preferences)
-    assert_equals(len(source_ids), model_matrix.users_count())
+    assert_equals(len(source_ids), model.users_count())
 
     for pref in prefs:
-        assert_equals(len(pref), model_matrix.users_count())
+        assert_equals(len(pref), model.users_count())
 
 
 def test_get__item___ItemSimilarity():
+    model = DictPreferenceDataModel(movies)
     #Cosine #With limits
     similarity = ItemSimilarity(model, cosine_distances, 3)
 
@@ -620,7 +655,8 @@ def test_get__item___ItemSimilarity():
 
     #MATRIXMODEL
     #Cosine #With limits
-    similarity = ItemSimilarity(model_matrix, cosine_distances, 3)
+    model = MatrixPreferenceDataModel(movies)
+    similarity = ItemSimilarity(model, cosine_distances, 3)
 
     #assert_array_equal(np.array([[1.]]), similarity['Snakes on a Plane'][0][1])
     #assert_equals('Marcel Caraciolo', similarity['Snakes on a Plane'][0][0])
@@ -632,7 +668,7 @@ def test_get__item___ItemSimilarity():
     assert_equals('Lady in the Water', similarity['Snakes on a Plane'][2][0])
 
     #Pearson Without limits
-    similarity = ItemSimilarity(model_matrix, pearson_correlation)
+    similarity = ItemSimilarity(model, pearson_correlation)
 
     #assert_array_equal(np.array([[1.]]), similarity['The Night Listener'][0][1])
     #assert_equals('Leopoldo Pires', similarity['The Night Listener'][0][0])
@@ -655,7 +691,7 @@ def test_get__item___ItemSimilarity():
     assert_array_almost_equal(np.array([[-0.61237244]]), similarity['The Night Listener'][6][1])
     assert_equals('Lady in the Water', similarity['The Night Listener'][6][0])
 
-    similarity = ItemSimilarity(model_matrix, euclidean_distances)
+    similarity = ItemSimilarity(model, euclidean_distances)
 
     #assert_array_equal(np.array([[1.]]), similarity['The Night Listener'][0][1])
     #assert_equals('Steve Gates', similarity['The Night Listener'][0][0])
@@ -678,11 +714,11 @@ def test_get__item___ItemSimilarity():
     assert_array_almost_equal(np.array([[0.25265031]]), similarity['The Night Listener'][6][1])
     assert_equals('Superman Returns', similarity['The Night Listener'][6][0])
 
-    similarity = ItemSimilarity(model_matrix, manhattan_distances, 0)
+    similarity = ItemSimilarity(model, manhattan_distances, 0)
 
     assert_equals([], similarity['Lady in the Water'])
 
-    similarity = ItemSimilarity(model_matrix, manhattan_distances, 20)
+    similarity = ItemSimilarity(model, manhattan_distances, 20)
 
     assert_array_almost_equal(np.array([[1.]]), similarity['Snakes on a Plane'][1][1])
     assert_equals('Snakes on a Plane', similarity['Snakes on a Plane'][1][0])
@@ -702,6 +738,7 @@ def test_get__item___ItemSimilarity():
     assert_array_almost_equal(np.array([[-0.33333333]]), similarity['Snakes on a Plane'][6][1])
     assert_equals('You, Me and Dupree', similarity['Snakes on a Plane'][6][0])
 
+'''
 
 def test_get_similarities__ItemSimilarity():
     #DictModel
