@@ -5,7 +5,8 @@ from ..basic_similarities import UserSimilarity, ItemSimilarity, find_common_ele
 from ...metrics.pairwise import cosine_distances, \
     pearson_correlation, euclidean_distances, manhattan_distances, jaccard_coefficient, \
     sorensen_coefficient, loglikehood_coefficient
-from ...models.classes import DictPreferenceDataModel, MatrixPreferenceDataModel, DictBooleanPrefDataModel
+from ...models.classes import DictPreferenceDataModel, MatrixPreferenceDataModel, \
+    DictBooleanPrefDataModel, MatrixBooleanPrefDataModel
 
 #Simple Movies DataSet
 
@@ -364,6 +365,76 @@ def test_get__item___UserSimilarity():
     assert_array_almost_equal(np.array([[0.0]]), similarity['Steve Gates'][7][1])
     assert_equals('Maria Gabriela', similarity['Steve Gates'][7][0])
 
+    #MatrixBooleanModel
+    model = MatrixBooleanPrefDataModel(movies)
+    similarity = UserSimilarity(model, jaccard_coefficient, 3)
+    assert_array_equal(np.array([[1.]]), similarity['Marcel Caraciolo'][0][1])
+    assert_equals('Luciana Nunes', similarity['Marcel Caraciolo'][0][0])
+
+    assert_array_almost_equal(np.array([[1.]]), similarity['Marcel Caraciolo'][1][1])
+    assert_equals('Marcel Caraciolo', similarity['Marcel Caraciolo'][1][0])
+
+    assert_array_almost_equal(np.array([[1.]]), similarity['Marcel Caraciolo'][2][1])
+    assert_equals('Steve Gates', similarity['Marcel Caraciolo'][2][0])
+
+    #sorensen Without limits
+    similarity = UserSimilarity(model, sorensen_coefficient)
+
+    assert_array_almost_equal(np.array([[1.]]), similarity['Leopoldo Pires'][0][1])
+    assert_equals('Leopoldo Pires', similarity['Leopoldo Pires'][0][0])
+
+    assert_array_almost_equal(np.array([[0.88888889]]), similarity['Leopoldo Pires'][1][1])
+    assert_equals('Sheldom', similarity['Leopoldo Pires'][1][0])
+
+    assert_array_almost_equal(np.array([[0.8]]), similarity['Leopoldo Pires'][2][1])
+    assert_equals('Luciana Nunes', similarity['Leopoldo Pires'][2][0])
+
+    assert_array_almost_equal(np.array([[0.8]]), similarity['Leopoldo Pires'][3][1])
+    assert_equals('Marcel Caraciolo', similarity['Leopoldo Pires'][3][0])
+
+    assert_array_almost_equal(np.array([[0.8]]), similarity['Leopoldo Pires'][4][1])
+    assert_equals('Steve Gates', similarity['Leopoldo Pires'][4][0])
+
+    assert_array_almost_equal(np.array([[0.66666667]]), similarity['Leopoldo Pires'][5][1])
+    assert_equals('Lorena Abreu', similarity['Leopoldo Pires'][5][0])
+
+    assert_array_almost_equal(np.array([[0.57142857]]), similarity['Leopoldo Pires'][6][1])
+    assert_equals('Penny Frewman', similarity['Leopoldo Pires'][6][0])
+
+    assert_array_almost_equal(np.array([[0.]]), similarity['Leopoldo Pires'][7][1])
+    assert_equals('Maria Gabriela', similarity['Leopoldo Pires'][7][0])
+
+    #loglikehood with limits
+
+    similarity = UserSimilarity(model, loglikehood_coefficient, 0)
+    assert_equals([], similarity['Steve Gates'])
+
+    similarity = UserSimilarity(model, loglikehood_coefficient, 20)
+
+    assert_array_equal(np.array([[1.]]), similarity['Steve Gates'][0][1])
+    assert_equals('Luciana Nunes', similarity['Steve Gates'][0][0])
+
+    assert_array_almost_equal(np.array([[1.]]), similarity['Steve Gates'][1][1])
+    assert_equals('Marcel Caraciolo', similarity['Steve Gates'][1][0])
+
+    assert_array_almost_equal(np.array([[1.]]), similarity['Steve Gates'][2][1])
+    assert_equals('Steve Gates', similarity['Steve Gates'][2][0])
+
+    assert_array_almost_equal(np.array([[0.74804989]]), similarity['Steve Gates'][3][1])
+    assert_equals('Lorena Abreu', similarity['Steve Gates'][3][0])
+
+    assert_array_almost_equal(np.array([[0.74804989]]), similarity['Steve Gates'][4][1])
+    assert_equals('Sheldom', similarity['Steve Gates'][4][0])
+
+    assert_array_almost_equal(np.array([[0.65783229]]), similarity['Steve Gates'][5][1])
+    assert_equals('Leopoldo Pires', similarity['Steve Gates'][5][0])
+
+    assert_array_almost_equal(np.array([[0.55415805]]), similarity['Steve Gates'][6][1])
+    assert_equals('Penny Frewman', similarity['Steve Gates'][6][0])
+
+    assert_array_almost_equal(np.array([[0.0]]), similarity['Steve Gates'][7][1])
+    assert_equals('Maria Gabriela', similarity['Steve Gates'][7][0])
+
 
 def test_get_similarities__UserSimilarity():
     model = DictPreferenceDataModel(movies)
@@ -434,6 +505,39 @@ def test_get_similarities__UserSimilarity():
 
     #BooleanDictModel
     model = DictBooleanPrefDataModel(movies)
+
+    similarity = UserSimilarity(model, sorensen_coefficient, 3)
+
+    sim = similarity.get_similarities('Marcel Caraciolo')
+
+    assert_equals(len(sim), model.users_count())
+
+    similarity = UserSimilarity(model, loglikehood_coefficient)
+
+    sim = similarity.get_similarities('Leopoldo Pires')
+
+    assert_equals(len(sim), model.users_count())
+
+    similarity = UserSimilarity(model, jaccard_coefficient)
+
+    sim = similarity.get_similarities('Steve Gates')
+
+    assert_equals(len(sim), model.users_count())
+
+    similarity = UserSimilarity(model, loglikehood_coefficient, 0)
+
+    sim = similarity.get_similarities('Steve Gates')
+
+    assert_equals(len(sim), model.users_count())
+
+    similarity = UserSimilarity(model, sorensen_coefficient, 20)
+
+    sim = similarity.get_similarities('Steve Gates')
+
+    assert_equals(len(sim), model.users_count())
+
+    #MatrixBooleanPrefDataModel
+    model = MatrixBooleanPrefDataModel(movies)
 
     similarity = UserSimilarity(model, sorensen_coefficient, 3)
 
@@ -556,6 +660,106 @@ def test__iter__UserSimilarity():
         assert_equals(len(pref), 0)
 
     similarity = UserSimilarity(model, manhattan_distances, 20)
+
+    source_ids = []
+    prefs = []
+    for source_id, preferences in similarity:
+        source_ids.append(source_id)
+        prefs.append(preferences)
+    assert_equals(len(source_ids), model.users_count())
+
+    for pref in prefs:
+        assert_equals(len(pref), model.users_count())
+
+    #DictBooleanPrefDataModel
+    model = DictBooleanPrefDataModel(movies)
+    similarity = UserSimilarity(model, jaccard_coefficient, 3)
+
+    source_ids = []
+    prefs = []
+    for source_id, preferences in similarity:
+        source_ids.append(source_id)
+        prefs.append(preferences)
+    assert_equals(len(source_ids), model.users_count())
+
+    for pref in prefs:
+        assert_equals(len(pref), 3)
+
+    similarity = UserSimilarity(model, sorensen_coefficient)
+
+    source_ids = []
+    prefs = []
+    for source_id, preferences in similarity:
+        source_ids.append(source_id)
+        prefs.append(preferences)
+    assert_equals(len(source_ids), model.users_count())
+
+    for pref in prefs:
+        assert_equals(len(pref), model.users_count())
+
+    similarity = UserSimilarity(model, loglikehood_coefficient, 0)
+
+    source_ids = []
+    prefs = []
+    for source_id, preferences in similarity:
+        source_ids.append(source_id)
+        prefs.append(preferences)
+    assert_equals(len(source_ids), model.users_count())
+
+    for pref in prefs:
+        assert_equals(len(pref), 0)
+
+    similarity = UserSimilarity(model, jaccard_coefficient, 20)
+
+    source_ids = []
+    prefs = []
+    for source_id, preferences in similarity:
+        source_ids.append(source_id)
+        prefs.append(preferences)
+    assert_equals(len(source_ids), model.users_count())
+
+    for pref in prefs:
+        assert_equals(len(pref), model.users_count())
+
+    #MatrixBooleanPrefDataModel
+    model = MatrixBooleanPrefDataModel(movies)
+    similarity = UserSimilarity(model, jaccard_coefficient, 3)
+
+    source_ids = []
+    prefs = []
+    for source_id, preferences in similarity:
+        source_ids.append(source_id)
+        prefs.append(preferences)
+    assert_equals(len(source_ids), model.users_count())
+
+    for pref in prefs:
+        assert_equals(len(pref), 3)
+
+    similarity = UserSimilarity(model, loglikehood_coefficient)
+
+    source_ids = []
+    prefs = []
+    for source_id, preferences in similarity:
+        source_ids.append(source_id)
+        prefs.append(preferences)
+    assert_equals(len(source_ids), model.users_count())
+
+    for pref in prefs:
+        assert_equals(len(pref), model.users_count())
+
+    similarity = UserSimilarity(model, sorensen_coefficient, 0)
+
+    source_ids = []
+    prefs = []
+    for source_id, preferences in similarity:
+        source_ids.append(source_id)
+        prefs.append(preferences)
+    assert_equals(len(source_ids), model.users_count())
+
+    for pref in prefs:
+        assert_equals(len(pref), 0)
+
+    similarity = UserSimilarity(model, loglikehood_coefficient, 20)
 
     source_ids = []
     prefs = []
@@ -738,6 +942,170 @@ def test_get__item___ItemSimilarity():
     assert_array_almost_equal(np.array([[-0.33333333]]), similarity['Snakes on a Plane'][6][1])
     assert_equals('You, Me and Dupree', similarity['Snakes on a Plane'][6][0])
 
+    #DictBooleanPrefDataModel
+    #Jaccard #With limits
+    model = DictBooleanPrefDataModel(movies)
+    similarity = ItemSimilarity(model, jaccard_coefficient, 3)
+
+    #assert_array_equal(np.array([[1.]]), similarity['Snakes on a Plane'][0][1])
+    #assert_equals('Marcel Caraciolo', similarity['Snakes on a Plane'][0][0])
+    assert_array_almost_equal(np.array([[1.]]), similarity['Snakes on a Plane'][1][1])
+    assert_equals('Superman Returns', similarity['Snakes on a Plane'][1][0])
+
+    assert_array_almost_equal(np.array([[0.85714286]]), similarity['Snakes on a Plane'][2][1])
+    assert_equals('The Night Listener', similarity['Snakes on a Plane'][2][0])
+
+    #Sorensen Without limits
+    similarity = ItemSimilarity(model, sorensen_coefficient)
+
+    #assert_array_equal(np.array([[1.]]), similarity['The Night Listener'][0][1])
+    #assert_equals('Leopoldo Pires', similarity['The Night Listener'][0][0])
+    assert_array_almost_equal(np.array([[0.92307692]]), similarity['The Night Listener'][1][1])
+    assert_equals('Snakes on a Plane', similarity['The Night Listener'][1][0])
+
+    assert_array_almost_equal(np.array([[0.92307692]]), similarity['The Night Listener'][2][1])
+    assert_equals('Superman Returns', similarity['The Night Listener'][2][0])
+
+    assert_array_almost_equal(np.array([[0.90909091]]), similarity['The Night Listener'][3][1])
+    assert_equals('Lady in the Water', similarity['The Night Listener'][3][0])
+
+    assert_array_almost_equal(np.array([[0.83333333]]), similarity['The Night Listener'][4][1])
+    assert_equals('You, Me and Dupree', similarity['The Night Listener'][4][0])
+
+    assert_array_almost_equal(np.array([[0.8]]), similarity['The Night Listener'][5][1])
+    assert_equals('Just My Luck', similarity['The Night Listener'][5][0])
+
+    assert_array_almost_equal(np.array([[0.]]), similarity['The Night Listener'][6][1])
+    assert_equals('Back to the Future', similarity['The Night Listener'][6][0])
+
+    similarity = ItemSimilarity(model, loglikehood_coefficient)
+    #assert_array_equal(np.array([[1.]]), similarity['The Night Listener'][0][1])
+    #assert_equals('Steve Gates', similarity['The Night Listener'][0][0])
+
+    assert_array_almost_equal(np.array([[1.]]), similarity['The Night Listener'][1][1])
+    assert_equals('Superman Returns', similarity['The Night Listener'][1][0])
+
+    assert_array_almost_equal(np.array([[1.]]), similarity['The Night Listener'][2][1])
+    assert_equals('The Night Listener', similarity['The Night Listener'][2][0])
+
+    assert_array_almost_equal(np.array([[0.74804989]]), similarity['The Night Listener'][3][1])
+    assert_equals('Lady in the Water', similarity['The Night Listener'][3][0])
+
+    assert_array_almost_equal(np.array([[0.65783229]]), similarity['The Night Listener'][4][1])
+    assert_equals('Just My Luck', similarity['The Night Listener'][4][0])
+
+    assert_array_almost_equal(np.array([[0.25087682]]), similarity['The Night Listener'][5][1])
+    assert_equals('You, Me and Dupree', similarity['The Night Listener'][5][0])
+
+    assert_array_almost_equal(np.array([[0.]]), similarity['The Night Listener'][6][1])
+    assert_equals('Back to the Future', similarity['The Night Listener'][6][0])
+
+    similarity = ItemSimilarity(model, jaccard_coefficient, 0)
+
+    assert_equals([], similarity['Lady in the Water'])
+
+    similarity = ItemSimilarity(model, sorensen_coefficient, 20)
+
+    assert_array_almost_equal(np.array([[1.]]), similarity['Snakes on a Plane'][1][1])
+    assert_equals('Superman Returns', similarity['Snakes on a Plane'][1][0])
+
+    assert_array_almost_equal(np.array([[0.92307692]]), similarity['Snakes on a Plane'][2][1])
+    assert_equals('The Night Listener', similarity['Snakes on a Plane'][2][0])
+
+    assert_array_almost_equal(np.array([[0.92307692]]), similarity['Snakes on a Plane'][3][1])
+    assert_equals('You, Me and Dupree', similarity['Snakes on a Plane'][3][0])
+
+    assert_array_almost_equal(np.array([[0.83333333]]), similarity['Snakes on a Plane'][4][1])
+    assert_equals('Lady in the Water', similarity['Snakes on a Plane'][4][0])
+
+    assert_array_almost_equal(np.array([[0.72727273]]), similarity['Snakes on a Plane'][5][1])
+    assert_equals('Just My Luck', similarity['Snakes on a Plane'][5][0])
+
+    assert_array_almost_equal(np.array([[0.]]), similarity['Snakes on a Plane'][6][1])
+    assert_equals('Back to the Future', similarity['Snakes on a Plane'][6][0])
+
+    #MatrixBooleanPrefDataModel
+    #Jaccard #With limits
+    model = MatrixBooleanPrefDataModel(movies)
+    similarity = ItemSimilarity(model, jaccard_coefficient, 3)
+
+    #assert_array_equal(np.array([[1.]]), similarity['Snakes on a Plane'][0][1])
+    #assert_equals('Marcel Caraciolo', similarity['Snakes on a Plane'][0][0])
+    assert_array_almost_equal(np.array([[1.]]), similarity['Snakes on a Plane'][1][1])
+    assert_equals('Superman Returns', similarity['Snakes on a Plane'][1][0])
+
+    assert_array_almost_equal(np.array([[0.85714286]]), similarity['Snakes on a Plane'][2][1])
+    assert_equals('The Night Listener', similarity['Snakes on a Plane'][2][0])
+
+    #Sorensen Without limits
+    similarity = ItemSimilarity(model, sorensen_coefficient)
+
+    #assert_array_equal(np.array([[1.]]), similarity['The Night Listener'][0][1])
+    #assert_equals('Leopoldo Pires', similarity['The Night Listener'][0][0])
+    assert_array_almost_equal(np.array([[0.92307692]]), similarity['The Night Listener'][1][1])
+    assert_equals('Snakes on a Plane', similarity['The Night Listener'][1][0])
+
+    assert_array_almost_equal(np.array([[0.92307692]]), similarity['The Night Listener'][2][1])
+    assert_equals('Superman Returns', similarity['The Night Listener'][2][0])
+
+    assert_array_almost_equal(np.array([[0.90909091]]), similarity['The Night Listener'][3][1])
+    assert_equals('Lady in the Water', similarity['The Night Listener'][3][0])
+
+    assert_array_almost_equal(np.array([[0.83333333]]), similarity['The Night Listener'][4][1])
+    assert_equals('You, Me and Dupree', similarity['The Night Listener'][4][0])
+
+    assert_array_almost_equal(np.array([[0.8]]), similarity['The Night Listener'][5][1])
+    assert_equals('Just My Luck', similarity['The Night Listener'][5][0])
+
+    assert_array_almost_equal(np.array([[0.]]), similarity['The Night Listener'][6][1])
+    assert_equals('Back to the Future', similarity['The Night Listener'][6][0])
+
+    similarity = ItemSimilarity(model, loglikehood_coefficient)
+    #assert_array_equal(np.array([[1.]]), similarity['The Night Listener'][0][1])
+    #assert_equals('Steve Gates', similarity['The Night Listener'][0][0])
+
+    assert_array_almost_equal(np.array([[1.]]), similarity['The Night Listener'][1][1])
+    assert_equals('Superman Returns', similarity['The Night Listener'][1][0])
+
+    assert_array_almost_equal(np.array([[1.]]), similarity['The Night Listener'][2][1])
+    assert_equals('The Night Listener', similarity['The Night Listener'][2][0])
+
+    assert_array_almost_equal(np.array([[0.74804989]]), similarity['The Night Listener'][3][1])
+    assert_equals('Lady in the Water', similarity['The Night Listener'][3][0])
+
+    assert_array_almost_equal(np.array([[0.65783229]]), similarity['The Night Listener'][4][1])
+    assert_equals('Just My Luck', similarity['The Night Listener'][4][0])
+
+    assert_array_almost_equal(np.array([[0.25087682]]), similarity['The Night Listener'][5][1])
+    assert_equals('You, Me and Dupree', similarity['The Night Listener'][5][0])
+
+    assert_array_almost_equal(np.array([[0.]]), similarity['The Night Listener'][6][1])
+    assert_equals('Back to the Future', similarity['The Night Listener'][6][0])
+
+    similarity = ItemSimilarity(model, jaccard_coefficient, 0)
+
+    assert_equals([], similarity['Lady in the Water'])
+
+    similarity = ItemSimilarity(model, sorensen_coefficient, 20)
+
+    assert_array_almost_equal(np.array([[1.]]), similarity['Snakes on a Plane'][1][1])
+    assert_equals('Superman Returns', similarity['Snakes on a Plane'][1][0])
+
+    assert_array_almost_equal(np.array([[0.92307692]]), similarity['Snakes on a Plane'][2][1])
+    assert_equals('The Night Listener', similarity['Snakes on a Plane'][2][0])
+
+    assert_array_almost_equal(np.array([[0.92307692]]), similarity['Snakes on a Plane'][3][1])
+    assert_equals('You, Me and Dupree', similarity['Snakes on a Plane'][3][0])
+
+    assert_array_almost_equal(np.array([[0.83333333]]), similarity['Snakes on a Plane'][4][1])
+    assert_equals('Lady in the Water', similarity['Snakes on a Plane'][4][0])
+
+    assert_array_almost_equal(np.array([[0.72727273]]), similarity['Snakes on a Plane'][5][1])
+    assert_equals('Just My Luck', similarity['Snakes on a Plane'][5][0])
+
+    assert_array_almost_equal(np.array([[0.]]), similarity['Snakes on a Plane'][6][1])
+    assert_equals('Back to the Future', similarity['Snakes on a Plane'][6][0])
+
 
 def test_get_similarities__ItemSimilarity():
     model = DictPreferenceDataModel(movies)
@@ -816,7 +1184,41 @@ def test_get_similarities__ItemSimilarity():
 
     assert_equals(len(sim), model.items_count())
 
-    #Pearson Without limits
+    #Sorensen Without limits
+    similarity = ItemSimilarity(model, sorensen_coefficient)
+
+    sim = similarity.get_similarities('Lady in the Water')
+
+    assert_equals(len(sim), model.items_count())
+
+    similarity = ItemSimilarity(model, loglikehood_coefficient)
+
+    sim = similarity.get_similarities('Lady in the Water')
+
+    assert_equals(len(sim), model.items_count())
+
+    similarity = ItemSimilarity(model, loglikehood_coefficient, 0)
+
+    sim = similarity.get_similarities('Lady in the Water')
+
+    assert_equals(len(sim), model.items_count())
+
+    similarity = ItemSimilarity(model, sorensen_coefficient, 20)
+
+    sim = similarity.get_similarities('Lady in the Water')
+
+    assert_equals(len(sim), model.items_count())
+
+    #MatrixBooleanPrefDataModel
+    model = MatrixBooleanPrefDataModel(movies)
+
+    similarity = ItemSimilarity(model, jaccard_coefficient, 3)
+
+    sim = similarity.get_similarities('Snakes on a Plane')
+
+    assert_equals(len(sim), model.items_count())
+
+    #Sorensen Without limits
     similarity = ItemSimilarity(model, sorensen_coefficient)
 
     sim = similarity.get_similarities('Lady in the Water')
@@ -995,6 +1397,56 @@ def test__iter__ItemSimilarity():
 
     #DictBoolean
     model = DictBooleanPrefDataModel(movies)
+    similarity = ItemSimilarity(model, sorensen_coefficient, 3)
+
+    item_ids = []
+    prefs = []
+    for item_id, preferences in similarity:
+        item_ids.append(item_id)
+        prefs.append(preferences)
+    assert_equals(len(item_ids), model.items_count())
+
+    for pref in prefs:
+        assert_equals(len(pref), 3)
+
+    similarity = ItemSimilarity(model, jaccard_coefficient)
+
+    item_ids = []
+    prefs = []
+    for item_id, preferences in similarity:
+        item_ids.append(item_id)
+        prefs.append(preferences)
+    assert_equals(len(item_ids), model.items_count())
+
+    for pref in prefs:
+        assert_equals(len(pref), model.items_count())
+
+    similarity = ItemSimilarity(model, loglikehood_coefficient, 0)
+
+    item_ids = []
+    prefs = []
+    for item_id, preferences in similarity:
+        item_ids.append(item_id)
+        prefs.append(preferences)
+    assert_equals(len(item_ids), model.items_count())
+
+    for pref in prefs:
+        assert_equals(len(pref), 0)
+
+    similarity = ItemSimilarity(model, sorensen_coefficient, 20)
+
+    item_ids = []
+    prefs = []
+    for item_id, preferences in similarity:
+        item_ids.append(item_id)
+        prefs.append(preferences)
+    assert_equals(len(item_ids), model.items_count())
+
+    for pref in prefs:
+        assert_equals(len(pref), model.items_count())
+
+    #MatrixBooleanPrefDataModel
+    model = MatrixBooleanPrefDataModel(movies)
     similarity = ItemSimilarity(model, sorensen_coefficient, 3)
 
     item_ids = []

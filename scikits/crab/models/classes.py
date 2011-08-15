@@ -1051,7 +1051,7 @@ class MatrixBooleanPrefDataModel(BaseDataModel):
     '''
     def __init__(self, dataset):
         BaseDataModel.__init__(self)
-        self.dataset = self._load_dataset(dataset)
+        self.dataset = self._load_dataset(dataset.copy())
         self.build_model()
 
     def _load_dataset(self, dataset):
