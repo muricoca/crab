@@ -1,0 +1,26 @@
+#Para Rodrigo Vieira
+
+Todo site vai ser inspirado na home do scikit-learn 
+
+http://scikit-learn.sourceforge.net/stable/
+
+
+1. Alterar os layouts do futuro site do crab para suportar lá em cima do lado esquerdo o logo oficial do crab 
+http://muricoca.github.com/crab/icon_crab.jpg
+A idéia é que vc aumente a barra branca superior, ela ficar mais larga pra poder encaixar a 
+figura do Crab, se possivel vc editar a imagem e por o nome Crab do lado em letras menores
+melhor ainda.
+
+2. As cores do site serem mudadas para o vermelho da cor do logo no background (trocar esse azul
+escuro por a cor do crab) e a cor dos links para um vermelho escuro (da cor do crab).
+Continuar branco o fundo do meio, nao precisa alterar e os fundos azul claros para um vermelho
+claro.
+
+
+Quando finalizar nao sobe com o html, ou seja a pasta _build apenas a pasta contendo o resto
+inclusive a pasta themes sem os .pyc !
+
+O layout pode ser acessado aqui:
+
+https://github.com/muricoca/crab/tree/gh-pages/future_html/themes/scikit-learn
+
