@@ -139,7 +139,7 @@ class BaseDataModel(object):
         '''
         raise NotImplementedError("cannot instantiate Abstract Base Class")
 
-    def set_preference(self, user_id, item_id, value):
+    def set_preference(self, user_id, item_id, value=None):
         '''
         Parameters
         ----------
