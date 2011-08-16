@@ -68,18 +68,16 @@ def euclidean_distances(X, Y, squared=False, inverse=True):
     if X.shape[1] != Y.shape[1]:
         raise ValueError("Incompatible dimension for X and Y matrices")
 
-
     if squared:
-        return ssd.cdist(X,Y,'sqeuclidean')
-        
-    XY = ssd.cdist(X,Y)
-    return  np.divide(1.0,(1.0 + XY)) if inverse else XY
+        return ssd.cdist(X, Y, 'sqeuclidean')
+
+    XY = ssd.cdist(X, Y)
+    return  np.divide(1.0, (1.0 + XY)) if inverse else XY
 
 euclidian_distances = euclidean_distances  # both spelling for backward compat
 
 
-
-def pearson_correlation(X,Y):
+def pearson_correlation(X, Y):
     """
     Considering the rows of X (and Y=X) as vectors, compute the
     distance matrix between each pair of vectors.
@@ -122,10 +120,11 @@ def pearson_correlation(X,Y):
 
     if X.shape[1] != Y.shape[1]:
         raise ValueError("Incompatible dimension for X and Y matrices")
-    
-    XY = ssd.cdist(X,Y,'correlation',2)
-    
+
+    XY = ssd.cdist(X, Y, 'correlation', 2)
+
     return 1 - XY
+
 
 def jaccard_coefficient(X, Y):
     """
@@ -158,9 +157,9 @@ def jaccard_coefficient(X, Y):
            [ 0.,  1.]])
 
     >>> jaccard_coefficient(X, [['a', 'b', 'c', 'k']])
-	array([[ 0.6],
-	      [ 0. ]])
-	"""
+    array([[ 0.6],
+           [ 0. ]])
+    """
     # should not need X_norm_squared because if you could precompute that as
     # well as Y, then you should just pre-compute the output and not even
     # call this function.
@@ -182,7 +181,6 @@ def jaccard_coefficient(X, Y):
         i += 1
 
     #XY = np.array([ [np.intersect1d(y,x).size / (float(len(x)) + len(y) - np.intersect1d(y,x).size)]  for y in Y  for x in X]) 
-
     return np.array(result)
 
 
@@ -231,10 +229,10 @@ def manhattan_distances(X, Y):
 
     if X.shape[1] != Y.shape[1]:
         raise ValueError("Incompatible dimension for X and Y matrices")
-    
-    XY = ssd.cdist(X,Y,'cityblock')
 
-    return 1.0 - (XY/float(X.shape[1]))
+    XY = ssd.cdist(X, Y, 'cityblock')
+
+    return 1.0 - (XY / float(X.shape[1]))
 
 
 def sorensen_coefficient(X, Y):
@@ -408,7 +406,8 @@ def cosine_distances(X, Y):
     if X.shape[1] != Y.shape[1]:
         raise ValueError("Incompatible dimension for X and Y matrices")
 
-    return 1. - ssd.cdist(X,Y,'cosine')
+    return 1. - ssd.cdist(X, Y, 'cosine')
+
 
 def spearman_coefficient(X, Y):
     """
