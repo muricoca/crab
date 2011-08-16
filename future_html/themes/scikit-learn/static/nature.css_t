@@ -6,7 +6,8 @@
  *
  * :copyright: Copyright 2007-2010 by the Sphinx team, see AUTHORS.
  * :license: BSD, see LICENSE for details.
- *
+ * marrom: b5742f
+ * vinho: 870808
  */
 /* @import url("minimalist.css") /\* google custom search  *\/ */
 @import url("basic.css");
@@ -23,7 +24,7 @@ body {
 div.header-wrapper {
     background-color: #ffffff;
     max-width: 1024px;
-    min-height: 50px;
+    min-height: 132px;
     margin-left: auto;
     margin-right: auto;
     border-radius: 15px;
@@ -60,7 +61,7 @@ div.navbar {
 }    
 
 div.navbar ul {
-    background-color: #ff9c34;
+    background-color: #b5742f;
     color: white;
     border-radius: 5px;
     -moz-border-radius: 5px;
