@@ -1,2 +1,2 @@
-from classes import DictPreferenceDataModel, MatrixPreferenceDataModel, \
+from .classes import DictPreferenceDataModel, MatrixPreferenceDataModel, \
          MatrixBooleanPrefDataModel, DictBooleanPrefDataModel
