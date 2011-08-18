@@ -82,8 +82,6 @@ class UserRecommender(MemoryBasedRecommender):
         '''
         raise NotImplementedError("UserRecommender is an abstract class.")
 
-
-
 #===========================
 # Base Item Candidate Strategy
 
@@ -98,6 +96,30 @@ class BaseCandidateItemsStrategy(object):
         '''
         Return the candidate items that could possibly be recommended to the user
 
+        Parameters
+        -----------
+        user_id:  int or string
+            ID of user for which to find most similar other users
+
+        data_model: The data model that will be the source for the possible
+            candidates
+        '''
+        raise NotImplementedError("BaseCandidateItemsStrategy is an abstract class.")
+
+
+#===========================
+# Base User Candidates Strategies
+
+class BaseUserNeighborhoodStrategy(object):
+    '''
+    Base implementation for retrieving
+    all users that could possibly be select as part of the neighborhood.
+    '''
+
+    def user_neighborhood(user_id, data_model, **params):
+        '''
+        Computes a neighborhood consisting of the  n users to a given user based on the
+        strategy implemented in this method.
         Parameters
         -----------
         user_id:  int or string
