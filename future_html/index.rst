@@ -43,7 +43,7 @@ User Guide
 .. toctree::
    :maxdepth: 2
 
-   exercises
+   Installing crab
 
 Example Gallery
 ===============
@@ -51,7 +51,7 @@ Example Gallery
 .. toctree::
    :maxdepth: 2
 
-   setup
+   Examples
 
 
 Development
@@ -59,5 +59,6 @@ Development
 .. toctree::
    :maxdepth: 2
 
-   general_concepts
+   Contributing
+
 
