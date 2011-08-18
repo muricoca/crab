@@ -22,13 +22,11 @@
 
 
 :Features:
-  * **Solid**: :ref:`supervised-learning`: :ref:`svm`, :ref:`linear_model`.
+  * **Recommender Algorithms**: User-Based Filtering and Item-Based Filtering
 
-  * **Work in progress**: :ref:`unsupervised-learning`:
-    :ref:`clustering`, :ref:`mixture`, manifold learning, :ref:`ICA
-    <ICA>`, :ref:`gaussian_process`
+  * **Work in progress**: Slope One, SVD, Evaluation of Recommenders.
 
-  * **Planed**: Gaussian graphical models, matrix factorization
+  * **Planed**: Sparse Matrices, REST API's.
 
 :License:
   Open source, commercially usable: **BSD license** (3 clause)

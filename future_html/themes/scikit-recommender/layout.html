@@ -2,16 +2,16 @@
     scikit-learn/layout.html
     ~~~~~~~~~~~~~~~~~
 
-    Layout for scikit-learn, after a design made by Angel Soler
+    Layout for Crab, modified from Scikit-Learn after a design made by Angel Soler
     (http://webylimonada.org)
 
-    :copyright: Fabian Pedregosa
+    :copyright: Rodrigo Vieira
     :license: BSD
 #}
 {% extends "basic/layout.html" %}
 
 {%- if pagename == 'index' %}
-    {% set title = 'Applied Machine Learning in Python with scikit-learn' %}
+    {% set title = 'Recommender Systems Framework in Python' %}
 {%- endif %}
 
 {% block header %}
@@ -28,11 +28,12 @@
           {%- block navbar -%}
           <div class="navbar">
           <ul>
-            <li><a href="http://github.com/scikit-learn/scikit-learn-tutorial">Source of this tutorial</a></li>
-            <li><a href="http://scikit-learn.sourceforge.net">Documentation for scikit-learn</a></li>
+            <li><a href="http://github.com/scikit-learn/scikit-learn-tutorial">Download</a></li>
+            <li><a href="http://scikit-learn.sourceforge.net">Support</a></li>
+            <li><a href="http://scikit-learn.sourceforge.net">User Guide</a></li>
+            <li><a href="http://scikit-learn.sourceforge.net">Examples</a></li>
+            <li><a href="http://scikit-learn.sourceforge.net">Contribute</a></li>
        </ul>
-
-
        </div> <!-- end navbar -->
          {%- endblock -%}
        </div>
@@ -57,17 +58,31 @@
         {% else %}
         <h3>News</h3>
 
-       <p>scikits.learn 0.7 is available
+       <p>Crab 0.1 is available
          for <a href="https://sourceforge.net/projects/scikit-learn/files/">download</a>.
          See <a href="{{pathto('whats_new')}}">what's new</a> and tips
          on <a href="{{pathto('install')}}">installing</a>.</p>
 
-
         {% endif %}
 
-        <h3>{{ _('Contents') }}</h3>
-         {{ toc }}
+        <h3>Participate</h3> 
 
+        <p>Fork
+        the <a href="http://github.com/scikit-learn/scikit-learn">source
+        code</a>, join the
+        <a href="support.html#mailing-list">mailing
+        lists</a>, report bugs to
+        the <a href="https://github.com/scikit-learn/scikit-learn/issues">issue
+        tracker</a> or participate in the next
+        <a href="http://github.com/scikit-learn/scikit-learn/wiki/Upcoming-events">coding sprint</a>. <a href="developers/index.html">Read More...</a> 
+        </p> 
+
+        <h3>Funding</h3> 
+        <p>This project is maintained
+        by <a href="http://www.muricoca.com">Muriçoca Labs</a>,
+        and others.</p> 
+        <p style="text-align: center;"><a href="http://www.muricoca.com"><img src="_static/small-muricoca-logo.png"
+        alt="Muricoca"/></a></p> 
       </div>
 
       <div class="content">
@@ -86,7 +101,7 @@
 
 {%- block footer %}
     <div class="footer">
-        <p style="text-align: center">This tutorial is for scikit-learn
+        <p style="text-align: center">This docummentation is for crab
         version {{ release|e }}<p>
 
     {%- if show_copyright %}
@@ -100,7 +115,8 @@
       {% trans last_updated=last_updated|e %}Last updated on {{ last_updated }}.{% endtrans %}
     {%- endif %}
     {%- if show_sphinx %}
-      {% trans sphinx_version=sphinx_version|e %}Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> {{ sphinx_version }}{% endtrans %}. Design by <a href="http://webylimonada.com">Web y Limonada</a>.
+      {% trans sphinx_version=sphinx_version|e %}Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> {{ sphinx_version }}{% endtrans %}. Design by <a href="http://webylimonada.com">Web y Limonada</a>
+ 	  <br>Based on the original design by <a href="http://scikit-learn.sourceforge.net/stable/">scikit-learn</a>.
     {%- endif %}
     </div>
 {%- endblock %}

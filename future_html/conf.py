@@ -23,15 +23,15 @@ source_encoding = 'utf-8'
 master_doc = 'index'
 
 # General information about the project.
-project = u'scikit-learn tutorial'
-copyright = u'2010–2011, scikits.learn developers (BSD License)'
+project = u'scikit-recommender'
+copyright = u'2011, scikits.recommender Crab developers (BSD License)'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
 # built documents.
 #
-# The short X.Y version. Should track scikit-learn version.
-version = '0.9'
+# The short X.Y version. Should track scikit-recommender (Crab) version.
+version = '0.1'
 # The full version, including alpha/beta/rc tags.
 release = version
 
@@ -77,7 +77,7 @@ pygments_style = 'sphinx'
 
 # The theme to use for HTML and HTML Help pages.  Major themes that come with
 # Sphinx are currently 'default' and 'sphinxdoc'.
-html_theme = 'scikit-learn'
+html_theme = 'scikit-recommender'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
@@ -92,7 +92,7 @@ html_theme_path = ['themes']
 #html_title = None
 
 # A shorter title for the navigation bar.  Default is the same as html_title.
-html_short_title = 'scikits.learn'
+html_short_title = 'scikits.recommender Crab'
 
 # The name of an image file (relative to this directory) to place at the top
 # of the sidebar.
@@ -158,14 +158,14 @@ htmlhelp_basename = 'scikit-learndoc'
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'scikit_learn_tutorial.tex',
-   u'Applied Machine Learning in Python with scikit-learn',
-   u'By the scikits.learn developers', 'manual'),
+  #('index', 'scikit_learn_tutorial.tex',
+  # u'Applied Machine Learning in Python with scikit-learn',
+  # u'By the scikits.recommender developers', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
 # the title page.
-latex_logo = "logos/scikit-learn-logo.png"
+latex_logo = "logos/crab-logo-small.png"
 
 # For "manual" documents, if this is true, then toplevel headings are parts,
 # not chapters.
