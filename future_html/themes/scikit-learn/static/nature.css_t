@@ -12,11 +12,16 @@
 /* @import url("minimalist.css") /\* google custom search  *\/ */
 @import url("basic.css");
 /* -- page layout ----------------------------------------------------------- */
- 
+
+@font-face {
+  font-family: Yanone Kaffeesatz;
+  src:url('http://themes.googleusercontent.com/static/fonts/yanonekaffeesatz/v1/YDAoLskQQ5MOAgvHUQCcLQa6gm6bS00u2Qn-iPLo1Go.woff') format('woff');
+}
+
 body {
     font-family: Helvetica, Arial, sans-serif;
     font-size: 100%;
-    background-color: #4eacc5;
+    background-color: #b5742f;
     margin: 0;
     padding: 0;
 }
@@ -56,8 +61,8 @@ span.legend {
 }
 
 div.navbar {
-    padding-top: 15px;
-    margin-left: 200px;
+    padding-top: 45px;
+    margin-left: 350px;
 }    
 
 div.navbar ul {
@@ -72,6 +77,10 @@ div.navbar ul, div.navbar li {
     display: inline;
     list-style: none;
     padding: 4px 10px 5px 10px;
+}
+
+.header h1 {
+  font-family: Yanone Kaffeesatz; color: #870808;
 }
 
 div.navbar ul li a, 
@@ -184,7 +193,7 @@ div.sphinxsidebar h3,
 div.sphinxsidebar h4 {
     margin: 0;
     padding: 5px 10px;
-    background-color: #4EACC5;
+    background-color: #f6bd93;
     font-weight: normal;
     color: white;
     margin: 25px 20px 0;
@@ -258,12 +267,12 @@ div.sphinxsidebar input[type=text]{
 /* -- body styles ----------------------------------------------------------- */
  
 a {
-    color: #355F7C;
+    color: #870808;
     text-decoration: none;
 }
  
 a:hover {
-    color: #355F7C;
+    color: #870808;
     text-decoration: underline;
 }
 
@@ -291,11 +300,12 @@ div.body h2,
 div.body h3 {
     text-align: left;
 }
+f6bd93
 
 div.bodywrapper h1 {
     margin: 0 -10px 0 -10px;
     text-align: center;
-    background-color: #cde8ef;
+    background-color: #f6bd93;
     font-family: Helvetica, Arial, sans-serif;
     font-size: 250%;
     border-radius: 0 15px 0 15px;
@@ -304,7 +314,8 @@ div.bodywrapper h1 {
  
 div.body h3 { 
     font-size: 120%; 
-    background-color: #D8DEE3; 
+    background-color: #f6bd93;
+
     padding: 5px;
     border-radius: 10px;
 
