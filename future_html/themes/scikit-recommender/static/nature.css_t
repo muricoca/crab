@@ -80,7 +80,9 @@ div.navbar ul, div.navbar li {
 }
 
 .header h1 {
-  font-family: Yanone Kaffeesatz; color: #870808;
+  font-family: Yanone Kaffeesatz;
+  color: #870808;
+  padding-top: 15px;
 }
 
 div.navbar ul li a, 
@@ -287,9 +289,18 @@ div.body h6 {
     color: #212224;
 }
 
+#headline {
+	font-family: Yanone Kaffeesatz;
+	color: #333;
+	margin-left: 160px;
+	font-size: 18px;
+}
+
 div.body h1,
 div.body h2,
 div.body h3 {
+	background-color: #f6bd93;
+	
     padding: 10px;
     text-align: center;
     border-radius: 10px;
@@ -300,7 +311,7 @@ div.body h2,
 div.body h3 {
     text-align: left;
 }
-f6bd93
+
 
 div.bodywrapper h1 {
     margin: 0 -10px 0 -10px;
