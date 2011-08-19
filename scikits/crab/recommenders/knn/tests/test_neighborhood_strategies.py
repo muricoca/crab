@@ -2,7 +2,7 @@ import numpy as np
 from numpy.testing import assert_array_equal
 from nose.tools import assert_raises
 from ....models.classes import DictPreferenceDataModel, MatrixPreferenceDataModel
-from ..neighborhood_strategies import AllNeighborsStrategy
+from ..neighborhood_strategies import AllNeighborsStrategy, NearestNeighborsStrategy
 from ....models.utils import UserNotFoundError
 
 
@@ -46,3 +46,49 @@ def test_AllNeighborsStrategy():
     strategy = AllNeighborsStrategy()
     assert_array_equal(np.array(['Leopoldo Pires', 'Luciana Nunes', 'Marcel Caraciolo',
        'Maria Gabriela', 'Penny Frewman', 'Sheldom', 'Steve Gates']), strategy.user_neighborhood('Lorena Abreu', model))
+
+
+def test_NearestNeighborsStrategy():
+    #Empty Dataset
+    model = DictPreferenceDataModel({})
+    strategy = NearestNeighborsStrategy()
+    assert_array_equal(np.array([]), strategy.user_neighborhood('Lorena Abreu', model))
+
+    model = MatrixPreferenceDataModel({})
+    strategy = NearestNeighborsStrategy()
+    assert_array_equal(np.array([]), strategy.user_neighborhood('Lorena Abreu', model))
+
+    #Possible candidates
+    model = DictPreferenceDataModel(movies)
+    strategy = NearestNeighborsStrategy()
+    assert_array_equal(np.array(['Leopoldo Pires', 'Marcel Caraciolo', 'Sheldom',
+       'Luciana Nunes', 'Penny Frewman', 'Steve Gates'], dtype='|S16'),
+        strategy.user_neighborhood('Lorena Abreu', model))
+
+    model = MatrixPreferenceDataModel(movies)
+    strategy = NearestNeighborsStrategy()
+    assert_array_equal(np.array(['Leopoldo Pires', 'Marcel Caraciolo', 'Sheldom',
+       'Luciana Nunes', 'Penny Frewman', 'Steve Gates'], dtype='|S16'),
+       strategy.user_neighborhood('Lorena Abreu', model))
+
+    #Empty candidates
+    model = DictPreferenceDataModel(movies)
+    strategy = NearestNeighborsStrategy()
+    assert_array_equal(np.array(['Leopoldo Pires', 'Steve Gates', 'Lorena Abreu', 'Sheldom',
+       'Luciana Nunes', 'Penny Frewman'], dtype='|S14'),
+        strategy.user_neighborhood('Marcel Caraciolo', model))
+
+    model = MatrixPreferenceDataModel(movies)
+    strategy = NearestNeighborsStrategy()
+    assert_array_equal(np.array(['Leopoldo Pires', 'Steve Gates', 'Lorena Abreu', 'Sheldom',
+       'Luciana Nunes', 'Penny Frewman'], dtype='|S14'),
+        strategy.user_neighborhood('Marcel Caraciolo', model))
+
+    #Empty candidates
+    model = DictPreferenceDataModel(movies)
+    strategy = NearestNeighborsStrategy()
+    assert_array_equal(np.array([], dtype=bool), strategy.user_neighborhood('Maria Gabriela', model))
+
+    model = MatrixPreferenceDataModel(movies)
+    strategy = NearestNeighborsStrategy()
+    assert_array_equal(np.array([], dtype=bool), strategy.user_neighborhood('Maria Gabriela', model))

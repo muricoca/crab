@@ -116,7 +116,8 @@ class BaseUserNeighborhoodStrategy(object):
     all users that could possibly be select as part of the neighborhood.
     '''
 
-    def user_neighborhood(user_id, data_model, **params):
+    def user_neighborhood(user_id, data_model, similarity='user_similarity',
+                distance=None, n_users=None, **params):
         '''
         Computes a neighborhood consisting of the  n users to a given user based on the
         strategy implemented in this method.
@@ -125,7 +126,18 @@ class BaseUserNeighborhoodStrategy(object):
         user_id:  int or string
             ID of user for which to find most similar other users
 
-        data_model: The data model that will be the source for the possible
+        data_model: DataModel instance
+            The data model that will be the source for the possible
             candidates
+
+        similarity: string
+            The similarity to compute the neighborhood (default = user_similarity)
+
+        distance: function
+            Pairwise metric to compute the similarity between the users.
+
+        nhood_size: int
+            The neighborhood size (default = None all users)
+
         '''
         raise NotImplementedError("BaseCandidateItemsStrategy is an abstract class.")
