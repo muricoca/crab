@@ -4,10 +4,11 @@ from nose.tools import assert_raises, assert_equals, assert_almost_equals
 from ....models.classes import DictPreferenceDataModel, MatrixPreferenceDataModel, \
     DictBooleanPrefDataModel, MatrixBooleanPrefDataModel
 from ..item_strategies import ItemsNeighborhoodStrategy, AllPossibleItemsStrategy
-from ....similarities.basic_similarities import ItemSimilarity
-from ..classes import ItemBasedRecommender
+from ..neighborhood_strategies import AllNeighborsStrategy, NearestNeighborsStrategy
+from ....similarities.basic_similarities import ItemSimilarity, UserSimilarity
+from ..classes import ItemBasedRecommender, UserBasedRecommender
 from ....models.utils import ItemNotFoundError
-from ....metrics.pairwise import euclidean_distances, jaccard_coefficient
+from ....metrics.pairwise import euclidean_distances, jaccard_coefficient, pearson_correlation
 
 
 movies = {'Marcel Caraciolo': {'Lady in the Water': 2.5, 'Snakes on a Plane': 3.5,
@@ -45,6 +46,16 @@ def test_create_ItemBasedRecommender():
     assert_equals(recsys.capper, True)
 
 
+def test_create_UserBasedRecommender():
+    nhood_strategy = AllNeighborsStrategy()
+    similarity = UserSimilarity(dict_model, euclidean_distances)
+    recsys = UserBasedRecommender(dict_model, similarity, nhood_strategy)
+    assert_equals(recsys.similarity, similarity)
+    assert_equals(recsys.neighborhood_strategy, nhood_strategy)
+    assert_equals(recsys.model, dict_model)
+    assert_equals(recsys.capper, True)
+
+
 def test_all_other_items_ItemBasedRecommender():
     items_strategy = AllPossibleItemsStrategy()
     similarity = ItemSimilarity(dict_model, euclidean_distances)
@@ -70,6 +81,62 @@ def test_all_other_items_ItemBasedRecommender():
     assert_array_equal(np.array([], dtype='|S'), recsys.all_other_items('Marcel Caraciolo'))
     assert_array_equal(np.array(['Just My Luck', 'Lady in the Water', 'Snakes on a Plane',
        'Superman Returns', 'The Night Listener', 'You, Me and Dupree']), recsys.all_other_items('Maria Gabriela'))
+
+
+def test_all_other_items_UserBasedRecommender():
+    nhood_strategy = AllNeighborsStrategy()
+    similarity = UserSimilarity(dict_model, euclidean_distances)
+    recsys = UserBasedRecommender(dict_model, similarity, nhood_strategy)
+
+    assert_array_equal(np.array(['Lady in the Water']), recsys.all_other_items('Lorena Abreu'))
+    assert_array_equal(np.array([], dtype='|S'), recsys.all_other_items('Marcel Caraciolo'))
+    assert_array_equal(np.array(['Just My Luck', 'Lady in the Water', 'Snakes on a Plane',
+       'Superman Returns', 'The Night Listener', 'You, Me and Dupree']), recsys.all_other_items('Maria Gabriela'))
+
+    similarity = UserSimilarity(boolean_model, jaccard_coefficient)
+    recsys = UserBasedRecommender(boolean_model, similarity, nhood_strategy)
+
+    assert_array_equal(np.array(['Lady in the Water']), recsys.all_other_items('Lorena Abreu'))
+    assert_array_equal(np.array([], dtype='|S'), recsys.all_other_items('Marcel Caraciolo'))
+    assert_array_equal(np.array(['Just My Luck', 'Lady in the Water', 'Snakes on a Plane',
+       'Superman Returns', 'The Night Listener', 'You, Me and Dupree']), recsys.all_other_items('Maria Gabriela'))
+
+    similarity = UserSimilarity(boolean_matrix_model, jaccard_coefficient)
+    recsys = UserBasedRecommender(boolean_matrix_model, similarity, nhood_strategy)
+
+    assert_array_equal(np.array(['Lady in the Water']), recsys.all_other_items('Lorena Abreu'))
+    assert_array_equal(np.array([], dtype='|S'), recsys.all_other_items('Marcel Caraciolo'))
+    assert_array_equal(np.array(['Just My Luck', 'Lady in the Water', 'Snakes on a Plane',
+       'Superman Returns', 'The Night Listener', 'You, Me and Dupree']), recsys.all_other_items('Maria Gabriela'))
+
+    similarity = UserSimilarity(boolean_matrix_model, jaccard_coefficient)
+    recsys = UserBasedRecommender(boolean_matrix_model, similarity, nhood_strategy)
+    assert_array_equal(np.array(['Lady in the Water']),
+        recsys.all_other_items(user_id='Lorena Abreu', distance=pearson_correlation, nhood_size=2, minimal_similarity=0.1))
+    assert_array_equal(np.array([], dtype='|S'),
+         recsys.all_other_items(user_id='Marcel Caraciolo', distance=pearson_correlation, nhood_size=2, minimal_similarity=0.1))
+    assert_array_equal(np.array(['Just My Luck', 'Lady in the Water', 'Snakes on a Plane',
+       'Superman Returns', 'The Night Listener', 'You, Me and Dupree']),
+        recsys.all_other_items(user_id='Maria Gabriela', distance=pearson_correlation, nhood_size=2, minimal_similarity=0.1))
+
+    similarity = UserSimilarity(matrix_model, euclidean_distances)
+    recsys = UserBasedRecommender(matrix_model, similarity, nhood_strategy)
+
+    assert_array_equal(np.array(['Lady in the Water']), recsys.all_other_items('Lorena Abreu'))
+    assert_array_equal(np.array([], dtype='|S'), recsys.all_other_items('Marcel Caraciolo'))
+    assert_array_equal(np.array(['Just My Luck', 'Lady in the Water', 'Snakes on a Plane',
+       'Superman Returns', 'The Night Listener', 'You, Me and Dupree']), recsys.all_other_items('Maria Gabriela'))
+
+    similarity = UserSimilarity(matrix_model, pearson_correlation)
+    recsys = UserBasedRecommender(matrix_model, similarity, nhood_strategy)
+
+    assert_array_equal(np.array(['Lady in the Water']),
+        recsys.all_other_items(user_id='Lorena Abreu', distance=pearson_correlation, nhood_size=2, minimal_similarity=0.1))
+    assert_array_equal(np.array([], dtype='|S'),
+         recsys.all_other_items(user_id='Marcel Caraciolo', distance=pearson_correlation, nhood_size=2, minimal_similarity=0.1))
+    assert_array_equal(np.array(['Just My Luck', 'Lady in the Water', 'Snakes on a Plane',
+       'Superman Returns', 'The Night Listener', 'You, Me and Dupree']),
+        recsys.all_other_items(user_id='Maria Gabriela', distance=pearson_correlation, nhood_size=2, minimal_similarity=0.1))
 
 
 def test_estimate_preference_ItemBasedRecommender():
