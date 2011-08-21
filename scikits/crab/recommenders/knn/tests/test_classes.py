@@ -127,16 +127,16 @@ def test_all_other_items_UserBasedRecommender():
     assert_array_equal(np.array(['Just My Luck', 'Lady in the Water', 'Snakes on a Plane',
        'Superman Returns', 'The Night Listener', 'You, Me and Dupree']), recsys.all_other_items('Maria Gabriela'))
 
+    nhood_strategy = NearestNeighborsStrategy()
     similarity = UserSimilarity(matrix_model, pearson_correlation)
     recsys = UserBasedRecommender(matrix_model, similarity, nhood_strategy)
 
     assert_array_equal(np.array(['Lady in the Water']),
         recsys.all_other_items(user_id='Lorena Abreu', distance=pearson_correlation, nhood_size=2, minimal_similarity=0.1))
     assert_array_equal(np.array([], dtype='|S'),
-         recsys.all_other_items(user_id='Marcel Caraciolo', distance=pearson_correlation, nhood_size=2, minimal_similarity=0.1))
-    assert_array_equal(np.array(['Just My Luck', 'Lady in the Water', 'Snakes on a Plane',
-       'Superman Returns', 'The Night Listener', 'You, Me and Dupree']),
-        recsys.all_other_items(user_id='Maria Gabriela', distance=pearson_correlation, nhood_size=2, minimal_similarity=0.1))
+         recsys.all_other_items(user_id='Marcel Caraciolo', distance=pearson_correlation, nhood_size=3))
+    assert_array_equal(np.array([]),
+        recsys.all_other_items(user_id='Maria Gabriela', distance=euclidean_distances, nhood_size=2))
 
 
 def test_estimate_preference_ItemBasedRecommender():

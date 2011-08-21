@@ -93,6 +93,7 @@ class NearestNeighborsStrategy(BaseUserNeighborhoodStrategy):
     def _set_similarity(self, data_model, similarity, distance, nhood_size):
         if not isinstance(self.similarity, UserSimilarity) \
              or not distance == self.similarity.distance:
+            nhood_size = nhood_size if not nhood_size else nhood_size + 1
             self.similarity = UserSimilarity(data_model, distance, nhood_size)
 
     def user_neighborhood(self, user_id, data_model, similarity='user_similarity',

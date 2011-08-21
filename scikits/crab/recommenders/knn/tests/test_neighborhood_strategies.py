@@ -71,6 +71,19 @@ def test_NearestNeighborsStrategy():
        'Luciana Nunes', 'Penny Frewman', 'Steve Gates'], dtype='|S16'),
        strategy.user_neighborhood('Lorena Abreu', model))
 
+    #Test with neighborhood size limited.
+    model = MatrixPreferenceDataModel(movies)
+    strategy = NearestNeighborsStrategy()
+    assert_array_equal(np.array(['Leopoldo Pires', 'Marcel Caraciolo'],
+            dtype='|S16'), strategy.user_neighborhood(user_id='Lorena Abreu', data_model=model,
+                nhood_size=2))
+
+    #Test with minimal_similarity
+    model = MatrixPreferenceDataModel(movies)
+    strategy = NearestNeighborsStrategy()
+    assert_array_equal(np.array(['Leopoldo Pires']),
+        strategy.user_neighborhood(user_id='Lorena Abreu', data_model=model,
+                minimal_similarity=0.4))
     #Empty candidates
     model = DictPreferenceDataModel(movies)
     strategy = NearestNeighborsStrategy()
@@ -88,6 +101,13 @@ def test_NearestNeighborsStrategy():
     model = DictPreferenceDataModel(movies)
     strategy = NearestNeighborsStrategy()
     assert_array_equal(np.array([], dtype=bool), strategy.user_neighborhood('Maria Gabriela', model))
+
+    #Raise exception with an invalid similarity
+    #Empty candidates
+    model = DictPreferenceDataModel(movies)
+    strategy = NearestNeighborsStrategy()
+    assert_raises(ValueError, strategy.user_neighborhood,
+            user_id='Lorena Abreu', data_model=model, similarity='item_similarity')
 
     model = MatrixPreferenceDataModel(movies)
     strategy = NearestNeighborsStrategy()

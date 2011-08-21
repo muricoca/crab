@@ -443,7 +443,7 @@ class UserBasedRecommender(UserRecommender):
         the preference and could possibly be recommended to the user.
 
         '''
-        similarity = params.pop('similarity', None)
+        similarity = params.pop('similarity', 'user_similarity')
         distance = params.pop('distance', None)
         nhood_size = params.pop('nhood_size', None)
 
