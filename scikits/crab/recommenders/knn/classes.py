@@ -459,6 +459,71 @@ class UserBasedRecommender(UserRecommender):
 
         return np.setdiff1d(possible_items, items_from_user_id)
 
+    def estimate_preference(self, user_id, item_id, **params):
+        '''
+        Parameters
+        ----------
+        user_id: int or string
+                 User for which recommendations are to be computed.
+
+        item_id:  int or string
+            ID of item for which wants to find the estimated preference.
+
+        Returns
+        -------
+        Return an estimated preference if the user has not expressed a
+        preference for the item, or else the user's actual preference for the
+        item. If a preference cannot be estimated, returns None.
+        '''
+
+        preference = self.model.preference_value(user_id, item_id)
+        if not np.isnan(preference):
+            return preference
+
+        similarity = params.pop('similarity', 'user_similarity')
+        distance = params.pop('distance', None)
+        nhood_size = params.pop('nhood_size', None)
+
+        nearest_neighbors = self.neighborhood_strategy.user_neighborhood(user_id,
+                self.model, similarity, distance, nhood_size, **params)
+
+        preference = 0.0
+        total_similarity = 0.0
+
+        similarities = np.array([self.similarity.get_similarity(user_id, to_user_id)
+                for to_user_id in nearest_neighbors]).flatten()
+
+        prefs = np.array([self.model.preference_value(to_user_id, item_id)
+                 for to_user_id in nearest_neighbors])
+
+        prefs = prefs[~np.isnan(prefs)]
+        similarities = similarities[~np.isnan(prefs)]
+
+        prefs_sim = np.sum(prefs[~np.isnan(similarities)] *
+                             similarities[~np.isnan(similarities)])
+        total_similarity = np.sum(similarities)
+
+        #Throw out the estimate if it was based on no data points,
+        #of course, but also if based on just one. This is a bit
+        #of a band-aid on the 'stock' item-based algorithm for
+        #the moment. The reason is that in this case the estimate
+        #is, simply, the user's rating for one item that happened
+        #to have a defined similarity. The similarity score doesn't
+        #matter, and that seems like a bad situation.
+        if total_similarity == 0.0 or \
+           not similarities[~np.isnan(similarities)].size:
+            return np.nan
+
+        estimated = prefs_sim / total_similarity
+
+        if self.capper:
+            max_p = self.model.maximum_preference_value()
+            min_p = self.model.minimum_preference_value()
+            estimated = max_p if estimated > max_p else min_p \
+                     if estimated < min_p else estimated
+
+        return estimated
+
     """
 
     def recommend(self, user_id, how_many=None, **params):
@@ -483,59 +548,7 @@ class UserBasedRecommender(UserRecommender):
 
         return recommendable_items
 
-    def estimate_preference(self, user_id, item_id, **params):
-        '''
-        Parameters
-        ----------
-        user_id: int or string
-                 User for which recommendations are to be computed.
 
-        item_id:  int or string
-            ID of item for which wants to find the estimated preference.
-
-        Returns
-        -------
-        Return an estimated preference if the user has not expressed a
-        preference for the item, or else the user's actual preference for the
-        item. If a preference cannot be estimated, returns None.
-        '''
-        preference = self.model.preference_value(user_id, item_id)
-        if not np.isnan(preference):
-            return preference
-
-        #TODO: It needs optimization
-        prefs = self.model.preferences_from_user(user_id)
-
-        similarities = \
-            np.array([self.similarity.get_similarity(item_id, to_item_id) \
-            for to_item_id, pref in prefs if to_item_id != item_id]).flatten()
-
-        prefs = np.array([pref for it, pref in prefs])
-        prefs_sim = np.sum(prefs[~np.isnan(similarities)] *
-                             similarities[~np.isnan(similarities)])
-        total_similarity = np.sum(similarities)
-
-        #Throw out the estimate if it was based on no data points,
-        #of course, but also if based on
-        #just one. This is a bit of a band-aid on the 'stock'
-        #item-based algorithm for the moment.
-        #The reason is that in this case the estimate is, simply,
-        #the user's rating for one item
-        #that happened to have a defined similarity.
-        #The similarity score doesn't matter, and that
-        #seems like a bad situation.
-        if total_similarity == 0.0 or \
-           not similarities[~np.isnan(similarities)].size:
-            return np.nan
-
-        estimated = prefs_sim / total_similarity
-
-        if self.capper:
-            max_p = self.model.maximum_preference_value()
-            min_p = self.model.minimum_preference_value()
-            estimated = max_p if estimated > max_p else min_p \
-                     if estimated < min_p else estimated
-        return estimated
 
     def all_other_items(self, user_id, **params):
         '''

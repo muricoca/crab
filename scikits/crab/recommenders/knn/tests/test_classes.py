@@ -185,6 +185,53 @@ def test_estimate_preference_ItemBasedRecommender():
     assert_array_equal(0.0, recsys.estimate_preference('Maria Gabriela', 'You, Me and Dupree'))
 
 
+def test_estimate_preference_UserBasedRecommender():
+    nhood_strategy = NearestNeighborsStrategy()
+    similarity = UserSimilarity(matrix_model, euclidean_distances)
+    recsys = UserBasedRecommender(matrix_model, similarity, nhood_strategy)
+    assert_almost_equals(3.5, recsys.estimate_preference('Marcel Caraciolo', 'Superman Returns'))
+    assert_almost_equals(2.4533792305691886, recsys.estimate_preference('Leopoldo Pires', 'You, Me and Dupree'))
+
+    #With capper = False
+    recsys = UserBasedRecommender(matrix_model, similarity, nhood_strategy, False)
+    assert_almost_equals(2.4533792305691886, recsys.estimate_preference('Leopoldo Pires', 'You, Me and Dupree'))
+    #Non-Preferences
+    assert_array_equal(np.nan, recsys.estimate_preference('Maria Gabriela', 'You, Me and Dupree'))
+
+    nhood_strategy = NearestNeighborsStrategy()
+    similarity = UserSimilarity(dict_model, euclidean_distances)
+    recsys = UserBasedRecommender(dict_model, similarity, nhood_strategy)
+    assert_almost_equals(3.5, recsys.estimate_preference('Marcel Caraciolo', 'Superman Returns'))
+    assert_almost_equals(2.4533792305691886, recsys.estimate_preference('Leopoldo Pires', 'You, Me and Dupree'))
+    #With capper = False
+    recsys = UserBasedRecommender(dict_model, similarity, nhood_strategy, False)
+    assert_almost_equals(2.4533792305691886, recsys.estimate_preference('Leopoldo Pires', 'You, Me and Dupree'))
+    #Non-Preferences
+    assert_array_equal(np.nan, recsys.estimate_preference('Maria Gabriela', 'You, Me and Dupree'))
+
+    nhood_strategy = NearestNeighborsStrategy()
+    similarity = UserSimilarity(boolean_model, jaccard_coefficient)
+    recsys = UserBasedRecommender(boolean_model, similarity, nhood_strategy)
+    assert_almost_equals(1.0, recsys.estimate_preference('Marcel Caraciolo', 'Superman Returns'))
+    assert_almost_equals(0.0, recsys.estimate_preference('Leopoldo Pires', 'You, Me and Dupree'))
+    #With capper = False
+    recsys = UserBasedRecommender(boolean_model, similarity, nhood_strategy, False)
+    assert_almost_equals(0.0, recsys.estimate_preference('Leopoldo Pires', 'You, Me and Dupree'))
+    #Non-Preferences
+    assert_array_equal(0.0, recsys.estimate_preference('Maria Gabriela', 'You, Me and Dupree'))
+
+    nhood_strategy = NearestNeighborsStrategy()
+    similarity = UserSimilarity(boolean_matrix_model, jaccard_coefficient)
+    recsys = UserBasedRecommender(boolean_matrix_model, similarity, nhood_strategy)
+    assert_almost_equals(1.0, recsys.estimate_preference('Marcel Caraciolo', 'Superman Returns'))
+    assert_almost_equals(0.0, recsys.estimate_preference('Leopoldo Pires', 'You, Me and Dupree'))
+    #With capper = False
+    recsys = UserBasedRecommender(boolean_matrix_model, similarity, nhood_strategy, False)
+    assert_almost_equals(0.0, recsys.estimate_preference('Leopoldo Pires', 'You, Me and Dupree'))
+    #Non-Preferences
+    assert_array_equal(0.0, recsys.estimate_preference('Maria Gabriela', 'You, Me and Dupree'))
+
+
 def test_most_similar_items_ItemBasedRecommender():
     items_strategy = ItemsNeighborhoodStrategy()
     similarity = ItemSimilarity(matrix_model, euclidean_distances)
