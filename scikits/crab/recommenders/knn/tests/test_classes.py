@@ -192,6 +192,17 @@ def test_estimate_preference_UserBasedRecommender():
     assert_almost_equals(3.5, recsys.estimate_preference('Marcel Caraciolo', 'Superman Returns'))
     assert_almost_equals(2.4533792305691886, recsys.estimate_preference('Leopoldo Pires', 'You, Me and Dupree'))
 
+    recsys = UserBasedRecommender(matrix_model, similarity, nhood_strategy)
+    assert_almost_equals(3.5, recsys.estimate_preference('Marcel Caraciolo', 'Superman Returns'))
+    assert_almost_equals(2.8960083169728952,
+         recsys.estimate_preference(user_id='Leopoldo Pires', item_id='You, Me and Dupree',
+                distance=pearson_correlation, nhood_size=4, minimal_similarity=-1.0))
+
+
+
+
+
+
     #With capper = False
     recsys = UserBasedRecommender(matrix_model, similarity, nhood_strategy, False)
     assert_almost_equals(2.4533792305691886, recsys.estimate_preference('Leopoldo Pires', 'You, Me and Dupree'))

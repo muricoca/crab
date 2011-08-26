@@ -61,14 +61,14 @@ def test_NearestNeighborsStrategy():
     #Possible candidates
     model = DictPreferenceDataModel(movies)
     strategy = NearestNeighborsStrategy()
-    assert_array_equal(np.array(['Leopoldo Pires', 'Marcel Caraciolo', 'Sheldom',
-       'Luciana Nunes', 'Penny Frewman', 'Steve Gates'], dtype='|S16'),
+    assert_array_equal(np.array(['Leopoldo Pires', 'Marcel Caraciolo', 'Penny Frewman',
+     'Sheldom', 'Steve Gates', 'Luciana Nunes'], dtype='|S16'),
         strategy.user_neighborhood('Lorena Abreu', model))
 
     model = MatrixPreferenceDataModel(movies)
     strategy = NearestNeighborsStrategy()
-    assert_array_equal(np.array(['Leopoldo Pires', 'Marcel Caraciolo', 'Sheldom',
-       'Luciana Nunes', 'Penny Frewman', 'Steve Gates'], dtype='|S16'),
+    assert_array_equal(np.array(['Leopoldo Pires', 'Marcel Caraciolo', 'Penny Frewman',
+     'Sheldom', 'Steve Gates', 'Luciana Nunes'], dtype='|S16'),
        strategy.user_neighborhood('Lorena Abreu', model))
 
     #Test with neighborhood size limited.
@@ -87,14 +87,14 @@ def test_NearestNeighborsStrategy():
     #Empty candidates
     model = DictPreferenceDataModel(movies)
     strategy = NearestNeighborsStrategy()
-    assert_array_equal(np.array(['Leopoldo Pires', 'Steve Gates', 'Lorena Abreu', 'Sheldom',
-       'Luciana Nunes', 'Penny Frewman'], dtype='|S14'),
+    assert_array_equal(np.array(['Leopoldo Pires', 'Steve Gates', 'Lorena Abreu', 'Penny Frewman',
+    'Sheldom', 'Luciana Nunes'], dtype='|S14'),
         strategy.user_neighborhood('Marcel Caraciolo', model))
 
     model = MatrixPreferenceDataModel(movies)
     strategy = NearestNeighborsStrategy()
-    assert_array_equal(np.array(['Leopoldo Pires', 'Steve Gates', 'Lorena Abreu', 'Sheldom',
-       'Luciana Nunes', 'Penny Frewman'], dtype='|S14'),
+    assert_array_equal(np.array(['Leopoldo Pires', 'Steve Gates', 'Lorena Abreu', 'Penny Frewman',
+    'Sheldom', 'Luciana Nunes'], dtype='|S14'),
         strategy.user_neighborhood('Marcel Caraciolo', model))
 
     #Empty candidates

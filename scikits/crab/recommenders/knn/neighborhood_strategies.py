@@ -137,6 +137,7 @@ class NearestNeighborsStrategy(BaseUserNeighborhoodStrategy):
             self._set_similarity(data_model, similarity, distance, nhood_size)
         else:
             raise ValueError('similarity argument must be user_similarity')
+
         neighborhood = [to_user_id for to_user_id, score in self.similarity[user_id] \
                            if not np.isnan(score) and score >= minimal_similarity and user_id != to_user_id]
 
