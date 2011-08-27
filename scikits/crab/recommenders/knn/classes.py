@@ -389,7 +389,44 @@ class UserBasedRecommender(UserRecommender):
 
     Examples
     -----------
-
+    >>> from scikits.crab.models.classes import DictPreferenceDataModel
+    >>> from scikits.crab.recommenders.knn.classes import UserBasedRecommender
+    >>> from scikits.crab.similarities.basic_similarities import UserSimilarity
+    >>> from scikits.crab.recommenders.knn.neighborhood_strategies import NearestNeighborsStrategy
+    >>> from scikits.crab.metrics.pairwise import euclidean_distances
+    >>> movies = {'Marcel Caraciolo': {'Lady in the Water': 2.5, \
+     'Snakes on a Plane': 3.5, \
+     'Just My Luck': 3.0, 'Superman Returns': 3.5, 'You, Me and Dupree': 2.5, \
+     'The Night Listener': 3.0}, \
+     'Paola Pow': {'Lady in the Water': 3.0, 'Snakes on a Plane': 3.5, \
+     'Just My Luck': 1.5, 'Superman Returns': 5.0, 'The Night Listener': 3.0, \
+     'You, Me and Dupree': 3.5}, \
+    'Leopoldo Pires': {'Lady in the Water': 2.5, 'Snakes on a Plane': 3.0, \
+     'Superman Returns': 3.5, 'The Night Listener': 4.0}, \
+    'Lorena Abreu': {'Snakes on a Plane': 3.5, 'Just My Luck': 3.0, \
+     'The Night Listener': 4.5, 'Superman Returns': 4.0, \
+     'You, Me and Dupree': 2.5}, \
+    'Steve Gates': {'Lady in the Water': 3.0, 'Snakes on a Plane': 4.0, \
+     'Just My Luck': 2.0, 'Superman Returns': 3.0, 'The Night Listener': 3.0, \
+     'You, Me and Dupree': 2.0}, \
+    'Sheldom': {'Lady in the Water': 3.0, 'Snakes on a Plane': 4.0, \
+     'The Night Listener': 3.0, 'Superman Returns': 5.0, \
+     'You, Me and Dupree': 3.5}, \
+    'Penny Frewman': {'Snakes on a Plane':4.5,'You, Me and Dupree':1.0, \
+    'Superman Returns':4.0}, \
+    'Maria Gabriela': {}}
+    >>> model = DictPreferenceDataModel(movies)
+    >>> nhood_strategy = NearestNeighborsStrategy()
+    >>> similarity = UserSimilarity(model, euclidean_distances)
+    >>> recsys = UserBasedRecommender(model, similarity, nhood_strategy)
+    >>> #Return the recommendations for the given user.
+    >>> recsys.recommend('Leopoldo Pires')
+    array(['Just My Luck', 'You, Me and Dupree'],\
+          dtype='|S18')
+    >>> #Return the 2 explanations for the given recommendation.
+    >>> recsys.recommended_because('Leopoldo Pires', 'Just My Luck',2)
+    array(['Lorena Abreu', 'Marcel Caraciolo'],\
+          dtype='|S16')
 
     Notes
     -----------

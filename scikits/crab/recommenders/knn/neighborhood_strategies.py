@@ -96,7 +96,7 @@ class NearestNeighborsStrategy(BaseUserNeighborhoodStrategy):
             nhood_size = nhood_size if not nhood_size else nhood_size + 1
             self.similarity = UserSimilarity(data_model, distance, nhood_size)
 
-    def user_neighborhood(self, user_id, data_model, similarity='user_similarity',
+    def user_neighborhood(self, user_id, data_model, n_similarity='user_similarity',
              distance=None, nhood_size=None, **params):
         '''
         Computes a neighborhood consisting of the  n users to a given
@@ -110,7 +110,7 @@ class NearestNeighborsStrategy(BaseUserNeighborhoodStrategy):
             The data model that will be the source for the possible
             candidates
 
-        similarity: string
+        n_similarity: string
             The similarity to compute the neighborhood (Default = 'user_similarity')
 
         nhood_size: int
@@ -133,8 +133,8 @@ class NearestNeighborsStrategy(BaseUserNeighborhoodStrategy):
         #set the nhood_size at Similarity , and use Similarity to get the top_users
         if distance is None:
             distance = euclidean_distances
-        if similarity == 'user_similarity':
-            self._set_similarity(data_model, similarity, distance, nhood_size)
+        if n_similarity == 'user_similarity':
+            self._set_similarity(data_model, n_similarity, distance, nhood_size)
         else:
             raise ValueError('similarity argument must be user_similarity')
 
