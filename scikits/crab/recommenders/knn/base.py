@@ -139,7 +139,7 @@ class BaseUserNeighborhoodStrategy(object):
     all users that could possibly be select as part of the neighborhood.
     '''
 
-    def user_neighborhood(self, user_id, data_model, similarity='user_similarity',
+    def user_neighborhood(self, user_id, data_model, n_similarity='user_similarity',
                 distance=None, n_users=None, **params):
         '''
         Computes a neighborhood consisting of the  n users to a given user based on the
@@ -153,7 +153,7 @@ class BaseUserNeighborhoodStrategy(object):
             The data model that will be the source for the possible
             candidates
 
-        similarity: string
+        n_similarity: string
             The similarity to compute the neighborhood (default = user_similarity)
 
         distance: function

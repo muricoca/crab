@@ -421,7 +421,7 @@ class UserBasedRecommender(UserRecommender):
 
         Optional Parameters
         --------------------
-        similarity: string
+        n_similarity: string
             The similarity used in the neighborhood strategy
 
         distance: the metrics.pairwise function to set.
@@ -443,12 +443,12 @@ class UserBasedRecommender(UserRecommender):
         the preference and could possibly be recommended to the user.
 
         '''
-        similarity = params.pop('similarity', 'user_similarity')
+        n_similarity = params.pop('n_similarity', 'user_similarity')
         distance = params.pop('distance', None)
         nhood_size = params.pop('nhood_size', None)
 
         nearest_neighbors = self.neighborhood_strategy.user_neighborhood(user_id,
-                self.model, similarity, distance, nhood_size, **params)
+                self.model, n_similarity, distance, nhood_size, **params)
 
         items_from_user_id = self.model.items_from_user(user_id)
         possible_items = []
@@ -480,12 +480,12 @@ class UserBasedRecommender(UserRecommender):
         if not np.isnan(preference):
             return preference
 
-        similarity = params.pop('similarity', 'user_similarity')
+        n_similarity = params.pop('n_similarity', 'user_similarity')
         distance = params.pop('distance', None)
         nhood_size = params.pop('nhood_size', None)
 
         nearest_neighbors = self.neighborhood_strategy.user_neighborhood(user_id,
-                self.model, similarity, distance, nhood_size, **params)
+                self.model, n_similarity, distance, nhood_size, **params)
 
         preference = 0.0
         total_similarity = 0.0
@@ -559,9 +559,10 @@ class UserBasedRecommender(UserRecommender):
                  Desired number of recommendations (default=None ALL)
 
         '''
+
         self._set_params(**params)
 
-        candidate_items = self.all_other_items(user_id)
+        candidate_items = self.all_other_items(user_id, **params)
 
         recommendable_items = self._top_matches(user_id, \
                  candidate_items, how_many)
@@ -611,14 +612,12 @@ class UserBasedRecommender(UserRecommender):
 
         return top_n_recs
 
-
-    """
     def recommended_because(self, user_id, item_id, how_many=None, **params):
         '''
-        Returns the items that were most influential in recommending a
+        Returns the users that were most influential in recommending a
         given item to a given user. In most implementations, this
-        method will return items that the user prefers and that
-        are similar to the given item.
+        method will return users that prefers the recommended item and that
+        are similar to the given user.
 
         Parameters
         -----------
@@ -636,22 +635,22 @@ class UserBasedRecommender(UserRecommender):
         The list of items ordered from most influential in
         recommended the given item to least
         '''
-        preferences = self.model.preferences_from_user(user_id)
+        preferences = self.model.preferences_for_item(item_id)
 
         if self.model.has_preference_values():
             similarities = \
-                np.array([self.similarity.get_similarity(item_id, to_item_id) \
-                    for to_item_id, pref in preferences
-                        if to_item_id != item_id]).flatten()
+                np.array([self.similarity.get_similarity(user_id, to_user_id) \
+                    for to_user_id, pref in preferences
+                        if to_user_id != user_id]).flatten()
             prefs = np.array([pref for it, pref in preferences])
-            item_ids = np.array([it for it, pref in preferences])
+            user_ids = np.array([usr for usr, pref in preferences])
         else:
             similarities = \
-                np.array([self.similarity.get_similarity(item_id, to_item_id) \
-                for to_item_id in preferences
-                    if to_item_id != item_id]).flatten()
+                np.array([self.similarity.get_similarity(user_id, to_user_id) \
+                for to_user_id in preferences
+                    if to_user_id != user_id]).flatten()
             prefs = np.array([1.0 for it in preferences])
-            item_ids = np.array(preferences)
+            user_ids = np.array(preferences)
 
         scores = prefs[~np.isnan(similarities)] * \
              (1.0 + similarities[~np.isnan(similarities)])
@@ -663,11 +662,10 @@ class UserBasedRecommender(UserRecommender):
                  else sorted_preferences
 
         if self.with_preference:
-            top_n_recs = np.array([(item_ids[ind], \
+            top_n_recs = np.array([(user_ids[ind], \
                      prefs[ind]) for ind in sorted_preferences])
         else:
-            top_n_recs = np.array([item_ids[ind]
+            top_n_recs = np.array([user_ids[ind]
                  for ind in sorted_preferences])
 
         return top_n_recs
-    """

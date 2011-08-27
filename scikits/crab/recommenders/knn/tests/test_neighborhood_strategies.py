@@ -107,7 +107,7 @@ def test_NearestNeighborsStrategy():
     model = DictPreferenceDataModel(movies)
     strategy = NearestNeighborsStrategy()
     assert_raises(ValueError, strategy.user_neighborhood,
-            user_id='Lorena Abreu', data_model=model, similarity='item_similarity')
+            user_id='Lorena Abreu', data_model=model, n_similarity='item_similarity')
 
     model = MatrixPreferenceDataModel(movies)
     strategy = NearestNeighborsStrategy()

@@ -478,8 +478,6 @@ def test_recommend_ItemBasedRecommender():
     #            recsys.recommend('Leopoldo Pires'))
 
 
-'''
-
 def test_recommend_UserBasedRecommender():
     nhood_strategy = NearestNeighborsStrategy()
     similarity = UserSimilarity(matrix_model, euclidean_distances)
@@ -710,4 +708,117 @@ def test_recommend_because_ItemBasedRecommender():
     #assert_array_equal(np.array([('The Night Listener', 1.0), \
     #            ('Superman Returns', 1.0)]), \
     #            recsys.recommended_because('Leopoldo Pires', 'Just My Luck', 2))
-'''
+
+
+def test_recommend_because_UserBasedRecommender():
+    nhood_strategy = NearestNeighborsStrategy()
+    similarity = UserSimilarity(matrix_model, euclidean_distances)
+    #Full Recommendation Because
+    recsys = UserBasedRecommender(matrix_model, similarity, nhood_strategy)
+    assert_array_equal(np.array(['Lorena Abreu', 'Marcel Caraciolo', \
+        'Steve Gates', 'Luciana Nunes']), \
+        recsys.recommended_because('Leopoldo Pires', 'Just My Luck'))
+    #over-items
+    recsys = UserBasedRecommender(matrix_model, similarity, nhood_strategy)
+    assert_array_equal(np.array(['Lorena Abreu', 'Marcel Caraciolo', \
+        'Steve Gates', 'Luciana Nunes']), \
+        recsys.recommended_because('Leopoldo Pires', 'Just My Luck', 20))
+    #Semi
+    recsys = UserBasedRecommender(matrix_model, similarity, nhood_strategy)
+    assert_array_equal(np.array(['Lorena Abreu', 'Marcel Caraciolo']), \
+        recsys.recommended_because('Leopoldo Pires', 'Just My Luck', 2))
+
+    #Non-Existing
+    recsys = UserBasedRecommender(matrix_model, similarity, nhood_strategy)
+    assert_array_equal(np.array([]), \
+        recsys.recommended_because('Maria Gabriela', 'Just My Luck', 2))
+
+    #with_preference
+    recsys = UserBasedRecommender(matrix_model, similarity, nhood_strategy, True, True)
+    assert_array_equal(np.array([('Lorena Abreu', 3.0), \
+                ('Marcel Caraciolo', 3.0)]), \
+                recsys.recommended_because('Leopoldo Pires', 'Just My Luck', 2))
+    #DictModel
+    similarity = UserSimilarity(dict_model, euclidean_distances)
+    #Full Recommendation Because
+    recsys = UserBasedRecommender(dict_model, similarity, nhood_strategy)
+    assert_array_equal(np.array(['Lorena Abreu', 'Marcel Caraciolo', \
+        'Steve Gates', 'Luciana Nunes']), \
+        recsys.recommended_because('Leopoldo Pires', 'Just My Luck'))
+    #over-items
+    recsys = UserBasedRecommender(dict_model, similarity, nhood_strategy)
+    assert_array_equal(np.array(['Lorena Abreu', 'Marcel Caraciolo', \
+        'Steve Gates', 'Luciana Nunes']), \
+        recsys.recommended_because('Leopoldo Pires', 'Just My Luck', 20))
+    #Semi
+    recsys = UserBasedRecommender(dict_model, similarity, nhood_strategy)
+    assert_array_equal(np.array(['Lorena Abreu', 'Marcel Caraciolo']), \
+        recsys.recommended_because('Leopoldo Pires', 'Just My Luck', 2))
+
+    #Non-Existing
+    recsys = UserBasedRecommender(dict_model, similarity, nhood_strategy)
+    assert_array_equal(np.array([]), \
+        recsys.recommended_because('Maria Gabriela', 'Just My Luck', 2))
+
+    #with_preference
+    recsys = UserBasedRecommender(dict_model, similarity, nhood_strategy, True, True)
+    assert_array_equal(np.array([('Lorena Abreu', 3.0), \
+                ('Marcel Caraciolo', 3.0)]), \
+                recsys.recommended_because('Leopoldo Pires', 'Just My Luck', 2))
+
+    #boolean_model
+    similarity = UserSimilarity(boolean_model, jaccard_coefficient)
+    #Full Recommendation Because
+    recsys = UserBasedRecommender(boolean_model, similarity, nhood_strategy)
+    assert_array_equal(np.array(['Steve Gates', 'Marcel Caraciolo', \
+        'Luciana Nunes', 'Lorena Abreu']), \
+        recsys.recommended_because('Leopoldo Pires', 'Just My Luck'))
+    #over-items
+    recsys = UserBasedRecommender(boolean_model, similarity, nhood_strategy)
+    assert_array_equal(np.array(['Steve Gates', 'Marcel Caraciolo', \
+        'Luciana Nunes', 'Lorena Abreu']), \
+        recsys.recommended_because('Leopoldo Pires', 'Just My Luck', 20))
+    #Semi
+    recsys = UserBasedRecommender(boolean_model, similarity, nhood_strategy)
+    assert_array_equal(np.array(['Steve Gates', 'Marcel Caraciolo']), \
+        recsys.recommended_because('Leopoldo Pires', 'Just My Luck', 2))
+
+    #Non-Existing
+    recsys = UserBasedRecommender(boolean_model, similarity, nhood_strategy)
+    assert_array_equal(np.array([]), \
+        recsys.recommended_because('Maria Gabriela', 'Just My Luck', 2))
+
+    #with_preference
+    #recsys = ItemBasedRecommender(boolean_model, similarity, items_strategy, True, True)
+    #assert_array_equal(np.array([('The Night Listener', 1.0), \
+    #            ('Superman Returns', 1.0)]), \
+    #            recsys.recommended_because('Leopoldo Pires', 'Just My Luck', 2))
+
+    #boolean_matrix_model
+    similarity = UserSimilarity(boolean_matrix_model, jaccard_coefficient)
+    #Full Recommendation Because
+    recsys = UserBasedRecommender(boolean_matrix_model, similarity, nhood_strategy)
+    assert_array_equal(np.array(['Steve Gates', 'Marcel Caraciolo', 'Luciana Nunes', \
+    'Lorena Abreu']), \
+        recsys.recommended_because('Leopoldo Pires', 'Just My Luck'))
+    #over-items
+    recsys = UserBasedRecommender(boolean_matrix_model, similarity, nhood_strategy)
+    assert_array_equal(np.array(['Steve Gates', 'Marcel Caraciolo', 'Luciana Nunes', \
+    'Lorena Abreu']), \
+        recsys.recommended_because('Leopoldo Pires', 'Just My Luck', 20))
+    #Semi
+    recsys = UserBasedRecommender(boolean_matrix_model, similarity, nhood_strategy)
+    assert_array_equal(np.array(['Steve Gates', 'Marcel Caraciolo']), \
+        recsys.recommended_because('Leopoldo Pires', 'Just My Luck', 2))
+
+    #Non-Existing
+    recsys = UserBasedRecommender(boolean_matrix_model, similarity, nhood_strategy)
+    assert_array_equal(np.array([]), \
+        recsys.recommended_because('Maria Gabriela', 'Just My Luck', 2))
+
+    #with_preference
+    #recsys = ItemBasedRecommender(boolean_matrix_model, similarity, items_strategy, True, True)
+    #assert_array_equal(np.array([('The Night Listener', 1.0), \
+    #            ('Superman Returns', 1.0)]), \
+    #            recsys.recommended_because('Leopoldo Pires', 'Just My Luck', 2))
+
