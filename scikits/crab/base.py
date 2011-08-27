@@ -116,13 +116,3 @@ class BaseRecommender(BaseEstimator):
 
         '''
         self.model.remove_preference(user_id, item_id)
-
-    def _top_matches(self, ** params):
-        '''
-        Returns
-        --------
-        array of shape [n_item_ids]
-        Return the top N matches
-        It can be user_ids or item_ids
-        '''
-        raise NotImplementedError("BaseRecommender is an abstract class.")

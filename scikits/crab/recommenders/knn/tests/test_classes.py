@@ -7,7 +7,7 @@ from ..item_strategies import ItemsNeighborhoodStrategy, AllPossibleItemsStrateg
 from ..neighborhood_strategies import AllNeighborsStrategy, NearestNeighborsStrategy
 from ....similarities.basic_similarities import ItemSimilarity, UserSimilarity
 from ..classes import ItemBasedRecommender, UserBasedRecommender
-from ....models.utils import ItemNotFoundError
+from ....models.utils import ItemNotFoundError, UserNotFoundError
 from ....metrics.pairwise import euclidean_distances, jaccard_coefficient, pearson_correlation
 
 
@@ -198,14 +198,23 @@ def test_estimate_preference_UserBasedRecommender():
          recsys.estimate_preference(user_id='Leopoldo Pires', item_id='You, Me and Dupree',
                 distance=pearson_correlation, nhood_size=4, minimal_similarity=-1.0))
 
-
-
-
-
+    recsys = UserBasedRecommender(matrix_model, similarity, nhood_strategy)
+    assert_almost_equals(2.0653946891716108,
+         recsys.estimate_preference(user_id='Leopoldo Pires', item_id='You, Me and Dupree',
+                 nhood_size=4))
 
     #With capper = False
     recsys = UserBasedRecommender(matrix_model, similarity, nhood_strategy, False)
-    assert_almost_equals(2.4533792305691886, recsys.estimate_preference('Leopoldo Pires', 'You, Me and Dupree'))
+    assert_almost_equals(2.0653946891716108, recsys.estimate_preference('Leopoldo Pires', 'You, Me and Dupree'))
+    assert_almost_equals(2.8960083169728952,
+         recsys.estimate_preference(user_id='Leopoldo Pires', item_id='You, Me and Dupree',
+                distance=pearson_correlation, nhood_size=4, minimal_similarity=-1.0))
+
+    recsys = UserBasedRecommender(matrix_model, similarity, nhood_strategy, False)
+    assert_almost_equals(2.0653946891716108,
+         recsys.estimate_preference(user_id='Leopoldo Pires', item_id='You, Me and Dupree',
+                 nhood_size=4))
+
     #Non-Preferences
     assert_array_equal(np.nan, recsys.estimate_preference('Maria Gabriela', 'You, Me and Dupree'))
 
@@ -214,9 +223,17 @@ def test_estimate_preference_UserBasedRecommender():
     recsys = UserBasedRecommender(dict_model, similarity, nhood_strategy)
     assert_almost_equals(3.5, recsys.estimate_preference('Marcel Caraciolo', 'Superman Returns'))
     assert_almost_equals(2.4533792305691886, recsys.estimate_preference('Leopoldo Pires', 'You, Me and Dupree'))
+    assert_almost_equals(2.8960083169728952,
+         recsys.estimate_preference(user_id='Leopoldo Pires', item_id='You, Me and Dupree',
+                distance=pearson_correlation, nhood_size=4, minimal_similarity=-1.0))
+
     #With capper = False
     recsys = UserBasedRecommender(dict_model, similarity, nhood_strategy, False)
     assert_almost_equals(2.4533792305691886, recsys.estimate_preference('Leopoldo Pires', 'You, Me and Dupree'))
+    assert_almost_equals(2.8960083169728952,
+         recsys.estimate_preference(user_id='Leopoldo Pires', item_id='You, Me and Dupree',
+                distance=pearson_correlation, nhood_size=4, minimal_similarity=-1.0))
+
     #Non-Preferences
     assert_array_equal(np.nan, recsys.estimate_preference('Maria Gabriela', 'You, Me and Dupree'))
 
@@ -224,7 +241,10 @@ def test_estimate_preference_UserBasedRecommender():
     similarity = UserSimilarity(boolean_model, jaccard_coefficient)
     recsys = UserBasedRecommender(boolean_model, similarity, nhood_strategy)
     assert_almost_equals(1.0, recsys.estimate_preference('Marcel Caraciolo', 'Superman Returns'))
-    assert_almost_equals(0.0, recsys.estimate_preference('Leopoldo Pires', 'You, Me and Dupree'))
+    assert_almost_equals(0.0,
+         recsys.estimate_preference(user_id='Leopoldo Pires', item_id='You, Me and Dupree',
+                distance=jaccard_coefficient, nhood_size=4))
+
     #With capper = False
     recsys = UserBasedRecommender(boolean_model, similarity, nhood_strategy, False)
     assert_almost_equals(0.0, recsys.estimate_preference('Leopoldo Pires', 'You, Me and Dupree'))
@@ -236,6 +256,10 @@ def test_estimate_preference_UserBasedRecommender():
     recsys = UserBasedRecommender(boolean_matrix_model, similarity, nhood_strategy)
     assert_almost_equals(1.0, recsys.estimate_preference('Marcel Caraciolo', 'Superman Returns'))
     assert_almost_equals(0.0, recsys.estimate_preference('Leopoldo Pires', 'You, Me and Dupree'))
+    assert_almost_equals(0.0,
+         recsys.estimate_preference(user_id='Leopoldo Pires', item_id='You, Me and Dupree',
+                distance=jaccard_coefficient, nhood_size=3))
+
     #With capper = False
     recsys = UserBasedRecommender(boolean_matrix_model, similarity, nhood_strategy, False)
     assert_almost_equals(0.0, recsys.estimate_preference('Leopoldo Pires', 'You, Me and Dupree'))
@@ -285,6 +309,54 @@ def test_most_similar_items_ItemBasedRecommender():
     #Empty
     assert_array_equal(np.array([]), \
             recsys.most_similar_items('Just My Luck', 0))
+
+
+def test_most_similar_users_UserBasedRecommender():
+    nhood_strategy = NearestNeighborsStrategy()
+    similarity = UserSimilarity(matrix_model, euclidean_distances)
+    recsys = UserBasedRecommender(matrix_model, similarity, nhood_strategy)
+    #semi items
+    assert_array_equal(np.array(['Leopoldo Pires', 'Steve Gates', 'Lorena Abreu',
+         'Penny Frewman']), \
+            recsys.most_similar_users('Marcel Caraciolo', 4))
+    #all items
+    assert_array_equal(np.array(['Lorena Abreu', 'Marcel Caraciolo', 'Penny Frewman', \
+    'Steve Gates', 'Luciana Nunes', 'Sheldom', 'Maria Gabriela']), \
+            recsys.most_similar_users('Leopoldo Pires'))
+    #Non-existing
+    assert_array_equal(np.array(['Leopoldo Pires', 'Lorena Abreu', 'Luciana Nunes',
+       'Marcel Caraciolo', 'Penny Frewman', 'Sheldom', 'Steve Gates']), \
+            recsys.most_similar_users('Maria Gabriela'))
+    #Exceed the limit
+    assert_array_equal(np.array(['Lorena Abreu', 'Marcel Caraciolo', 'Penny Frewman', \
+    'Steve Gates', 'Luciana Nunes', 'Sheldom', 'Maria Gabriela']), \
+            recsys.most_similar_users('Leopoldo Pires', 20))
+    #Empty
+    assert_array_equal(np.array([]), \
+            recsys.most_similar_users('Sheldom', 0))
+
+    nhood_strategy = NearestNeighborsStrategy()
+    similarity = UserSimilarity(boolean_matrix_model, jaccard_coefficient)
+    recsys = UserBasedRecommender(boolean_matrix_model, similarity, nhood_strategy)
+    #semi items
+    assert_array_equal(np.array(['Luciana Nunes', 'Steve Gates', \
+            'Lorena Abreu', 'Sheldom']), \
+            recsys.most_similar_users('Marcel Caraciolo', 4))
+    #all items
+    assert_array_equal(np.array(['Sheldom', 'Luciana Nunes', 'Marcel Caraciolo',
+     'Steve Gates', 'Lorena Abreu', 'Penny Frewman', 'Maria Gabriela']), \
+            recsys.most_similar_users('Leopoldo Pires'))
+    #Non-existing
+    assert_array_equal(np.array(['Leopoldo Pires', 'Lorena Abreu', 'Luciana Nunes',
+       'Marcel Caraciolo', 'Penny Frewman', 'Sheldom', 'Steve Gates']), \
+            recsys.most_similar_users('Maria Gabriela'))
+    #Exceed the limit
+    assert_array_equal(np.array(['Sheldom', 'Luciana Nunes', 'Marcel Caraciolo',
+     'Steve Gates', 'Lorena Abreu', 'Penny Frewman', 'Maria Gabriela']), \
+            recsys.most_similar_users('Leopoldo Pires', 20))
+    #Empty
+    assert_array_equal(np.array([]), \
+            recsys.most_similar_users('Sheldom', 0))
 
 
 def test_recommend_ItemBasedRecommender():
@@ -393,6 +465,127 @@ def test_recommend_ItemBasedRecommender():
 
     #Empty Recommendation
     recsys = ItemBasedRecommender(boolean_matrix_model, similarity, items_strategy)
+    assert_array_equal(np.array([]), recsys.recommend('Maria Gabriela'))
+
+    #Test with params update
+    recsys.recommend(user_id='Maria Gabriela', similarity=similarity)
+    assert_array_equal(np.array([]), recsys.recommend('Maria Gabriela'))
+
+    #with_preference
+    #recsys = ItemBasedRecommender(boolean_matrix_model, similarity, items_strategy, True, True)
+    #assert_array_equal(np.array([('Just My Luck', 3.20597), \
+    #            ('You, Me and Dupree', 3.1471)]), \
+    #            recsys.recommend('Leopoldo Pires'))
+
+
+'''
+
+def test_recommend_UserBasedRecommender():
+    nhood_strategy = NearestNeighborsStrategy()
+    similarity = UserSimilarity(matrix_model, euclidean_distances)
+    #Empty Recommendation
+    recsys = UserBasedRecommender(matrix_model, similarity, nhood_strategy)
+    assert_array_equal(np.array([]), recsys.recommend('Marcel Caraciolo'))
+
+    #Semi Recommendation
+    recsys = UserBasedRecommender(matrix_model, similarity, nhood_strategy)
+    assert_array_equal(np.array(['Just My Luck', 'You, Me and Dupree']), \
+        recsys.recommend('Leopoldo Pires'))
+
+    #Semi Recommendation
+    recsys = UserBasedRecommender(matrix_model, similarity, nhood_strategy)
+    assert_array_equal(np.array(['Just My Luck']), \
+        recsys.recommend('Leopoldo Pires', 1))
+
+    #Empty Recommendation
+    recsys = UserBasedRecommender(matrix_model, similarity, nhood_strategy)
+    assert_array_equal(np.array([]), recsys.recommend('Maria Gabriela'))
+
+    #Test with params update
+    recsys.recommend(user_id='Maria Gabriela', similarity=similarity)
+    assert_array_equal(np.array([]), recsys.recommend('Maria Gabriela'))
+
+    #with_preference
+    #recsys = ItemBasedRecommender(matrix_model, similarity, items_strategy, True, True)
+    #assert_array_equal(np.array([('Just My Luck', 3.20597319063), \
+    #            ('You, Me and Dupree', 3.14717875510)]), \
+    #            recsys.recommend('Leopoldo Pires'))
+
+    similarity = UserSimilarity(dict_model, euclidean_distances)
+    #Empty Recommendation
+    recsys = UserBasedRecommender(dict_model, similarity, nhood_strategy)
+    assert_array_equal(np.array([]), recsys.recommend('Marcel Caraciolo'))
+
+    #Semi Recommendation
+    recsys = UserBasedRecommender(dict_model, similarity, nhood_strategy)
+    assert_array_equal(np.array(['Just My Luck', 'You, Me and Dupree']), \
+        recsys.recommend('Leopoldo Pires'))
+
+    #Semi Recommendation
+    recsys = UserBasedRecommender(dict_model, similarity, nhood_strategy)
+    assert_array_equal(np.array(['Just My Luck']), \
+        recsys.recommend('Leopoldo Pires', 1))
+
+    #Empty Recommendation
+    recsys = UserBasedRecommender(dict_model, similarity, nhood_strategy)
+    assert_array_equal(np.array([]), recsys.recommend('Maria Gabriela'))
+
+    #Test with params update
+    recsys.recommend(user_id='Maria Gabriela', similarity=similarity)
+    assert_array_equal(np.array([]), recsys.recommend('Maria Gabriela'))
+
+    #with_preference
+    #recsys = ItemBasedRecommender(dict_model, similarity, items_strategy, True, True)
+    #assert_array_equal(np.array([('Just My Luck', 3.20597), \
+    #            ('You, Me and Dupree', 3.1471)]), \
+    #            recsys.recommend('Leopoldo Pires'))
+
+    similarity = UserSimilarity(boolean_model, jaccard_coefficient)
+    #Empty Recommendation
+    recsys = UserBasedRecommender(boolean_model, similarity, nhood_strategy)
+    assert_array_equal(np.array([]), recsys.recommend('Marcel Caraciolo'))
+
+    #Semi Recommendation
+    recsys = UserBasedRecommender(boolean_model, similarity, nhood_strategy)
+    assert_array_equal(np.array(['You, Me and Dupree', 'Just My Luck']), \
+        recsys.recommend('Leopoldo Pires'))
+
+    #Semi Recommendation
+    recsys = UserBasedRecommender(boolean_model, similarity, nhood_strategy)
+    assert_array_equal(np.array(['You, Me and Dupree']), \
+        recsys.recommend('Leopoldo Pires', 1))
+
+    #Empty Recommendation
+    recsys = UserBasedRecommender(boolean_model, similarity, nhood_strategy)
+    assert_array_equal(np.array([]), recsys.recommend('Maria Gabriela'))
+
+    #Test with params update
+    recsys.recommend(user_id='Maria Gabriela', similarity=similarity)
+    assert_array_equal(np.array([]), recsys.recommend('Maria Gabriela'))
+
+    #with_preference
+    #recsys = ItemBasedRecommender(boolean_model, similarity, items_strategy, True, True)
+    #assert_array_equal(np.array([('Just My Luck', 1.0), \
+    #            ('You, Me and Dupree', 1.0)]), \
+    #            recsys.recommend('Leopoldo Pires'))
+
+    similarity = UserSimilarity(boolean_matrix_model, jaccard_coefficient)
+    #Empty Recommendation
+    recsys = UserBasedRecommender(boolean_matrix_model, similarity, nhood_strategy)
+    assert_array_equal(np.array([]), recsys.recommend('Marcel Caraciolo'))
+
+    #Semi Recommendation
+    recsys = UserBasedRecommender(boolean_matrix_model, similarity, nhood_strategy)
+    assert_array_equal(np.array(['You, Me and Dupree', 'Just My Luck']), \
+        recsys.recommend('Leopoldo Pires'))
+
+    #Semi Recommendation
+    recsys = UserBasedRecommender(boolean_matrix_model, similarity, nhood_strategy)
+    assert_array_equal(np.array(['You, Me and Dupree']), \
+        recsys.recommend('Leopoldo Pires', 1))
+
+    #Empty Recommendation
+    recsys = UserBasedRecommender(boolean_matrix_model, similarity, nhood_strategy)
     assert_array_equal(np.array([]), recsys.recommend('Maria Gabriela'))
 
     #Test with params update
@@ -517,3 +710,4 @@ def test_recommend_because_ItemBasedRecommender():
     #assert_array_equal(np.array([('The Night Listener', 1.0), \
     #            ('Superman Returns', 1.0)]), \
     #            recsys.recommended_because('Leopoldo Pires', 'Just My Luck', 2))
+'''

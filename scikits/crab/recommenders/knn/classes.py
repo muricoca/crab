@@ -524,7 +524,27 @@ class UserBasedRecommender(UserRecommender):
 
         return estimated
 
-    """
+    def most_similar_users(self, user_id, how_many=None):
+        '''
+        Return the most similar users to the given user, ordered
+        from most similar to least.
+
+        Parameters
+        -----------
+        user_id:  int or string
+            ID of user for which to find most similar other users
+
+        how_many: int
+            Desired number of most similar users to find (default=None ALL)
+        '''
+        old_how_many = self.similarity.num_best
+        #+1 since it returns the identity.
+        self.similarity.num_best = how_many + 1 \
+                    if how_many is not None else None
+        similarities = self.similarity[user_id]
+        self.similarity.num_best = old_how_many
+        return np.array([to_user_id for to_user_id, pref in similarities \
+            if user_id != to_user_id])
 
     def recommend(self, user_id, how_many=None, **params):
         '''
@@ -547,24 +567,6 @@ class UserBasedRecommender(UserRecommender):
                  candidate_items, how_many)
 
         return recommendable_items
-
-
-
-    def all_other_items(self, user_id, **params):
-        '''
-        Parameters
-        ----------
-        user_id: int or string
-                 User for which recommendations are to be computed.
-
-        Returns
-        ---------
-        Return items in the `model` for which the user has not expressed
-        the preference and could possibly be recommended to the user.
-
-        '''
-        return self.items_selection_strategy.candidate_items(user_id, \
-                            self.model)
 
     def _top_matches(self, source_id, target_ids, how_many=None, **params):
         '''
@@ -609,29 +611,8 @@ class UserBasedRecommender(UserRecommender):
 
         return top_n_recs
 
-    def most_similar_items(self, item_id, how_many=None):
-        '''
-        Return the most similar items to the given item, ordered
-        from most similar to least.
 
-        Parameters
-        -----------
-        item_id:  int or string
-            ID of item for which to find most similar other items
-
-        how_many: int
-            Desired number of most similar items to find (default=None ALL)
-        '''
-        old_how_many = self.similarity.num_best
-        #+1 since it returns the identity.
-        self.similarity.num_best = how_many + 1 \
-                    if how_many is not None else None
-        similarities = self.similarity[item_id]
-        self.similarity.num_best = old_how_many
-
-        return np.array([item for item, pref in similarities \
-            if item != item_id])
-
+    """
     def recommended_because(self, user_id, item_id, how_many=None, **params):
         '''
         Returns the items that were most influential in recommending a
