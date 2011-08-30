@@ -126,17 +126,17 @@ def test_get__item___UserSimilarity():
     assert_array_almost_equal(np.array([[0.2045983]]), similarity['Leopoldo Pires'][3][1])
     assert_equals('Luciana Nunes', similarity['Leopoldo Pires'][3][0])
 
-    assert_array_almost_equal(np.array([[np.nan]]), similarity['Leopoldo Pires'][4][1])
-    assert_equals('Maria Gabriela', similarity['Leopoldo Pires'][4][0])
+    assert_array_almost_equal(np.array([[0.13483997]]), similarity['Leopoldo Pires'][4][1])
+    assert_equals('Sheldom', similarity['Leopoldo Pires'][4][0])
 
-    assert_array_almost_equal(np.array([[0.13483997]]), similarity['Leopoldo Pires'][5][1])
-    assert_equals('Sheldom', similarity['Leopoldo Pires'][5][0])
+    assert_array_almost_equal(np.array([[-0.25819889]]), similarity['Leopoldo Pires'][5][1])
+    assert_equals('Steve Gates', similarity['Leopoldo Pires'][5][0])
 
-    assert_array_almost_equal(np.array([[-0.25819889]]), similarity['Leopoldo Pires'][6][1])
-    assert_equals('Steve Gates', similarity['Leopoldo Pires'][6][0])
+    assert_array_almost_equal(np.array([[-1.]]), similarity['Leopoldo Pires'][6][1])
+    assert_equals('Penny Frewman', similarity['Leopoldo Pires'][6][0])
 
-    assert_array_almost_equal(np.array([[-1.]]), similarity['Leopoldo Pires'][7][1])
-    assert_equals('Penny Frewman', similarity['Leopoldo Pires'][7][0])
+    assert_array_almost_equal(np.array([[np.nan]]), similarity['Leopoldo Pires'][7][1])
+    assert_equals('Maria Gabriela', similarity['Leopoldo Pires'][7][0])
 
     #Euclidean Without limits
     similarity = UserSimilarity(model, euclidean_distances)
@@ -156,14 +156,14 @@ def test_get__item___UserSimilarity():
     assert_array_almost_equal(np.array([[0.31451986]]), similarity['Steve Gates'][4][1])
     assert_equals('Lorena Abreu', similarity['Steve Gates'][4][0])
 
-    assert_array_almost_equal(np.array([[0.2779263]]), similarity['Steve Gates'][5][1])
-    assert_equals('Luciana Nunes', similarity['Steve Gates'][5][0])
+    assert_array_almost_equal(np.array([[0.28571429]]), similarity['Steve Gates'][5][1])
+    assert_equals('Sheldom', similarity['Steve Gates'][5][0])
 
-    assert_array_almost_equal(np.array([[np.nan]]), similarity['Steve Gates'][6][1])
-    assert_equals('Maria Gabriela', similarity['Steve Gates'][6][0])
+    assert_array_almost_equal(np.array([[0.2779263]]), similarity['Steve Gates'][6][1])
+    assert_equals('Luciana Nunes', similarity['Steve Gates'][6][0])
 
-    assert_array_almost_equal(np.array([[0.28571429]]), similarity['Steve Gates'][7][1])
-    assert_equals('Sheldom', similarity['Steve Gates'][7][0])
+    assert_array_almost_equal(np.array([[np.nan]]), similarity['Steve Gates'][7][1])
+    assert_equals('Maria Gabriela', similarity['Steve Gates'][7][0])
 
     #Manhattan Without limits
     similarity = UserSimilarity(model, manhattan_distances, 0)
@@ -187,14 +187,14 @@ def test_get__item___UserSimilarity():
     assert_array_almost_equal(np.array([[0.25]]), similarity['Steve Gates'][4][1])
     assert_equals('Luciana Nunes', similarity['Steve Gates'][4][0])
 
-    assert_array_almost_equal(np.array([[0.1]]), similarity['Steve Gates'][5][1])
-    assert_equals('Lorena Abreu', similarity['Steve Gates'][5][0])
+    assert_array_almost_equal(np.array([[0.16666667]]), similarity['Steve Gates'][5][1])
+    assert_equals('Penny Frewman', similarity['Steve Gates'][5][0])
 
-    assert_array_almost_equal(np.array([[np.nan]]), similarity['Steve Gates'][6][1])
-    assert_equals('Maria Gabriela', similarity['Steve Gates'][6][0])
+    assert_array_almost_equal(np.array([[0.1]]), similarity['Steve Gates'][6][1])
+    assert_equals('Lorena Abreu', similarity['Steve Gates'][6][0])
 
-    assert_array_almost_equal(np.array([[0.16666667]]), similarity['Steve Gates'][7][1])
-    assert_equals('Penny Frewman', similarity['Steve Gates'][7][0])
+    assert_array_almost_equal(np.array([[np.nan]]), similarity['Steve Gates'][7][1])
+    assert_equals('Maria Gabriela', similarity['Steve Gates'][7][0])
 
     #Cosine #With limits
     #MatrixModel
@@ -225,17 +225,17 @@ def test_get__item___UserSimilarity():
     assert_array_almost_equal(np.array([[0.2045983]]), similarity['Leopoldo Pires'][3][1])
     assert_equals('Luciana Nunes', similarity['Leopoldo Pires'][3][0])
 
-    assert_array_almost_equal(np.array([[np.nan]]), similarity['Leopoldo Pires'][4][1])
-    assert_equals('Maria Gabriela', similarity['Leopoldo Pires'][4][0])
+    assert_array_almost_equal(np.array([[0.13483997]]), similarity['Leopoldo Pires'][4][1])
+    assert_equals('Sheldom', similarity['Leopoldo Pires'][4][0])
 
-    assert_array_almost_equal(np.array([[0.13483997]]), similarity['Leopoldo Pires'][5][1])
-    assert_equals('Sheldom', similarity['Leopoldo Pires'][5][0])
+    assert_array_almost_equal(np.array([[-0.25819889]]), similarity['Leopoldo Pires'][5][1])
+    assert_equals('Steve Gates', similarity['Leopoldo Pires'][5][0])
 
-    assert_array_almost_equal(np.array([[-0.25819889]]), similarity['Leopoldo Pires'][6][1])
-    assert_equals('Steve Gates', similarity['Leopoldo Pires'][6][0])
+    assert_array_almost_equal(np.array([[-1.]]), similarity['Leopoldo Pires'][6][1])
+    assert_equals('Penny Frewman', similarity['Leopoldo Pires'][6][0])
 
-    assert_array_almost_equal(np.array([[-1.]]), similarity['Leopoldo Pires'][7][1])
-    assert_equals('Penny Frewman', similarity['Leopoldo Pires'][7][0])
+    assert_array_almost_equal(np.array([[np.nan]]), similarity['Leopoldo Pires'][7][1])
+    assert_equals('Maria Gabriela', similarity['Leopoldo Pires'][7][0])
 
     #Euclidean Without limits
     similarity = UserSimilarity(model, euclidean_distances)
@@ -255,14 +255,14 @@ def test_get__item___UserSimilarity():
     assert_array_almost_equal(np.array([[0.31451986]]), similarity['Steve Gates'][4][1])
     assert_equals('Lorena Abreu', similarity['Steve Gates'][4][0])
 
-    assert_array_almost_equal(np.array([[0.2779263]]), similarity['Steve Gates'][5][1])
-    assert_equals('Luciana Nunes', similarity['Steve Gates'][5][0])
+    assert_array_almost_equal(np.array([[0.28571429]]), similarity['Steve Gates'][5][1])
+    assert_equals('Sheldom', similarity['Steve Gates'][5][0])
 
-    assert_array_almost_equal(np.array([[np.nan]]), similarity['Steve Gates'][6][1])
-    assert_equals('Maria Gabriela', similarity['Steve Gates'][6][0])
+    assert_array_almost_equal(np.array([[0.2779263]]), similarity['Steve Gates'][6][1])
+    assert_equals('Luciana Nunes', similarity['Steve Gates'][6][0])
 
-    assert_array_almost_equal(np.array([[0.28571429]]), similarity['Steve Gates'][7][1])
-    assert_equals('Sheldom', similarity['Steve Gates'][7][0])
+    assert_array_almost_equal(np.array([[np.nan]]), similarity['Steve Gates'][7][1])
+    assert_equals('Maria Gabriela', similarity['Steve Gates'][7][0])
 
     #Manhattan Without limits
     similarity = UserSimilarity(model, manhattan_distances, 0)
@@ -286,14 +286,14 @@ def test_get__item___UserSimilarity():
     assert_array_almost_equal(np.array([[0.25]]), similarity['Steve Gates'][4][1])
     assert_equals('Luciana Nunes', similarity['Steve Gates'][4][0])
 
-    assert_array_almost_equal(np.array([[0.1]]), similarity['Steve Gates'][5][1])
-    assert_equals('Lorena Abreu', similarity['Steve Gates'][5][0])
+    assert_array_almost_equal(np.array([[0.16666667]]), similarity['Steve Gates'][5][1])
+    assert_equals('Penny Frewman', similarity['Steve Gates'][5][0])
 
-    assert_array_almost_equal(np.array([[np.nan]]), similarity['Steve Gates'][6][1])
-    assert_equals('Maria Gabriela', similarity['Steve Gates'][6][0])
+    assert_array_almost_equal(np.array([[0.1]]), similarity['Steve Gates'][6][1])
+    assert_equals('Lorena Abreu', similarity['Steve Gates'][6][0])
 
-    assert_array_almost_equal(np.array([[0.16666667]]), similarity['Steve Gates'][7][1])
-    assert_equals('Penny Frewman', similarity['Steve Gates'][7][0])
+    assert_array_almost_equal(np.array([[np.nan]]), similarity['Steve Gates'][7][1])
+    assert_equals('Maria Gabriela', similarity['Steve Gates'][7][0])
 
     #BooleanDictModel
     model = DictBooleanPrefDataModel(movies)
@@ -777,61 +777,55 @@ def test_get__item___ItemSimilarity():
     #Cosine #With limits
     similarity = ItemSimilarity(model, cosine_distances, 3)
 
-    #assert_array_equal(np.array([[1.]]), similarity['Snakes on a Plane'][0][1])
-    #assert_equals('Marcel Caraciolo', similarity['Snakes on a Plane'][0][0])
+    assert_array_equal(np.array([[1.]]), similarity['Snakes on a Plane'][0][1])
+    assert_equals('Snakes on a Plane', similarity['Snakes on a Plane'][0][0])
 
-    assert_array_almost_equal(np.array([[1.]]), similarity['Snakes on a Plane'][1][1])
-    assert_equals('Snakes on a Plane', similarity['Snakes on a Plane'][1][0])
+    assert_array_almost_equal(np.array([[0.99773877]]), similarity['Snakes on a Plane'][1][1])
+    assert_equals('Lady in the Water', similarity['Snakes on a Plane'][1][0])
 
-    assert_array_almost_equal(np.array([[0.99773877]]), similarity['Snakes on a Plane'][2][1])
-    assert_equals('Lady in the Water', similarity['Snakes on a Plane'][2][0])
+    assert_array_almost_equal(np.array([[0.9798780]]), similarity['Snakes on a Plane'][2][1])
+    assert_equals('Superman Returns', similarity['Snakes on a Plane'][2][0])
 
     #Pearson Without limits
     similarity = ItemSimilarity(model, pearson_correlation)
 
-    #assert_array_equal(np.array([[1.]]), similarity['The Night Listener'][0][1])
-    #assert_equals('Leopoldo Pires', similarity['The Night Listener'][0][0])
+    assert_array_equal(np.array([[1.]]), similarity['The Night Listener'][0][1])
+    assert_equals('The Night Listener', similarity['The Night Listener'][0][0])
 
-    assert_array_almost_equal(np.array([[1.]]), similarity['The Night Listener'][1][1])
-    assert_equals('The Night Listener', similarity['The Night Listener'][1][0])
+    assert_array_almost_equal(np.array([[0.55555556]]), similarity['The Night Listener'][1][1])
+    assert_equals('Just My Luck', similarity['The Night Listener'][1][0])
 
-    assert_array_almost_equal(np.array([[0.55555556]]), similarity['The Night Listener'][2][1])
-    assert_equals('Just My Luck', similarity['The Night Listener'][2][0])
+    assert_array_almost_equal(np.array([[-0.17984719]]), similarity['The Night Listener'][2][1])
+    assert_equals('Superman Returns', similarity['The Night Listener'][2][0])
 
-    assert_array_almost_equal(np.array([[-0.17984719]]), similarity['The Night Listener'][3][1])
-    assert_equals('Superman Returns', similarity['The Night Listener'][3][0])
+    assert_array_almost_equal(np.array([[-0.25]]), similarity['The Night Listener'][3][1])
+    assert_equals('You, Me and Dupree', similarity['The Night Listener'][3][0])
 
-    assert_array_almost_equal(np.array([[-0.25]]), similarity['The Night Listener'][4][1])
-    assert_equals('You, Me and Dupree', similarity['The Night Listener'][4][0])
+    assert_array_almost_equal(np.array([[-0.56635211]]), similarity['The Night Listener'][4][1])
+    assert_equals('Snakes on a Plane', similarity['The Night Listener'][4][0])
 
-    assert_array_almost_equal(np.array([[-0.56635211]]), similarity['The Night Listener'][5][1])
-    assert_equals('Snakes on a Plane', similarity['The Night Listener'][5][0])
-
-    assert_array_almost_equal(np.array([[-0.61237244]]), similarity['The Night Listener'][6][1])
-    assert_equals('Lady in the Water', similarity['The Night Listener'][6][0])
+    assert_array_almost_equal(np.array([[-0.61237244]]), similarity['The Night Listener'][5][1])
+    assert_equals('Lady in the Water', similarity['The Night Listener'][5][0])
 
     similarity = ItemSimilarity(model, euclidean_distances)
 
-    #assert_array_equal(np.array([[1.]]), similarity['The Night Listener'][0][1])
-    #assert_equals('Steve Gates', similarity['The Night Listener'][0][0])
+    assert_array_equal(np.array([[1.]]), similarity['The Night Listener'][0][1])
+    assert_equals('The Night Listener', similarity['The Night Listener'][0][0])
 
-    assert_array_almost_equal(np.array([[1.]]), similarity['The Night Listener'][1][1])
-    assert_equals('The Night Listener', similarity['The Night Listener'][1][0])
+    assert_array_almost_equal(np.array([[0.38742588]]), similarity['The Night Listener'][1][1])
+    assert_equals('Lady in the Water', similarity['The Night Listener'][1][0])
 
-    assert_array_almost_equal(np.array([[0.38742589]]), similarity['The Night Listener'][2][1])
-    assert_equals('Lady in the Water', similarity['The Night Listener'][2][0])
+    assert_array_almost_equal(np.array([[0.32037724]]), similarity['The Night Listener'][2][1])
+    assert_equals('Snakes on a Plane', similarity['The Night Listener'][2][0])
 
-    assert_array_almost_equal(np.array([[0.32037724]]), similarity['The Night Listener'][3][1])
-    assert_equals('Snakes on a Plane', similarity['The Night Listener'][3][0])
+    assert_array_almost_equal(np.array([[0.29893508]]), similarity['The Night Listener'][3][1])
+    assert_equals('Just My Luck', similarity['The Night Listener'][3][0])
 
-    assert_array_almost_equal(np.array([[0.29893508]]), similarity['The Night Listener'][4][1])
-    assert_equals('Just My Luck', similarity['The Night Listener'][4][0])
+    assert_array_almost_equal(np.array([[0.29429806]]), similarity['The Night Listener'][4][1])
+    assert_equals('You, Me and Dupree', similarity['The Night Listener'][4][0])
 
-    assert_array_almost_equal(np.array([[0.29429806]]), similarity['The Night Listener'][5][1])
-    assert_equals('You, Me and Dupree', similarity['The Night Listener'][5][0])
-
-    assert_array_almost_equal(np.array([[0.25265031]]), similarity['The Night Listener'][6][1])
-    assert_equals('Superman Returns', similarity['The Night Listener'][6][0])
+    assert_array_almost_equal(np.array([[0.25265031]]), similarity['The Night Listener'][5][1])
+    assert_equals('Superman Returns', similarity['The Night Listener'][5][0])
 
     similarity = ItemSimilarity(model, manhattan_distances, 0)
 
@@ -839,84 +833,84 @@ def test_get__item___ItemSimilarity():
 
     similarity = ItemSimilarity(model, manhattan_distances, 20)
 
-    assert_array_almost_equal(np.array([[1.]]), similarity['Snakes on a Plane'][1][1])
-    assert_equals('Snakes on a Plane', similarity['Snakes on a Plane'][1][0])
+    assert_array_almost_equal(np.array([[1.]]), similarity['Snakes on a Plane'][0][1])
+    assert_equals('Snakes on a Plane', similarity['Snakes on a Plane'][0][0])
 
-    assert_array_almost_equal(np.array([[0.28571429]]), similarity['Snakes on a Plane'][2][1])
-    assert_equals('Superman Returns', similarity['Snakes on a Plane'][2][0])
+    assert_array_almost_equal(np.array([[0.28571429]]), similarity['Snakes on a Plane'][1][1])
+    assert_equals('Superman Returns', similarity['Snakes on a Plane'][1][0])
 
-    assert_array_almost_equal(np.array([[0.2]]), similarity['Snakes on a Plane'][3][1])
-    assert_equals('Lady in the Water', similarity['Snakes on a Plane'][3][0])
+    assert_array_almost_equal(np.array([[0.2]]), similarity['Snakes on a Plane'][2][1])
+    assert_equals('Lady in the Water', similarity['Snakes on a Plane'][2][0])
 
-    assert_array_almost_equal(np.array([[0.16666667]]), similarity['Snakes on a Plane'][4][1])
-    assert_equals('The Night Listener', similarity['Snakes on a Plane'][4][0])
+    assert_array_almost_equal(np.array([[0.16666667]]), similarity['Snakes on a Plane'][3][1])
+    assert_equals('The Night Listener', similarity['Snakes on a Plane'][3][0])
 
-    assert_array_almost_equal(np.array([[-0.25]]), similarity['Snakes on a Plane'][5][1])
-    assert_equals('Just My Luck', similarity['Snakes on a Plane'][5][0])
+    assert_array_almost_equal(np.array([[-0.25]]), similarity['Snakes on a Plane'][4][1])
+    assert_equals('Just My Luck', similarity['Snakes on a Plane'][4][0])
 
-    assert_array_almost_equal(np.array([[-0.33333333]]), similarity['Snakes on a Plane'][6][1])
-    assert_equals('You, Me and Dupree', similarity['Snakes on a Plane'][6][0])
+    assert_array_almost_equal(np.array([[-0.33333333]]), similarity['Snakes on a Plane'][5][1])
+    assert_equals('You, Me and Dupree', similarity['Snakes on a Plane'][5][0])
 
     #MATRIXMODEL
     #Cosine #With limits
     model = MatrixPreferenceDataModel(movies)
     similarity = ItemSimilarity(model, cosine_distances, 3)
 
-    #assert_array_equal(np.array([[1.]]), similarity['Snakes on a Plane'][0][1])
-    #assert_equals('Marcel Caraciolo', similarity['Snakes on a Plane'][0][0])
+    assert_array_equal(np.array([[1.]]), similarity['Snakes on a Plane'][0][1])
+    assert_equals('Snakes on a Plane', similarity['Snakes on a Plane'][0][0])
 
-    assert_array_almost_equal(np.array([[1.]]), similarity['Snakes on a Plane'][1][1])
-    assert_equals('Snakes on a Plane', similarity['Snakes on a Plane'][1][0])
+    assert_array_almost_equal(np.array([[0.99773877]]), similarity['Snakes on a Plane'][1][1])
+    assert_equals('Lady in the Water', similarity['Snakes on a Plane'][1][0])
 
-    assert_array_almost_equal(np.array([[0.99773877]]), similarity['Snakes on a Plane'][2][1])
-    assert_equals('Lady in the Water', similarity['Snakes on a Plane'][2][0])
+    assert_array_almost_equal(np.array([[0.9798780]]), similarity['Snakes on a Plane'][2][1])
+    assert_equals('Superman Returns', similarity['Snakes on a Plane'][2][0])
 
     #Pearson Without limits
     similarity = ItemSimilarity(model, pearson_correlation)
 
-    #assert_array_equal(np.array([[1.]]), similarity['The Night Listener'][0][1])
-    #assert_equals('Leopoldo Pires', similarity['The Night Listener'][0][0])
+    assert_array_equal(np.array([[1.]]), similarity['The Night Listener'][0][1])
+    assert_equals('The Night Listener', similarity['The Night Listener'][0][0])
 
-    assert_array_almost_equal(np.array([[1.]]), similarity['The Night Listener'][1][1])
-    assert_equals('The Night Listener', similarity['The Night Listener'][1][0])
+    assert_array_almost_equal(np.array([[0.55555556]]), similarity['The Night Listener'][1][1])
+    assert_equals('Just My Luck', similarity['The Night Listener'][1][0])
 
-    assert_array_almost_equal(np.array([[0.55555556]]), similarity['The Night Listener'][2][1])
-    assert_equals('Just My Luck', similarity['The Night Listener'][2][0])
+    assert_array_almost_equal(np.array([[-0.17984719]]), similarity['The Night Listener'][2][1])
+    assert_equals('Superman Returns', similarity['The Night Listener'][2][0])
 
-    assert_array_almost_equal(np.array([[-0.17984719]]), similarity['The Night Listener'][3][1])
-    assert_equals('Superman Returns', similarity['The Night Listener'][3][0])
+    assert_array_almost_equal(np.array([[-0.25]]), similarity['The Night Listener'][3][1])
+    assert_equals('You, Me and Dupree', similarity['The Night Listener'][3][0])
 
-    assert_array_almost_equal(np.array([[-0.25]]), similarity['The Night Listener'][4][1])
-    assert_equals('You, Me and Dupree', similarity['The Night Listener'][4][0])
+    assert_array_almost_equal(np.array([[-0.56635211]]), similarity['The Night Listener'][4][1])
+    assert_equals('Snakes on a Plane', similarity['The Night Listener'][4][0])
 
-    assert_array_almost_equal(np.array([[-0.56635211]]), similarity['The Night Listener'][5][1])
-    assert_equals('Snakes on a Plane', similarity['The Night Listener'][5][0])
+    assert_array_almost_equal(np.array([[-0.61237244]]), similarity['The Night Listener'][5][1])
+    assert_equals('Lady in the Water', similarity['The Night Listener'][5][0])
 
-    assert_array_almost_equal(np.array([[-0.61237244]]), similarity['The Night Listener'][6][1])
-    assert_equals('Lady in the Water', similarity['The Night Listener'][6][0])
+    assert_array_almost_equal(np.array([[np.nan]]), similarity['The Night Listener'][6][1])
+    assert_equals('Back to the Future', similarity['The Night Listener'][6][0])
 
     similarity = ItemSimilarity(model, euclidean_distances)
 
-    #assert_array_equal(np.array([[1.]]), similarity['The Night Listener'][0][1])
-    #assert_equals('Steve Gates', similarity['The Night Listener'][0][0])
+    assert_array_equal(np.array([[1.]]), similarity['The Night Listener'][0][1])
+    assert_equals('The Night Listener', similarity['The Night Listener'][0][0])
 
-    assert_array_almost_equal(np.array([[1.]]), similarity['The Night Listener'][1][1])
-    assert_equals('The Night Listener', similarity['The Night Listener'][1][0])
+    assert_array_almost_equal(np.array([[0.38742589]]), similarity['The Night Listener'][1][1])
+    assert_equals('Lady in the Water', similarity['The Night Listener'][1][0])
 
-    assert_array_almost_equal(np.array([[0.38742589]]), similarity['The Night Listener'][2][1])
-    assert_equals('Lady in the Water', similarity['The Night Listener'][2][0])
+    assert_array_almost_equal(np.array([[0.32037724]]), similarity['The Night Listener'][2][1])
+    assert_equals('Snakes on a Plane', similarity['The Night Listener'][2][0])
 
-    assert_array_almost_equal(np.array([[0.32037724]]), similarity['The Night Listener'][3][1])
-    assert_equals('Snakes on a Plane', similarity['The Night Listener'][3][0])
+    assert_array_almost_equal(np.array([[0.29893508]]), similarity['The Night Listener'][3][1])
+    assert_equals('Just My Luck', similarity['The Night Listener'][3][0])
 
-    assert_array_almost_equal(np.array([[0.29893508]]), similarity['The Night Listener'][4][1])
-    assert_equals('Just My Luck', similarity['The Night Listener'][4][0])
+    assert_array_almost_equal(np.array([[0.29429806]]), similarity['The Night Listener'][4][1])
+    assert_equals('You, Me and Dupree', similarity['The Night Listener'][4][0])
 
-    assert_array_almost_equal(np.array([[0.29429806]]), similarity['The Night Listener'][5][1])
-    assert_equals('You, Me and Dupree', similarity['The Night Listener'][5][0])
+    assert_array_almost_equal(np.array([[0.25265031]]), similarity['The Night Listener'][5][1])
+    assert_equals('Superman Returns', similarity['The Night Listener'][5][0])
 
-    assert_array_almost_equal(np.array([[0.25265031]]), similarity['The Night Listener'][6][1])
-    assert_equals('Superman Returns', similarity['The Night Listener'][6][0])
+    assert_array_almost_equal(np.array([[np.nan]]), similarity['The Night Listener'][6][1])
+    assert_equals('Back to the Future', similarity['The Night Listener'][6][0])
 
     similarity = ItemSimilarity(model, manhattan_distances, 0)
 
@@ -924,31 +918,32 @@ def test_get__item___ItemSimilarity():
 
     similarity = ItemSimilarity(model, manhattan_distances, 20)
 
-    assert_array_almost_equal(np.array([[1.]]), similarity['Snakes on a Plane'][1][1])
-    assert_equals('Snakes on a Plane', similarity['Snakes on a Plane'][1][0])
+    assert_array_almost_equal(np.array([[1.]]), similarity['Snakes on a Plane'][0][1])
+    assert_equals('Snakes on a Plane', similarity['Snakes on a Plane'][0][0])
 
-    assert_array_almost_equal(np.array([[0.28571429]]), similarity['Snakes on a Plane'][2][1])
-    assert_equals('Superman Returns', similarity['Snakes on a Plane'][2][0])
+    assert_array_almost_equal(np.array([[0.28571429]]), similarity['Snakes on a Plane'][1][1])
+    assert_equals('Superman Returns', similarity['Snakes on a Plane'][1][0])
 
-    assert_array_almost_equal(np.array([[0.2]]), similarity['Snakes on a Plane'][3][1])
-    assert_equals('Lady in the Water', similarity['Snakes on a Plane'][3][0])
+    assert_array_almost_equal(np.array([[0.2]]), similarity['Snakes on a Plane'][2][1])
+    assert_equals('Lady in the Water', similarity['Snakes on a Plane'][2][0])
 
-    assert_array_almost_equal(np.array([[0.16666667]]), similarity['Snakes on a Plane'][4][1])
-    assert_equals('The Night Listener', similarity['Snakes on a Plane'][4][0])
+    assert_array_almost_equal(np.array([[0.16666667]]), similarity['Snakes on a Plane'][3][1])
+    assert_equals('The Night Listener', similarity['Snakes on a Plane'][3][0])
 
-    assert_array_almost_equal(np.array([[-0.25]]), similarity['Snakes on a Plane'][5][1])
-    assert_equals('Just My Luck', similarity['Snakes on a Plane'][5][0])
+    assert_array_almost_equal(np.array([[-0.25]]), similarity['Snakes on a Plane'][4][1])
+    assert_equals('Just My Luck', similarity['Snakes on a Plane'][4][0])
 
-    assert_array_almost_equal(np.array([[-0.33333333]]), similarity['Snakes on a Plane'][6][1])
-    assert_equals('You, Me and Dupree', similarity['Snakes on a Plane'][6][0])
+    assert_array_almost_equal(np.array([[-0.33333333]]), similarity['Snakes on a Plane'][5][1])
+    assert_equals('You, Me and Dupree', similarity['Snakes on a Plane'][5][0])
 
     #DictBooleanPrefDataModel
     #Jaccard #With limits
     model = DictBooleanPrefDataModel(movies)
     similarity = ItemSimilarity(model, jaccard_coefficient, 3)
 
-    #assert_array_equal(np.array([[1.]]), similarity['Snakes on a Plane'][0][1])
-    #assert_equals('Marcel Caraciolo', similarity['Snakes on a Plane'][0][0])
+    assert_array_equal(np.array([[1.]]), similarity['Snakes on a Plane'][0][1])
+    assert_equals('Snakes on a Plane', similarity['Snakes on a Plane'][0][0])
+
     assert_array_almost_equal(np.array([[1.]]), similarity['Snakes on a Plane'][1][1])
     assert_equals('Superman Returns', similarity['Snakes on a Plane'][1][0])
 
@@ -958,8 +953,9 @@ def test_get__item___ItemSimilarity():
     #Sorensen Without limits
     similarity = ItemSimilarity(model, sorensen_coefficient)
 
-    #assert_array_equal(np.array([[1.]]), similarity['The Night Listener'][0][1])
-    #assert_equals('Leopoldo Pires', similarity['The Night Listener'][0][0])
+    assert_array_equal(np.array([[1.]]), similarity['The Night Listener'][0][1])
+    assert_equals('The Night Listener', similarity['The Night Listener'][0][0])
+
     assert_array_almost_equal(np.array([[0.92307692]]), similarity['The Night Listener'][1][1])
     assert_equals('Snakes on a Plane', similarity['The Night Listener'][1][0])
 
@@ -979,8 +975,9 @@ def test_get__item___ItemSimilarity():
     assert_equals('Back to the Future', similarity['The Night Listener'][6][0])
 
     similarity = ItemSimilarity(model, loglikehood_coefficient)
-    #assert_array_equal(np.array([[1.]]), similarity['The Night Listener'][0][1])
-    #assert_equals('Steve Gates', similarity['The Night Listener'][0][0])
+
+    assert_array_equal(np.array([[1.]]), similarity['The Night Listener'][0][1])
+    assert_equals('Snakes on a Plane', similarity['The Night Listener'][0][0])
 
     assert_array_almost_equal(np.array([[1.]]), similarity['The Night Listener'][1][1])
     assert_equals('Superman Returns', similarity['The Night Listener'][1][0])
@@ -1005,6 +1002,9 @@ def test_get__item___ItemSimilarity():
     assert_equals([], similarity['Lady in the Water'])
 
     similarity = ItemSimilarity(model, sorensen_coefficient, 20)
+
+    assert_array_almost_equal(np.array([[1.]]), similarity['Snakes on a Plane'][0][1])
+    assert_equals('Snakes on a Plane', similarity['Snakes on a Plane'][0][0])
 
     assert_array_almost_equal(np.array([[1.]]), similarity['Snakes on a Plane'][1][1])
     assert_equals('Superman Returns', similarity['Snakes on a Plane'][1][0])
@@ -1029,8 +1029,9 @@ def test_get__item___ItemSimilarity():
     model = MatrixBooleanPrefDataModel(movies)
     similarity = ItemSimilarity(model, jaccard_coefficient, 3)
 
-    #assert_array_equal(np.array([[1.]]), similarity['Snakes on a Plane'][0][1])
-    #assert_equals('Marcel Caraciolo', similarity['Snakes on a Plane'][0][0])
+    assert_array_equal(np.array([[1.]]), similarity['Snakes on a Plane'][0][1])
+    assert_equals('Snakes on a Plane', similarity['Snakes on a Plane'][0][0])
+
     assert_array_almost_equal(np.array([[1.]]), similarity['Snakes on a Plane'][1][1])
     assert_equals('Superman Returns', similarity['Snakes on a Plane'][1][0])
 
@@ -1040,8 +1041,9 @@ def test_get__item___ItemSimilarity():
     #Sorensen Without limits
     similarity = ItemSimilarity(model, sorensen_coefficient)
 
-    #assert_array_equal(np.array([[1.]]), similarity['The Night Listener'][0][1])
-    #assert_equals('Leopoldo Pires', similarity['The Night Listener'][0][0])
+    assert_array_equal(np.array([[1.]]), similarity['The Night Listener'][0][1])
+    assert_equals('The Night Listener', similarity['The Night Listener'][0][0])
+
     assert_array_almost_equal(np.array([[0.92307692]]), similarity['The Night Listener'][1][1])
     assert_equals('Snakes on a Plane', similarity['The Night Listener'][1][0])
 
@@ -1061,8 +1063,9 @@ def test_get__item___ItemSimilarity():
     assert_equals('Back to the Future', similarity['The Night Listener'][6][0])
 
     similarity = ItemSimilarity(model, loglikehood_coefficient)
-    #assert_array_equal(np.array([[1.]]), similarity['The Night Listener'][0][1])
-    #assert_equals('Steve Gates', similarity['The Night Listener'][0][0])
+
+    assert_array_equal(np.array([[1.]]), similarity['The Night Listener'][0][1])
+    assert_equals('Snakes on a Plane', similarity['The Night Listener'][0][0])
 
     assert_array_almost_equal(np.array([[1.]]), similarity['The Night Listener'][1][1])
     assert_equals('Superman Returns', similarity['The Night Listener'][1][0])
@@ -1088,6 +1091,9 @@ def test_get__item___ItemSimilarity():
 
     similarity = ItemSimilarity(model, sorensen_coefficient, 20)
 
+    assert_array_almost_equal(np.array([[1.]]), similarity['Snakes on a Plane'][0][1])
+    assert_equals('Snakes on a Plane', similarity['Snakes on a Plane'][0][0])
+
     assert_array_almost_equal(np.array([[1.]]), similarity['Snakes on a Plane'][1][1])
     assert_equals('Superman Returns', similarity['Snakes on a Plane'][1][0])
 
@@ -1097,10 +1103,10 @@ def test_get__item___ItemSimilarity():
     assert_array_almost_equal(np.array([[0.92307692]]), similarity['Snakes on a Plane'][3][1])
     assert_equals('You, Me and Dupree', similarity['Snakes on a Plane'][3][0])
 
-    assert_array_almost_equal(np.array([[0.83333333]]), similarity['Snakes on a Plane'][4][1])
+    assert_array_almost_equal(np.array([[0.8333333333]]), similarity['Snakes on a Plane'][4][1])
     assert_equals('Lady in the Water', similarity['Snakes on a Plane'][4][0])
 
-    assert_array_almost_equal(np.array([[0.72727273]]), similarity['Snakes on a Plane'][5][1])
+    assert_array_almost_equal(np.array([[0.72727272]]), similarity['Snakes on a Plane'][5][1])
     assert_equals('Just My Luck', similarity['Snakes on a Plane'][5][0])
 
     assert_array_almost_equal(np.array([[0.]]), similarity['Snakes on a Plane'][6][1])

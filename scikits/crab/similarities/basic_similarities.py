@@ -1,4 +1,4 @@
-#-*- coding:utf-8 -*-
+                                     #-*- coding:utf-8 -*-
 
 """
 This module contains functions and classes for computing similarities across
@@ -88,8 +88,9 @@ class UserSimilarity(BaseSimilarity):
     >>> model = DictPreferenceDataModel(movies)
     >>> similarity = UserSimilarity(model, cosine_distances, 3)
     >>> similarity['Marcel Caraciolo']
-    [('Marcel Caraciolo', array([[ 1.]])), ('Lorena Abreu', array([[ 0.98658676]])),\
-     ('Leopoldo Pires', array([[ 0.9859858]]))]
+    [('Marcel Caraciolo', 1.0), ('Sheldom', 0.99127582693458016),
+      ('Lorena Abreu', 0.98658676452792504)]
+
    '''
 
     def __init__(self, model, distance, num_best=None):
@@ -191,8 +192,9 @@ class ItemSimilarity(BaseSimilarity):
     >>> model = DictPreferenceDataModel(movies)
     >>> similarity = ItemSimilarity(model, cosine_distances, 3)
     >>> similarity['The Night Listener']
-    [('The Night Listener', array([[ 1.]])), ('Lady in the Water', array([[ 0.98188311]])), \
-            ('Just My Luck', array([[ 0.97489347]]))]
+    [('The Night Listener', 1.0), ('Lady in the Water', 0.98188311415053031),
+        ('Just My Luck', 0.97489347126452108)]
+
     '''
 
     def __init__(self, model, distance, num_best=None):

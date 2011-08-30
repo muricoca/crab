@@ -6,6 +6,7 @@ Base Similarity Models.
 """
 #Authors: Marcel Caraciolo <marcel@muricoca.com>
 #License: BSD Style
+import numpy as np
 
 
 class BaseSimilarity(object):
@@ -72,7 +73,15 @@ class BaseSimilarity(object):
         #return either all similarities as a list,
         #or only self.num_best most similar,
         #depending on settings from the constructor
+
         tops = sorted(all_sims, key=lambda x: -x[1])
+
+        if all_sims:
+            item_ids, preferences = zip(*all_sims)
+            preferences = np.array(preferences).flatten()
+            item_ids = np.array(item_ids).flatten()
+            sorted_prefs = np.argsort(-preferences)
+            tops = zip(item_ids[sorted_prefs], preferences[sorted_prefs])
 
         # return at most numBest top 2-tuples (label, sim)
         return tops[:self.num_best] if self.num_best is not None else tops
