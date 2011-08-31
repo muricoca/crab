@@ -22,7 +22,8 @@ import numpy as np
 
 class MatrixFactorBasedRecommender(SVDRecommender):
     """
-    Matrix Factorization Based Recommender.
+    Matrix Factorization Based Recommender using
+    Expectation Maximization algorithm.
 
     Parameters
     -----------
@@ -144,8 +145,7 @@ class MatrixFactorBasedRecommender(SVDRecommender):
 
     References
     -----------
-    Item-based collaborative filtering recommendation algorithms by Sarwar
-    http://portal.acm.org/citation.cfm?id=372071
+
 
     """
 
@@ -231,23 +231,26 @@ class MatrixFactorBasedRecommender(SVDRecommender):
             err = self.model.index[user_idx, item_idx] - p
 
             #Adjust the factors
-            for f in range(self.n_features):
-                u_f = self.user_factors[user_idx, f]
-                i_f = self.item_factors[item_idx, f]
+            u_f = self.user_factors[user_idx]
+            i_f = self.item_factors[item_idx]
 
-                #Compute factor updates
-                delta_u = err * i_f - self.regularization * u_f
-                delta_i = err * u_f - self.regularization * i_f
+            #Compute factor updates
+            delta_u = err * u_f - self.regularization * u_f
+            delta_i = err * u_f - self.regularization * i_f
+            #if necessary apply updates
+            if update_user:
+                self.user_factors[user_idx] += self.learning_rate * delta_u
+            if update_item:
+                self.item_factors[item_idx] += self.learning_rate * delta_i
 
-                #if necessary apply updates
-                if update_user:
-                    self.user_factors[user_idx, f] += self.learning_rate * delta_u
-                if update_item:
-                    self.item_factors[item_idx, f] += self.learning_rate * delta_i
+    def _rating_indices(self):
+        rating_indices = [(idx, jdx) for idx in range(self.model.users_count())
+                            for jdx in range(self.model.items_count())
+                    if not np.isnan(self.model.index[idx, jdx])]
+        return rating_indices
 
     def learn_factors(self, update_user=True, update_item=True):
-        rating_indices = [(idx, jdx) for idx in range(self.model.users_count())
-                            for jdx in range(self.model.items_count())]
+        rating_indices = self._rating_indices()
         random.shuffle(rating_indices)
 
         for index in range(self.n_interations):
