@@ -18,6 +18,10 @@ import random
 from base import SVDRecommender
 from ..knn.item_strategies import ItemsNeighborhoodStrategy
 import numpy as np
+from math import sqrt
+import logging
+
+logger = logging.getLogger('crab')
 
 
 class MatrixFactorBasedRecommender(SVDRecommender):
@@ -226,9 +230,11 @@ class MatrixFactorBasedRecommender(SVDRecommender):
         '''
         Iterate once over rating data and adjust corresponding factors (stochastic gradient descent)
         '''
+        err_total = 0.0
         for user_idx, item_idx in rating_indices:
             p = self._predict(user_idx, item_idx, False)
             err = self.model.index[user_idx, item_idx] - p
+            err_total += err
 
             #Adjust the factors
             u_f = self.user_factors[user_idx]
@@ -243,6 +249,8 @@ class MatrixFactorBasedRecommender(SVDRecommender):
             if update_item:
                 self.item_factors[item_idx] += self.learning_rate * delta_i
 
+        return err_total
+
     def _rating_indices(self):
         rating_indices = [(idx, jdx) for idx in range(self.model.users_count())
                             for jdx in range(self.model.items_count())
@@ -254,7 +262,10 @@ class MatrixFactorBasedRecommender(SVDRecommender):
         random.shuffle(rating_indices)
 
         for index in range(self.n_interations):
-            self._train(rating_indices, update_user, update_item)
+            err = self._train(rating_indices, update_user, update_item)
+            rmse = sqrt((err ** 2.0) / len(rating_indices))
+            logger.debug("Finished the interation %i with RMSE %f" %  \
+                    (index, rmse))
 
     def factorize(self):
         #init factor matrices
@@ -286,6 +297,8 @@ class MatrixFactorBasedRecommender(SVDRecommender):
 
     def estimate_preference(self, user_id, item_id, **params):
         '''
+        A preference is estimated by computing the dot-product
+        of the user and item feature vectors.
         Parameters
         ----------
         user_id: int or string
@@ -300,36 +313,17 @@ class MatrixFactorBasedRecommender(SVDRecommender):
         preference for the item, or else the user's actual preference for the
         item. If a preference cannot be estimated, returns None.
         '''
+
         preference = self.model.preference_value(user_id, item_id)
         if not np.isnan(preference):
             return preference
 
-        #TODO: It needs optimization
-        prefs = self.model.preferences_from_user(user_id)
+        #How to catch the user_id and item_id from the matrix.
 
-        similarities = \
-            np.array([self.similarity.get_similarity(item_id, to_item_id) \
-            for to_item_id, pref in prefs if to_item_id != item_id]).flatten()
+        user_features = self.user_factors[np.where(self.model.user_ids() == user_id)]
+        item_features = self.item_factors[np.where(self.model.item_ids() == item_id)]
 
-        prefs = np.array([pref for it, pref in prefs])
-        prefs_sim = np.sum(prefs[~np.isnan(similarities)] *
-                             similarities[~np.isnan(similarities)])
-        total_similarity = np.sum(similarities)
-
-        #Throw out the estimate if it was based on no data points,
-        #of course, but also if based on
-        #just one. This is a bit of a band-aid on the 'stock'
-        #item-based algorithm for the moment.
-        #The reason is that in this case the estimate is, simply,
-        #the user's rating for one item
-        #that happened to have a defined similarity.
-        #The similarity score doesn't matter, and that
-        #seems like a bad situation.
-        if total_similarity == 0.0 or \
-           not similarities[~np.isnan(similarities)].size:
-            return np.nan
-
-        estimated = prefs_sim / total_similarity
+        estimated = np.sum(user_features * item_features)
 
         if self.capper:
             max_p = self.model.maximum_preference_value()
@@ -397,29 +391,6 @@ class MatrixFactorBasedRecommender(SVDRecommender):
 
         return top_n_recs
 
-    def most_similar_items(self, item_id, how_many=None):
-        '''
-        Return the most similar items to the given item, ordered
-        from most similar to least.
-
-        Parameters
-        -----------
-        item_id:  int or string
-            ID of item for which to find most similar other items
-
-        how_many: int
-            Desired number of most similar items to find (default=None ALL)
-        '''
-        old_how_many = self.similarity.num_best
-        #+1 since it returns the identity.
-        self.similarity.num_best = how_many + 1 \
-                    if how_many is not None else None
-        similarities = self.similarity[item_id]
-        self.similarity.num_best = old_how_many
-
-        return np.array([item for item, pref in similarities \
-            if item != item_id])
-
     def recommended_because(self, user_id, item_id, how_many=None, **params):
         '''
         Returns the items that were most influential in recommending a
@@ -443,37 +414,4 @@ class MatrixFactorBasedRecommender(SVDRecommender):
         The list of items ordered from most influential in
         recommended the given item to least
         '''
-        preferences = self.model.preferences_from_user(user_id)
-
-        if self.model.has_preference_values():
-            similarities = \
-                np.array([self.similarity.get_similarity(item_id, to_item_id) \
-                    for to_item_id, pref in preferences
-                        if to_item_id != item_id]).flatten()
-            prefs = np.array([pref for it, pref in preferences])
-            item_ids = np.array([it for it, pref in preferences])
-        else:
-            similarities = \
-                np.array([self.similarity.get_similarity(item_id, to_item_id) \
-                for to_item_id in preferences
-                    if to_item_id != item_id]).flatten()
-            prefs = np.array([1.0 for it in preferences])
-            item_ids = np.array(preferences)
-
-        scores = prefs[~np.isnan(similarities)] * \
-             (1.0 + similarities[~np.isnan(similarities)])
-
-        sorted_preferences = np.lexsort((scores,))[::-1]
-
-        sorted_preferences = sorted_preferences[0:how_many] \
-             if how_many and sorted_preferences.size > how_many \
-                 else sorted_preferences
-
-        if self.with_preference:
-            top_n_recs = np.array([(item_ids[ind], \
-                     prefs[ind]) for ind in sorted_preferences])
-        else:
-            top_n_recs = np.array([item_ids[ind]
-                 for ind in sorted_preferences])
-
-        return top_n_recs
+        pass
