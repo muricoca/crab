@@ -5,7 +5,6 @@ from ...knn.item_strategies import AllPossibleItemsStrategy, ItemsNeighborhoodSt
 from ....models.classes import DictPreferenceDataModel, MatrixPreferenceDataModel, \
     DictBooleanPrefDataModel, MatrixBooleanPrefDataModel
 from ..classes import MatrixFactorBasedRecommender
-from ....models.utils import ItemNotFoundError, UserNotFoundError
 
 
 movies = {'Marcel Caraciolo': {'Lady in the Water': 2.5, 'Snakes on a Plane': 3.5,
