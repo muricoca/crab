@@ -103,11 +103,9 @@ class MatrixFactorBasedRecommender(SVDRecommender):
 
     Examples
     -----------
-    >>> from scikits.crab.models.classes import DictPreferenceDataModel
-    >>> from scikits.crab.recommenders.knn.classes import ItemBasedRecommender
-    >>> from scikits.crab.similarities.basic_similarities import ItemSimilarity
+    >>> from scikits.crab.models.classes import MatrixPreferenceDataModel
+    >>> from scikits.crab.recommenders.svd.classes import MatrixFactorBasedRecommender
     >>> from scikits.crab.recommenders.knn.item_strategies import ItemsNeighborhoodStrategy
-    >>> from scikits.crab.metrics.pairwise import euclidean_distances
     >>> movies = {'Marcel Caraciolo': {'Lady in the Water': 2.5, \
      'Snakes on a Plane': 3.5, \
      'Just My Luck': 3.0, 'Superman Returns': 3.5, 'You, Me and Dupree': 2.5, \
@@ -129,23 +127,24 @@ class MatrixFactorBasedRecommender(SVDRecommender):
     'Penny Frewman': {'Snakes on a Plane':4.5,'You, Me and Dupree':1.0, \
     'Superman Returns':4.0}, \
     'Maria Gabriela': {}}
-    >>> model = DictPreferenceDataModel(movies)
+    >>> model = MatrixPreferenceDataModel(movies)
     >>> items_strategy = ItemsNeighborhoodStrategy()
-    >>> similarity = ItemSimilarity(model, euclidean_distances)
-    >>> recsys = ItemBasedRecommender(model, similarity, items_strategy)
+    >>> recsys = MatrixFactorBasedRecommender( \
+        model=model, \
+        items_selection_strategy=items_strategy, \
+        n_features=2)
     >>> #Return the recommendations for the given user.
     >>> recsys.recommend('Leopoldo Pires')
     array(['Just My Luck', 'You, Me and Dupree'],\
           dtype='|S18')
-    >>> #Return the 2 explanations for the given recommendation.
-    >>> recsys.recommended_because('Leopoldo Pires', 'Just My Luck',2)
-    array(['The Night Listener', 'Superman Returns'],\
-          dtype='|S18')
 
     Notes
     -----------
-    This ItemBasedRecommender does not yet provide
+    This MatrixFactorizationRecommender does not yet provide
     suppot for rescorer functions.
+
+    This MatrixFactorizationRecommender does not yet provide
+    suppot for DictDataModels.
 
     References
     -----------
