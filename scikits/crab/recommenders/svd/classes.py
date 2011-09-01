@@ -173,6 +173,8 @@ class MatrixFactorBasedRecommender(SVDRecommender):
         else:
             self.items_selection_strategy = items_selection_strategy
 
+        self.factorize()
+
     def _init_models(self):
         num_users = self.model.users_count()
         num_items = self.model.items_count()
@@ -204,12 +206,7 @@ class MatrixFactorBasedRecommender(SVDRecommender):
         if hasattr(self.model, 'index'):
             mdat = np.ma.masked_array(self.model.index, np.isnan(self.model.index))
         else:
-            average = []
-            user_ids = self.model.user_ids()
-            for user_id in user_ids:
-                for item_id, pref in self.model.preferences_from_user(user_id):
-                    average.append(pref)
-            mdat = np.ma.masked_array(self.model.index, np.isnan(np.array(average)))
+            raise TypeError('This model is not yet supported for this recommender.')
         return np.mean(mdat)
 
     def _predict(self, user_index, item_index, trailing=True):
@@ -252,9 +249,13 @@ class MatrixFactorBasedRecommender(SVDRecommender):
         return err_total
 
     def _rating_indices(self):
-        rating_indices = [(idx, jdx) for idx in range(self.model.users_count())
-                            for jdx in range(self.model.items_count())
-                    if not np.isnan(self.model.index[idx, jdx])]
+        if hasattr(self.model, 'index'):
+            rating_indices = [(idx, jdx) for idx in range(self.model.users_count())
+                                for jdx in range(self.model.items_count())
+                        if not np.isnan(self.model.index[idx, jdx])]
+        else:
+            raise TypeError('This model is not yet supported for this recommender.')
+
         return rating_indices
 
     def learn_factors(self, update_user=True, update_item=True):
@@ -323,7 +324,7 @@ class MatrixFactorBasedRecommender(SVDRecommender):
         user_features = self.user_factors[np.where(self.model.user_ids() == user_id)]
         item_features = self.item_factors[np.where(self.model.item_ids() == item_id)]
 
-        estimated = np.sum(user_features * item_features)
+        estimated = self._global_bias + np.sum(user_features * item_features)
 
         if self.capper:
             max_p = self.model.maximum_preference_value()
