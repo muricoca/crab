@@ -390,28 +390,3 @@ class MatrixFactorBasedRecommender(SVDRecommender):
                  for ind in sorted_preferences])
 
         return top_n_recs
-
-    def recommended_because(self, user_id, item_id, how_many=None, **params):
-        '''
-        Returns the items that were most influential in recommending a
-        given item to a given user. In most implementations, this
-        method will return items that the user prefers and that
-        are similar to the given item.
-
-        Parameters
-        -----------
-        user_id : int or string
-            ID of the user who was recommended the item
-
-        item_id: int or string
-            ID of item that was recommended
-
-        how_many: int
-            Maximum number of items to return (default=None ALL)
-
-        Returns
-        ----------
-        The list of items ordered from most influential in
-        recommended the given item to least
-        '''
-        pass
