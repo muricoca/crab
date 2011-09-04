@@ -7,4 +7,4 @@ def test_movielens_r100k():
 
 
 def test_sample_songs():
-    songs = load_sample_songs
+    songs = load_sample_songs()
