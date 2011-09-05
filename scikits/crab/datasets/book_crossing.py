@@ -39,6 +39,8 @@ import logging
 import zipfile
 from os.path import dirname
 from os.path import join
+import numpy as np
+from base import Bunch
 
 logger = logging.getLogger(__name__)
 
@@ -67,6 +69,7 @@ def download_book_crossings(target_dir):
             source_zip.extract(name, target_dir)
             archives.append(name)
     source_zip.close()
+    os.remove(archive_path)
 
     return archives
 
@@ -101,10 +104,9 @@ def load_bookcrossings(data_home=None, download_if_missing=True,
         data_home = join(dirname(__file__), 'data/')
 
     try:
-        ratings_file = open(os.path.join(data_home, 'BX-Book-Ratings.csv'))
-        books_file = open(os.path.join(data_home, 'BX-Books.csv'))
-        ratings_file = open(os.path.join(data_home, 'BX-Users.csv'))
-
+        if not os.path.exists(os.path.join(data_home, 'BX-Book-Ratings.csv')) \
+            and not open(os.path.join(data_home, 'BX-Books.csv')):
+            raise IOError
     except Exception, e:
         print 80 * '_'
         print 'Loading files failed'
@@ -113,8 +115,39 @@ def load_bookcrossings(data_home=None, download_if_missing=True,
 
         if download_if_missing:
             print 'downloading the dataset...'
-            filenames = download_book_crossings(data_home)
+            try:
+                download_book_crossings(data_home)
+            except:
+                raise Exception('FAIL: Problems during the download.')
             print 'dataset downloaded.'
         else:
             raise IOError('Book-Crossing dataset not found')
 
+    ratings_m = np.loadtxt(os.path.join(data_home, 'BX-Book-Ratings.csv'),
+                delimiter=';', dtype=str)
+
+    data_books = {}
+    if implicit:
+        for user_id, item_id, rating in ratings_m:
+            if rating == 0:
+                data_books.setdefault(user_id, {})
+                data_books[user_id][item_id] = int(rating)
+    else:
+        for user_id, item_id, rating in ratings_m:
+            if rating != 0:
+                data_books.setdefault(user_id, {})
+                data_books[user_id][item_id] = int(rating)
+
+    #Read the titles
+    data_titles = np.loadtxt(os.path.join(data_home, 'BX-Books.csv'),
+             delimiter=';', usecols=(0, 1), dtype=str)
+
+    data_t = []
+    for item_id, label in data_titles:
+        data_t.append((item_id, label))
+    data_titles = dict(data_t)
+
+    fdescr = open(dirname(__file__) + '/descr/book-crossing.rst')
+
+    return Bunch(data=data_books, item_ids=data_titles,
+                 user_ids=None, DESCR=fdescr.read())
