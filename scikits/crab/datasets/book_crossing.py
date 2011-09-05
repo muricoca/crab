@@ -41,6 +41,7 @@ from os.path import dirname
 from os.path import join
 import numpy as np
 from base import Bunch
+import csv
 
 logger = logging.getLogger(__name__)
 
@@ -123,18 +124,22 @@ def load_bookcrossings(data_home=None, download_if_missing=True,
         else:
             raise IOError('Book-Crossing dataset not found')
 
-    ratings_m = np.loadtxt(os.path.join(data_home, 'BX-Book-Ratings.csv'),
-                delimiter=';', dtype=str)
+    #TO FIX: it is not working for np.loadtxt
+    #ratings_m = np.loadtxt(os.path.join(data_home, 'BX-Book-Ratings.csv'),
+    #            delimiter=';', skiprows=1)
 
+    ratings_m = csv.reader(open(os.path.join(data_home, 'BX-Book-Ratings.csv')), delimiter=';')
+    ratings_m.next()
     data_books = {}
     if implicit:
         for user_id, item_id, rating in ratings_m:
-            if rating == 0:
+            if rating == "0":
                 data_books.setdefault(user_id, {})
                 data_books[user_id][item_id] = int(rating)
     else:
         for user_id, item_id, rating in ratings_m:
-            if rating != 0:
+            rating = int(rating)
+            if rating != "0":
                 data_books.setdefault(user_id, {})
                 data_books[user_id][item_id] = int(rating)
 
