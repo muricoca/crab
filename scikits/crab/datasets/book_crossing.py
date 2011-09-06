@@ -92,10 +92,6 @@ def load_bookcrossings(data_home=None, download_if_missing=True,
         If True, it will load the implicit ratings expressed by rating 0,
         otherwise it will load the explicit ratings expressed by rating 1-10.
 
-    Examples
-    --------
-
-
     """
 
     if data_home:
