@@ -61,14 +61,14 @@ def load_movielens_r100k(load_timestamp=False):
     #Read data
     if load_timestamp:
         data_m = np.loadtxt(base_dir + 'movielens100k.data',
-                delimiter='\t', skiprows=1, dtype=int)
+                delimiter='\t', dtype=int)
         data_movies = {}
         for user_id, item_id, rating, timestamp in data_m:
             data_movies.setdefault(user_id, {})
             data_movies[user_id][item_id] = (timestamp, int(rating))
     else:
         data_m = np.loadtxt(base_dir + 'movielens100k.data',
-                delimiter='\t', skiprows=1, usecols=(0, 1, 2), dtype=int)
+                delimiter='\t', usecols=(0, 1, 2), dtype=int)
 
         data_movies = {}
         for user_id, item_id, rating in data_m:

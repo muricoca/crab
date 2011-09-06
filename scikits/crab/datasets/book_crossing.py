@@ -128,14 +128,15 @@ def load_bookcrossings(data_home=None, download_if_missing=True,
     #ratings_m = np.loadtxt(os.path.join(data_home, 'BX-Book-Ratings.csv'),
     #            delimiter=';', skiprows=1)
 
-    ratings_m = csv.reader(open(os.path.join(data_home, 'BX-Book-Ratings.csv')), delimiter=';')
+    ratings_m = csv.reader(open(os.path.join(data_home,
+                'BX-Book-Ratings.csv')), delimiter=';')
     ratings_m.next()
     data_books = {}
     if implicit:
         for user_id, item_id, rating in ratings_m:
             if rating == "0":
                 data_books.setdefault(user_id, {})
-                data_books[user_id][item_id] = int(rating)
+                data_books[user_id][item_id] = True
     else:
         for user_id, item_id, rating in ratings_m:
             rating = int(rating)
