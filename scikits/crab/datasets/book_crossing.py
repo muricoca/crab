@@ -92,6 +92,18 @@ def load_bookcrossings(data_home=None, download_if_missing=True,
         If True, it will load the implicit ratings expressed by rating 0,
         otherwise it will load the explicit ratings expressed by rating 1-10.
 
+    Examples
+    --------
+    >>> from os.path import join
+    >>> from os.path import dirname
+    >>> from scikits.crab.datasets.book_crossing import load_bookcrossings
+    >>> data_home = join(dirname(__file__), 'scikits/crab/datasets/tests/data/')
+    >>> books = load_bookcrossings(data_home)
+    >>> len(books.data)
+    26
+    >>> len(books.item_ids)
+    100
+
     """
 
     if data_home:
