@@ -61,7 +61,7 @@ class UserSimilarity(BaseSimilarity):
 
     Examples
     ---------
-    >>> from scikits.crab.models.classes import DictPreferenceDataModel
+    >>> from scikits.crab.models.classes import MatrixPreferenceDataModel
     >>> from scikits.crab.metrics.pairwise import cosine_distances
     >>> from scikits.crab.similarities.basic_similarities import UserSimilarity
     >>> movies = {'Marcel Caraciolo': {'Lady in the Water': 2.5, \
@@ -85,7 +85,7 @@ class UserSimilarity(BaseSimilarity):
     'Penny Frewman': {'Snakes on a Plane':4.5,'You, Me and Dupree':1.0, \
     'Superman Returns':4.0}, \
     'Maria Gabriela': {}}
-    >>> model = DictPreferenceDataModel(movies)
+    >>> model = MatrixPreferenceDataModel(movies)
     >>> similarity = UserSimilarity(model, cosine_distances, 3)
     >>> similarity['Marcel Caraciolo']
     [('Marcel Caraciolo', 1.0), ('Sheldom', 0.99127582693458016),
@@ -165,7 +165,7 @@ class ItemSimilarity(BaseSimilarity):
 
     Examples
     ---------
-    >>> from scikits.crab.models.classes import DictPreferenceDataModel
+    >>> from scikits.crab.models.classes import MatrixPreferenceDataModel
     >>> from scikits.crab.metrics.pairwise import cosine_distances
     >>> from scikits.crab.similarities.basic_similarities import ItemSimilarity
     >>> movies = {'Marcel Caraciolo': {'Lady in the Water': 2.5, \
@@ -189,7 +189,7 @@ class ItemSimilarity(BaseSimilarity):
     'Penny Frewman': {'Snakes on a Plane':4.5,'You, Me and Dupree':1.0, \
     'Superman Returns':4.0}, \
     'Maria Gabriela': {}}
-    >>> model = DictPreferenceDataModel(movies)
+    >>> model = MatrixPreferenceDataModel(movies)
     >>> similarity = ItemSimilarity(model, cosine_distances, 3)
     >>> similarity['The Night Listener']
     [('The Night Listener', 1.0), ('Lady in the Water', 0.98188311415053031),
