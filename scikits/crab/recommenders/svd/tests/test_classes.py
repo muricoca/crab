@@ -1,9 +1,9 @@
 import numpy as np
 from numpy.testing import assert_array_equal
-from nose.tools import assert_raises, assert_equals, assert_almost_equals
+from nose.tools import assert_equals, assert_almost_equals
 from ...knn.item_strategies import AllPossibleItemsStrategy, ItemsNeighborhoodStrategy
-from ....models.classes import DictPreferenceDataModel, MatrixPreferenceDataModel, \
-    DictBooleanPrefDataModel, MatrixBooleanPrefDataModel
+from ....models.classes import  MatrixPreferenceDataModel, \
+     MatrixBooleanPrefDataModel
 from ..classes import MatrixFactorBasedRecommender
 
 
@@ -26,9 +26,7 @@ movies = {'Marcel Caraciolo': {'Lady in the Water': 2.5, 'Snakes on a Plane': 3.
 'Penny Frewman': {'Snakes on a Plane': 4.5, 'You, Me and Dupree': 1.0, 'Superman Returns': 4.0},
 'Maria Gabriela': {}}
 
-dict_model = DictPreferenceDataModel(movies)
 matrix_model = MatrixPreferenceDataModel(movies)
-boolean_model = DictBooleanPrefDataModel(movies)
 boolean_matrix_model = MatrixBooleanPrefDataModel(movies)
 
 
@@ -50,11 +48,6 @@ def test_create_MatrixFactorBasedRecommender():
     assert_equals(recsys.user_factors.shape, (8, 2))
     assert_equals(recsys.item_factors.shape, (6, 2))
     assert_equals(recsys._global_bias, 3.2285714285714286)
-
-    assert_raises(TypeError, MatrixFactorBasedRecommender,
-        model=dict_model,
-        items_selection_strategy=items_strategy,
-        n_features=2)
 
 
 def test_all_other_items_MatrixFactorBasedRecommender():

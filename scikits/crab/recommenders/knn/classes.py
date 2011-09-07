@@ -63,7 +63,7 @@ class ItemBasedRecommender(ItemRecommender):
 
     Examples
     -----------
-    >>> from scikits.crab.models.classes import DictPreferenceDataModel
+    >>> from scikits.crab.models.classes import MatrixPreferenceDataModel
     >>> from scikits.crab.recommenders.knn.classes import ItemBasedRecommender
     >>> from scikits.crab.similarities.basic_similarities import ItemSimilarity
     >>> from scikits.crab.recommenders.knn.item_strategies import ItemsNeighborhoodStrategy
@@ -89,7 +89,7 @@ class ItemBasedRecommender(ItemRecommender):
     'Penny Frewman': {'Snakes on a Plane':4.5,'You, Me and Dupree':1.0, \
     'Superman Returns':4.0}, \
     'Maria Gabriela': {}}
-    >>> model = DictPreferenceDataModel(movies)
+    >>> model = MatrixPreferenceDataModel(movies)
     >>> items_strategy = ItemsNeighborhoodStrategy()
     >>> similarity = ItemSimilarity(model, euclidean_distances)
     >>> recsys = ItemBasedRecommender(model, similarity, items_strategy)
@@ -389,7 +389,7 @@ class UserBasedRecommender(UserRecommender):
 
     Examples
     -----------
-    >>> from scikits.crab.models.classes import DictPreferenceDataModel
+    >>> from scikits.crab.models.classes import MatrixPreferenceDataModel
     >>> from scikits.crab.recommenders.knn.classes import UserBasedRecommender
     >>> from scikits.crab.similarities.basic_similarities import UserSimilarity
     >>> from scikits.crab.recommenders.knn.neighborhood_strategies import NearestNeighborsStrategy
@@ -415,7 +415,7 @@ class UserBasedRecommender(UserRecommender):
     'Penny Frewman': {'Snakes on a Plane':4.5,'You, Me and Dupree':1.0, \
     'Superman Returns':4.0}, \
     'Maria Gabriela': {}}
-    >>> model = DictPreferenceDataModel(movies)
+    >>> model = MatrixPreferenceDataModel(movies)
     >>> nhood_strategy = NearestNeighborsStrategy()
     >>> similarity = UserSimilarity(model, euclidean_distances)
     >>> recsys = UserBasedRecommender(model, similarity, nhood_strategy)
