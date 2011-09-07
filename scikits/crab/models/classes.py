@@ -329,6 +329,63 @@ class MatrixPreferenceDataModel(BaseDataModel):
         del self.dataset[user_id][item_id]
         self.build_model()
 
+    def __repr__(self):
+        return "<MatrixPreferenceDataModel (%d by %d)>" % (self.index.shape[0],
+                        self.index.shape[1])
+
+    def _repr_matrix(self, matrix):
+        s = ""
+        cellWidth = 11
+        shape = matrix.shape
+        for i in range(shape[0]):
+            for j in range(shape[1]):
+                v = matrix[i, j]
+                if np.isnan(v):
+                    s += "---".center(cellWidth)
+                else:
+                    exp = np.log(abs(v))
+                    if abs(exp) <= 4:
+                        if exp < 0:
+                            s += ("%9.6f" % v).ljust(cellWidth)
+                        else:
+                            s += ("%9.*f" % (6, v)).ljust(cellWidth)
+                    else:
+                        s += ("%9.2e" % v).ljust(cellWidth)
+            s += "\n"
+        return s[:-1]
+
+    def __unicode__(self):
+        """
+        Write out a representative picture of this matrix.
+
+        The upper left corner of the matrix will be shown, with up to 20x5
+        entries, and the rows and columns will be labeled with up to 8
+        characters.
+        """
+        matrix = self._repr_matrix(self.index[:20, :5])
+        lines = matrix.split('\n')
+        headers = [repr(self)[1:-1]]
+        if self._item_ids.size:
+            col_headers = [('%-8s' % item[:8]) for item in self._item_ids[:5]]
+            headers.append(' ' + ('   '.join(col_headers)))
+
+        if self._user_ids.size:
+            for (i, line) in enumerate(lines):
+                lines[i] = ('%-8s' % self._user_ids[i][:8]) + line
+            for (i, line) in enumerate(headers):
+                if i > 0:
+                    headers[i] = ' ' * 8 + line
+        lines = headers + lines
+        if self.index.shape[1] > 5 and self.index.shape[0] > 0:
+            lines[1] += ' ...'
+        if self.index.shape[0] > 20:
+            lines.append('...')
+
+        return '\n'.join(line.rstrip() for line in lines)
+
+    def __str__(self):
+        return unicode(self).encode('utf-8')
+
 
 ###############################################################################
 # MatrixBooleanDataModel
@@ -622,3 +679,60 @@ class MatrixBooleanPrefDataModel(BaseDataModel):
 
         self.dataset[user_id].remove(item_id)
         self.build_model()
+
+    def __repr__(self):
+        return "<MatrixBooleanPrefDataModel (%d by %d)>" % (self.index.shape[0],
+                        self.index.shape[1])
+
+    def _repr_matrix(self, matrix):
+        s = ""
+        cellWidth = 11
+        shape = matrix.shape
+        for i in range(shape[0]):
+            for j in range(shape[1]):
+                v = matrix[i, j]
+                if not v:
+                    s += "---".center(cellWidth)
+                else:
+                    exp = np.log(abs(v))
+                    if abs(exp) <= 4:
+                        if exp < 0:
+                            s += ("%9.6f" % v).ljust(cellWidth)
+                        else:
+                            s += ("%9.*f" % (6, v)).ljust(cellWidth)
+                    else:
+                        s += ("%9.2e" % v).ljust(cellWidth)
+            s += "\n"
+        return s[:-1]
+
+    def __unicode__(self):
+        """
+        Write out a representative picture of this matrix.
+
+        The upper left corner of the matrix will be shown, with up to 20x5
+        entries, and the rows and columns will be labeled with up to 8
+        characters.
+        """
+        matrix = self._repr_matrix(self.index[:20, :5])
+        lines = matrix.split('\n')
+        headers = [repr(self)[1:-1]]
+        if self._item_ids.size:
+            col_headers = [('%-8s' % item[:8]) for item in self._item_ids[:5]]
+            headers.append(' ' + ('   '.join(col_headers)))
+
+        if self._user_ids.size:
+            for (i, line) in enumerate(lines):
+                lines[i] = ('%-8s' % self._user_ids[i][:8]) + line
+            for (i, line) in enumerate(headers):
+                if i > 0:
+                    headers[i] = ' ' * 8 + line
+        lines = headers + lines
+        if self.index.shape[1] > 5 and self.index.shape[0] > 0:
+            lines[1] += ' ...'
+        if self.index.shape[0] > 20:
+            lines.append('...')
+
+        return '\n'.join(line.rstrip() for line in lines)
+
+    def __str__(self):
+        return unicode(self).encode('utf-8')
