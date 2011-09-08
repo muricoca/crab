@@ -16,23 +16,20 @@ class RecommenderEvaluator(object):
     being the lowest / best possible evaluation, meaning a perfect match.
 
     """
-    def report(self, **kwargs):
-        """
-        Build a text report showing the main recommender metrics implemented
-        in this evaluator.
 
-        Returns
-        -------
-        report : string
-        Text summary of the results.
-
+    def evaluate(self, figuresave=None, filesave=None, **kwargs):
         """
-        raise NotImplementedError("cannot instantiate Abstract Base Class")
+        Evaluates the predictor
 
-    def evaluate(self, **kwargs):
-        """
-        This method is the main method that will hold the specified
-        evaluation implementation for this class.
+        Parameters
+        ----------
+        figuresave : string
+            The path where will be stored the plot as figure. optional,
+            default = None
+
+        filesave : string
+            The path where will be stored the summary of the results. optional,
+            default = None
 
         Returns
         -------
@@ -41,16 +38,31 @@ class RecommenderEvaluator(object):
         """
         raise NotImplementedError("cannot instantiate Abstract Base Class")
 
-    def plot_result(self, filesave=None, **kwargs):
+    def evaluate_online(self, **kwargs):
         """
-        This method will hold the optional implementation of plotting the
-        results of the recommender metric in this class.
+        Online evaluation for recommendation prediction
+
+        Returns
+
+        -------
+        Returns a score representing how well the recommender estimated the
+        preferences match real values.
+        """
+        raise NotImplementedError("cannot instantiate Abstract Base Class")
+
+    def evaluate_on_split(self, **kwargs):
+        """
+        Evaluate on the folds of a dataset split
 
         Parameters
         ----------
+        figuresave : string
+            The path where will be stored the plot as figure. optional,
+            default = None
+
         filesave : string
-        The path where will be stored the plot as figure. optional,
-        default = None
+            The path where will be stored the summary of the results. optional,
+            default = None
 
         Returns
         -------
