@@ -5,53 +5,6 @@ from ..metrics import root_mean_square_error, mean_absolute_error,\
                         precision_score, recall_score, f1_score
 from numpy.testing import assert_array_almost_equal
 
-np.random.seed(0)
-
-'''
-def make_recommendations(dataset=None, boolean=False):
-    """ Make some recommendations on a movies dataset using UserBasedRecommender.
-        If boolean is True restrict to a boolean model recommendation instead
-        of a preference ratings model
-    """
-    if dataset is None:
-        #import some data to play with
-        dataset = load_sample_movies()
-
-    preferences = dataset.data
-
-    #split the data 70% training, 30% test
-    training_set = {}
-    test_set = {}
-    for user_id, prefs in preferences.iteritems():
-        if np.random.random() < 0.7:
-            training_prefs = []
-            test_prefs = []
-            for pref in prefs:
-                if np.random.random() < 0.7:
-                    training_prefs.append((pref, prefs[pref]))
-                else:
-                    test_prefs.append((pref, prefs[pref]))
-
-            if training_prefs:
-                training_set[user_id] = dict(training_prefs)
-            if test_prefs:
-                test_set[user_id] = dict(test_prefs)
-
-    training_model = MatrixPreferenceDataModel(training_set) if not boolean \
-                else MatrixBooleanPrefDataModel(training_set)
-    nhood_strategy = NearestNeighborsStrategy()
-    distance = jaccard_coefficient if not boolean else euclidean_distances
-    similarity = UserSimilarity(training_model, distance)
-    recsys = UserBasedRecommender(training_model, similarity, nhood_strategy)
-
-    test_set = MatrixPreferenceDataModel(test_set) if not boolean \
-                else MatrixBooleanPrefDataModel(test_set)
-    nhood_strategy = NearestNeighborsStrategy()
-    distance = jaccard_coefficient if not boolean else euclidean_distances
-    similarity = UserSimilarity(test_set, distance)
-    recsys = UserBasedRecommender(test_set, similarity, nhood_strategy)
-'''
-
 
 def test_root_mean_square_error():
     """Check that the metric Root Mean Squared Error (RMSE) """
@@ -64,8 +17,19 @@ def test_root_mean_square_error():
     assert_almost_equals(1.8973665961, root_mean_square_error(y_real, y_pred))
 
 
-def test_root_normalized_mean_absolute_error():
+def test_root_mean_absolute_error():
     """Check that the metric Mean Absolute Error (MAE) """
+    y_real = np.array([0.0, 1.0, 0.0, 2.0, 3.0])
+    y_pred = np.array([0.0, 1.0, 0.0, 2.0, 3.0])
+    assert_equals(0.0, mean_absolute_error(y_real, y_pred))
+
+    y_real = np.array([3.0, 1.0, 2.0, 1.0, 1.0])
+    y_pred = np.array([0.0, 1.0, 0.0, 2.0, 3.0])
+    assert_almost_equals(1.6, mean_absolute_error(y_real, y_pred))
+
+
+def test_root_normalized_mean_absolute_error():
+    """Check that the metric Normalized Mean Absolute Error (NMAE) """
     max_rating = 5.0
     min_rating = 1.0
     y_real = np.array([0.0, 1.0, 0.0, 2.0, 3.0])
