@@ -35,7 +35,7 @@ def root_mean_square_error(y_real, y_pred):
     """
     y_real, y_pred = check_arrays(y_real, y_pred)
 
-    return np.sqrt((np.sum(y_pred - y_real ** 2)) / y_real.size)
+    return np.sqrt((np.sum((y_pred - y_real) ** 2)) / y_real.shape[0])
 
 
 def mean_absolute_error(y_real, y_pred):
