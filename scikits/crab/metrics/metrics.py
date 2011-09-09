@@ -96,7 +96,7 @@ def normalized_mean_absolute_error(y_real, y_pred, max_rating, min_rating):
     return mae / (max_rating - min_rating)
 
 
-def precision_score(y_real, y_pred, n_at):
+def precision_score(y_real, y_pred):
     """Compute the precision
 
     The precision is the ratio :math:`tp / (tp + fp)` where tp is the
@@ -113,22 +113,16 @@ def precision_score(y_real, y_pred, n_at):
     y_pred : array, shape = [n_samples]
         predicted targets
 
-    n_at: int
-        It is the 'at' value, as in 'precision at 5'. In this
-        example would mean precision by removing the top 5
-        preferences for a user and then finding the percentage
-        of those 5 items included in the top 5 recommendations
-        for that user.
-
     Returns
     -------
     precision : float
 
     """
-    pass
+    p, _, _ = precision_recall_fscore(y_real, y_pred)
+    return np.average(p)
 
 
-def recall_score(y_real, y_pred, n_at):
+def recall_score(y_real, y_pred):
     """Compute the recall
 
     The recall is the ratio :math:`tp / (tp + fn)` where tp is the number of
@@ -145,22 +139,16 @@ def recall_score(y_real, y_pred, n_at):
     y_pred : array, shape = [n_samples]
         predicted targets
 
-    n_at: int
-        It is the 'at' value, as in 'recall at 5'. In this
-        example would mean recall by removing the top 5
-        preferences for a user and then finding the percentage
-        of those 5 items included in the top 5 recommendations
-        for that user...
-
     Returns
     -------
     recall : float
         ...
     """
-    pass
+    _, r, _ = precision_recall_fscore(y_real, y_pred)
+    return np.average(r)
 
 
-def f1_score(y_real, y_pred, n_at):
+def f1_score(y_real, y_pred):
     """Compute f1 score
 
     The F1 score can be interpreted as a weighted average of the precision
@@ -182,13 +170,6 @@ def f1_score(y_real, y_pred, n_at):
     y_pred : array, shape = [n_samples]
         predicted targets
 
-    n_at: int
-        It is the 'at' value, as in 'recall at 5'. In this
-        example would mean recall by removing the top 5
-        preferences for a user and then finding the percentage
-        of those 5 items included in the top 5 recommendations
-        for that user...
-
     Returns
     -------
     f1_score : float
@@ -199,10 +180,10 @@ def f1_score(y_real, y_pred, n_at):
     http://en.wikipedia.org/wiki/F1_score
 
     """
-    return fbeta_score(y_real, y_pred, n_at, 1)
+    return fbeta_score(y_real, y_pred, 1)
 
 
-def fbeta_score(y_real, y_pred, beta, n_at):
+def fbeta_score(y_real, y_pred, beta):
     """Compute fbeta score
 
     The F_beta score is the weighted harmonic mean of precision and recall,
@@ -222,13 +203,6 @@ def fbeta_score(y_real, y_pred, beta, n_at):
         precision (beta == 0 considers only precision, beta == inf only
         recall).
 
-    n_at: int
-        It is the 'at' value, as in 'recall at 5'. In this
-        example would mean recall by removing the top 5
-        preferences for a user and then finding the percentage
-        of those 5 items included in the top 5 recommendations
-        for that user...
-
     Returns
     -------
     fbeta_score : float
@@ -242,11 +216,13 @@ def fbeta_score(y_real, y_pred, beta, n_at):
     http://en.wikipedia.org/wiki/F1_score
 
     """
-    pass
+    _, _, f = precision_recall_fscore(y_real, y_pred, beta=beta)
+
+    return np.average(f)
 
 
-def precision_recall_fscore_support(y_real, y_pred, n_at, beta=1.0):
-    """Compute precisions, recalls, f-measures and support
+def precision_recall_fscore(y_real, y_pred, beta=1.0):
+    """Compute precisions, recalls, f-measures
        for recommender systems
 
 
@@ -268,17 +244,10 @@ def precision_recall_fscore_support(y_real, y_pred, n_at, beta=1.0):
     Parameters
     ----------
     y_real : array, shape = [n_samples]
-        true targets
+        true recommended items
 
     y_pred : array, shape = [n_samples]
-        predicted targets
-
-    n_at: int
-        It is the 'at' value, as in 'recall at 5'. In this
-        example would mean recall by removing the top 5
-        preferences for a user and then finding the percentage
-        of those 5 items included in the top 5 recommendations
-        for that user...
+        predicted recommended items
 
     beta : float, 1.0 by default
         the strength of recall versus precision in the f-score
@@ -294,4 +263,39 @@ def precision_recall_fscore_support(y_real, y_pred, n_at, beta=1.0):
     http://en.wikipedia.org/wiki/Precision_and_recall
 
     """
-    pass
+    y_real, y_pred = check_arrays(y_real, y_pred)
+    assert(beta > 0)
+
+    n_users = y_real.size
+
+    precision = np.zeros(n_users, dtype=np.double)
+    recall = np.zeros(n_users, dtype=np.double)
+    fscore = np.zeros(n_users, dtype=np.double)
+
+    try:
+        # oddly, we may get an "invalid" rather than a "divide" error here
+        old_err_settings = np.seterr(divide='ignore', invalid='ignore')
+
+        for i, y_items_pred in enumerate(y_pred):
+            intersection_size = np.intersect1d(y_items_pred, y_real[i]).size
+            precision[i] = (intersection_size / float(len(y_real[i]))) \
+                                    if len(y_real[i])  else 0.0
+            recall[i] = (intersection_size / float(len(y_items_pred))) \
+                                    if len(y_items_pred) else 0.0
+
+        # handle division by 0.0 in precision and recall
+        precision[np.isnan(precision)] = 0.0
+        recall[np.isnan(precision)] = 0.0
+
+        #fbeta Score
+        beta2 = beta ** 2
+        fscore = (1 + beta2) * (precision * recall) \
+                    / (beta2 * precision + recall)
+
+        #handle division by 0.0 in fscore
+        fscore[(precision + recall) == 0.0] = 0.0
+
+    finally:
+        np.seterr(**old_err_settings)
+
+    return precision, recall, fscore
