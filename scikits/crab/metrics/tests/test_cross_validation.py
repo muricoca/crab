@@ -1,5 +1,5 @@
 import numpy as np
-from ..cross_validation import LeaveOneOut, LeavePOut
+from ..cross_validation import LeaveOneOut, LeavePOut, KFold, ShuffleSplit
 from numpy.testing import assert_array_equal
 
 
@@ -31,5 +31,22 @@ def test_LeavePOut():
 
     loo = LeavePOut(3, 2, True)
     for index, sample in enumerate(loo):
+        assert_array_equal(X[sample[0]], results_train[index])
+        assert_array_equal(X[sample[1]], results_test[index])
+
+
+def test_KFold():
+    X = np.array(['userA', 'userB', 'userC', 'userD'])
+    kfold = KFold(4, 2)
+    results_train = [['userC', 'userD'], ['userA', 'userB'],
+                    ['userC', 'userD'], ['userA', 'userB']]
+    results_test = [['userA', 'userB'], ['userC', 'userD'],
+                    ['userA', 'userB'], ['userC', 'userD']]
+    for index, sample in enumerate(kfold):
+        assert_array_equal(X[sample[0]], results_train[index])
+        assert_array_equal(X[sample[1]], results_test[index])
+
+    kfold = KFold(4, 2, True)
+    for index, sample in enumerate(kfold):
         assert_array_equal(X[sample[0]], results_train[index])
         assert_array_equal(X[sample[1]], results_test[index])

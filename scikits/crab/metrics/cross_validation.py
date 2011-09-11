@@ -5,6 +5,8 @@
 
 import numpy as np
 from ..utils.extmath import factorial, combinations
+from ..utils import check_random_state
+from math import ceil
 
 
 class LeaveOneOut(object):
@@ -161,7 +163,7 @@ class KFold(object):
     Parameters
     ----------
     n: int
-        Total number of elements
+        Total number of user profiles
 
     k: int
         Number of folds
@@ -173,6 +175,18 @@ class KFold(object):
 
     Examples
     --------
+    >>> from scikits.crab.metrics import KFold
+    >>> X = np.array(['userA', 'userB', 'userC', 'userD'])
+    >>> kf = KFold(4, k=2)
+    >>> len(kf)
+    2
+    >>> print kf
+    scikits.crab.metrics.cross_validation.KFold(n=4, k=2)
+    >>> for train_index, test_index in kf:
+    ...    print "TRAIN:", train_index, "TEST:", test_index
+    ...    X_train, X_test = X[train_index], X[test_index]
+    TRAIN: [False False  True  True] TEST: [ True  True False False]
+    TRAIN: [ True  True False False] TEST: [False False  True  True]
 
     Notes
     -----
@@ -180,7 +194,43 @@ class KFold(object):
     complementary.
 
     """
-    pass
+    def __init__(self, n, k, indices=False):
+        assert k > 0, ValueError('Cannot have number of folds k below 1.')
+        assert k <= n, ValueError('Cannot have number of folds k=%d, '
+                                  'greater than the number '
+                                  'of samples: %d.' % (k, n))
+        self.n = n
+        self.k = k
+        self.indices = indices
+
+    def __iter__(self):
+        n = self.n
+        k = self.k
+        j = ceil(n / k)
+
+        for i in xrange(k):
+            test_index = np.zeros(n, dtype=np.bool)
+            if i < k - 1:
+                test_index[i * j:(i + 1) * j] = True
+            else:
+                test_index[i * j:] = True
+            train_index = np.logical_not(test_index)
+            if self.indices:
+                ind = np.arange(n)
+                train_index = ind[train_index]
+                test_index = ind[test_index]
+            yield train_index, test_index
+
+    def __repr__(self):
+        return '%s.%s(n=%i, k=%i)' % (
+            self.__class__.__module__,
+            self.__class__.__name__,
+            self.n,
+            self.k,
+        )
+
+    def __len__(self):
+        return self.k
 
 
 class ShuffleSplit(object):
@@ -214,10 +264,56 @@ class ShuffleSplit(object):
 
     Examples
     ----------
-
-    See also
-    --------
-    Bootstrap: cross-validation using re-sampling with replacement.
+    >>> from scikits.crab.metrics import ShuffleSplit
+    >>> rs = ShuffleSplit(4, n_iterations=3, test_fraction=.25,
+    ...                             random_state=0)
+    >>> len(rs)
+    3
+    >>> print rs
+    ... # doctest: +ELLIPSIS
+    ShuffleSplit(4, n_iterations=3, test_fraction=0.25, indices=False, ...)
+    >>> for train_index, test_index in rs:
+    ...    print "TRAIN:", train_index, "TEST:", test_index
+    ...
+    TRAIN: [False  True  True  True] TEST: [ True False False False]
+    TRAIN: [ True  True  True False] TEST: [False False False  True]
+    TRAIN: [ True False  True  True] TEST: [False  True False False]
     """
-    pass
+    def __init__(self, n, n_iterations=10, test_fraction=0.1,
+                indices=False, random_state=None):
+        self.n = n
+        self.n_iterations = n_iterations
+        self.test_fraction = test_fraction
+        self.random_state = random_state
+        self.indices = indices
 
+    def __iter__(self):
+        rng = self.random_state = check_random_state(self.random_state)
+        n_test = ceil(self.test_fraction * self.n)
+        for i in range(self.n_iterations):
+            #random partition
+            permutation = rng.permutation(self.n)
+            ind_train = permutation[:-n_test]
+            ind_test = permutation[-n_test:]
+            if self.indices:
+                yield ind_train, ind_test
+            else:
+                train_mask = np.zeros(self.n, dtype=np.bool)
+                train_mask[ind_train] = True
+                test_mask = np.zeros(self.n, dtype=np.bool)
+                test_mask[ind_test] = True
+                yield train_mask, test_mask
+
+    def __repr__(self):
+        return ('%s(%d, n_iterations=%d, test_fraction=%s, indices=%s, '
+                'random_state=%d)' % (
+                    self.__class__.__name__,
+                    self.n,
+                    self.n_iterations,
+                    str(self.test_fraction),
+                    self.indices,
+                    self.random_state,
+                ))
+
+    def __len__(self):
+        return self.n_iterations
