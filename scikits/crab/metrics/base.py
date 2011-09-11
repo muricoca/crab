@@ -17,19 +17,9 @@ class RecommenderEvaluator(object):
 
     """
 
-    def evaluate(self, figuresave=None, filesave=None, **kwargs):
+    def evaluate(self, **kwargs):
         """
         Evaluates the predictor
-
-        Parameters
-        ----------
-        figuresave : string
-            The path where will be stored the plot as figure. optional,
-            default = None
-
-        filesave : string
-            The path where will be stored the summary of the results. optional,
-            default = None
 
         Returns
         -------
@@ -53,16 +43,6 @@ class RecommenderEvaluator(object):
     def evaluate_on_split(self, **kwargs):
         """
         Evaluate on the folds of a dataset split
-
-        Parameters
-        ----------
-        figuresave : string
-            The path where will be stored the plot as figure. optional,
-            default = None
-
-        filesave : string
-            The path where will be stored the summary of the results. optional,
-            default = None
 
         Returns
         -------
