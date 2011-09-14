@@ -12,7 +12,7 @@ from math import ceil
 class LeaveOneOut(object):
     """Leave-One-Out cross validation iterator.
 
-    Provides train/test indices to split user profiles in train
+    Provides train/test indices to split user preferences in train
     and test sets. Each sample is used once as a test set (singleton)
     while the remaining samples form the training set.
 
@@ -23,7 +23,7 @@ class LeaveOneOut(object):
     Parameters
     ==========
     n: int
-        Total number of user profiles
+        Total number of user preferences
 
     indices: boolean, optional (default False)
         Return train/test split with integer indices or boolean mask.
@@ -81,7 +81,7 @@ class LeaveOneOut(object):
 class LeavePOut(object):
     """Leave-P-Out cross validation iterator
 
-    Provides train/test indices to split user profiles in train test sets.
+    Provides train/test indices to split user preferences in train test sets.
     The test set is built using p samples while the remaining samples form
     the training set.
 
@@ -154,7 +154,7 @@ class LeavePOut(object):
 class KFold(object):
     """K-Folds cross validation iterator
 
-    Provides train/test indices to split user profiles in train test sets.
+    Provides train/test indices to split user preferences in train test sets.
     Split dataset into k consecutive folds (without shuffling).
 
     Each fold is then used a validation set once while the k - 1 remaining
@@ -163,7 +163,7 @@ class KFold(object):
     Parameters
     ----------
     n: int
-        Total number of user profiles
+        Total number of user preferences
 
     k: int
         Number of folds
@@ -236,7 +236,7 @@ class KFold(object):
 class ShuffleSplit(object):
     """Random permutation cross-validation iterator.
 
-    Yields indices to split user profiles into training and test sets.
+    Yields indices to split user preferences into training and test sets.
 
     Note: contrary to other cross-validation strategies, random splits
     do not guarantee that all folds will be different, although this is
