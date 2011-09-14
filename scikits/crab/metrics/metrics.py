@@ -101,7 +101,8 @@ def precision_score(y_real, y_pred):
 
     The precision is the ratio :math:`tp / (tp + fp)` where tp is the
     number of true positives and fp the number of false positives.
-    In recommendation systems the precision ...
+    In recommendation systems the precision is the proportion of
+     recommendations that are good recommendations.
 
     The best value is 1 and the worst value is 0.
 
@@ -127,7 +128,8 @@ def recall_score(y_real, y_pred):
 
     The recall is the ratio :math:`tp / (tp + fn)` where tp is the number of
     true positives and fn the number of false negatives.
-    In recommendation systems the precision ...
+    In recommendation systems the recall  is the proportion of good
+    recommendations that appear in top recommendations.
 
     The best value is 1 and the worst value is 0.
 
@@ -160,7 +162,10 @@ def f1_score(y_real, y_pred):
 
     See: http://en.wikipedia.org/wiki/F1_score
 
-    In the recommender systems ...
+    In the recommender systems the F1-Score is considered an single value
+    obtained combining both the precision and recall measures and
+    indicates an overall utility of the recommendation list.
+
 
     Parameters
     ----------
