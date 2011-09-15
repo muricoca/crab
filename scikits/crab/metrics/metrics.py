@@ -96,6 +96,40 @@ def normalized_mean_absolute_error(y_real, y_pred, max_rating, min_rating):
     return mae / (max_rating - min_rating)
 
 
+def error_evaluation(y_real, y_pred, max_rating, min_rating):
+    """
+    It computes the NMAE, MAE and RMSE between predicted
+    and actual ratings for users.
+
+    Parameters
+    ----------
+    y_real : array-like
+        The real ratings.
+
+    y_pred : array-like
+        The predicted ratings.
+
+    max_rating:
+        The maximum rating of the model.
+
+    min_rating:
+        The minimum rating of the model.
+
+    Returns
+    -------
+    mae: Positive floating point value: the best value is 0.0.
+    nmae: Positive floating point value: the best value is 0.0.
+    rmse: Positive floating point value: the best value is 0.0.
+
+    """
+    mae = mean_absolute_error(y_real, y_pred)
+    nmae = normalized_mean_absolute_error(y_real, y_pred,
+             max_rating, min_rating)
+    rmse = root_mean_square_error(y_real, y_pred)
+
+    return mae, nmae, rmse
+
+
 def precision_score(y_real, y_pred):
     """Compute the precision
 
