@@ -17,36 +17,58 @@ class RecommenderEvaluator(object):
 
     """
 
-    def evaluate(self, **kwargs):
+    def evaluate(self, recommender, metrics=None, **kwargs):
         """
         Evaluates the predictor
 
+        Parameters
+        ----------
+
+        recommender: The BaseRecommender instance
+                The recommender instance to be evaluated.
+
+        metrics: [None|'rmse'|'f1score'|'precision'|'recall'|'nmae'|'mae']
+        If metrics is None, all metrics available will be evaluated.
+        Otherwise it will return the specified metric evaluated.
+
         Returns
         -------
-        Returns a score representing how well the recommender estimated the
+        Returns scores representing how well the recommender estimated the
         preferences match real values.
         """
         raise NotImplementedError("cannot instantiate Abstract Base Class")
 
-    def evaluate_online(self, **kwargs):
+    def evaluate_online(self, metrics=None, **kwargs):
         """
         Online evaluation for recommendation prediction
 
-        Returns
+        Parameters
+        ----------
+        metrics: [None|'rmse'|'f1score'|'precision'|'recall'|'nmae'|'mae']
+        If metrics is None, all metrics available will be evaluated.
+        Otherwise it will return the specified metric evaluated.
 
+        Returns
         -------
-        Returns a score representing how well the recommender estimated the
+
+        Returns scores representing how well the recommender estimated the
         preferences match real values.
         """
         raise NotImplementedError("cannot instantiate Abstract Base Class")
 
-    def evaluate_on_split(self, **kwargs):
+    def evaluate_on_split(self, metrics=None, **kwargs):
         """
         Evaluate on the folds of a dataset split
 
+        Parameters
+        ----------
+        metrics: [None|'rmse'|'f1score'|'precision'|'recall'|'nmae'|'mae']
+        If metrics is None, all metrics available will be evaluated.
+        Otherwise it will return the specified metric evaluated.
+
         Returns
         -------
-        Returns a score representing how well the recommender estimated the
+        Returns scores representing how well the recommender estimated the
         preferences match real values.
         """
         raise NotImplementedError("cannot instantiate Abstract Base Class")

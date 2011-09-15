@@ -96,7 +96,7 @@ def normalized_mean_absolute_error(y_real, y_pred, max_rating, min_rating):
     return mae / (max_rating - min_rating)
 
 
-def error_evaluation(y_real, y_pred, max_rating, min_rating):
+def evaluation_error(y_real, y_pred, max_rating, min_rating):
     """
     It computes the NMAE, MAE and RMSE between predicted
     and actual ratings for users.
