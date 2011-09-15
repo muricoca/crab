@@ -11,7 +11,7 @@ This module contains basic implementations that encapsulate
 # License: BSD Style.
 
 import numpy as np
-from ..utils import check_arrays
+from ..utils import check_arrays, unique_labels
 
 
 def root_mean_square_error(y_real, y_pred):
@@ -304,3 +304,69 @@ def precision_recall_fscore(y_real, y_pred, beta=1.0):
         np.seterr(**old_err_settings)
 
     return precision, recall, fscore
+
+
+def evaluation_report(y_real, y_pred, labels=None, target_names=None):
+    """Build a text report showing the main recommender metrics
+
+    Parameters
+    ----------
+    y_real : array, shape = [n_samples]
+        true targets
+
+    y_pred : array, shape = [n_samples]
+        estimated targets
+
+    labels : array, shape = [n_labels]
+        optional list of label indices to include in the report
+
+    target_names : list of strings
+        optional display names matching the labels (same order)
+
+    Returns
+    -------
+    report : string
+        Text summary of the precision, recall, f1-score.
+
+    """
+
+    if labels is None:
+        labels = unique_labels(y_real)
+    else:
+        labels = np.asarray(labels, dtype=np.int)
+
+    last_line_heading = 'avg / total'
+
+    if target_names is None:
+        width = len(last_line_heading)
+        target_names = ['%d' % l for l in labels]
+    else:
+        width = max(len(cn) for cn in target_names)
+        width = max(width, len(last_line_heading))
+
+    headers = ["precision", "recall", "f1-score"]
+    fmt = '%% %ds' % width  # first column: class name
+    fmt += '  '
+    fmt += ' '.join(['% 9s' for _ in headers])
+    fmt += '\n'
+
+    headers = [""] + headers
+    report = fmt % tuple(headers)
+    report += '\n'
+    p, r, f1 = precision_recall_fscore(y_real, y_pred)
+    for i, label in enumerate(labels):
+        values = [target_names[i]]
+        for v in (p[i], r[i], f1[i]):
+            values += ["%0.2f" % float(v)]
+        report += fmt % tuple(values)
+
+    report += '\n'
+
+    # compute averages
+    values = [last_line_heading]
+    for v in (np.average(p),
+              np.average(r),
+              np.average(f1)):
+        values += ["%0.2f" % float(v)]
+    report += fmt % tuple(values)
+    return report
