@@ -39,16 +39,17 @@ class SplitSampling(object):
         self.random_state = random_state
         self.indices = indices
 
-    def split(self, evaluation_fraction=0.7, indices=False,
-             random_state=None):
+    def split(self, evaluation_fraction=None, indices=False,
+             random_state=None, permutation=True):
         """
         Random Split Sampling the dataset into two sets.
 
         Parameters
         ----------
-        evaluation_fraction : float (default 0.1)
+        evaluation_fraction : float (default None)
             Should be between 0.0 and 1.0 and represent the proportion of
-            the dataset to include in the training set.
+            the dataset to include in the training set. If evaluation_fraction
+            is None, it will be used the one passed in the constructor.
 
         indices : boolean, optional (default False)
             Return  split with integer indices or boolean mask.
@@ -58,15 +59,22 @@ class SplitSampling(object):
         random_state : int or RandomState
             Pseudo-random number generator state used for random sampling.
 
+        permutation: boolean, optional (default True)
+            For testing purposes, to deactivate the permutation.
+
         """
-        self.evaluation_fraction = evaluation_fraction
-        self.random_state = random_state
+        if evaluation_fraction is not None:
+            self.evaluation_fraction = evaluation_fraction
+        if random_state is not None:
+            self.random_state = random_state
+
         self.indices = indices
 
         rng = self.random_state = check_random_state(self.random_state)
         n_train = ceil(self.evaluation_fraction * self.n)
         #random partition
-        permutation = rng.permutation(self.n)
+        permutation = rng.permutation(self.n) if permutation \
+                             else np.arange(self.n)
         ind_train = permutation[-n_train:]
         ind_ignore = permutation[:-n_train]
         if self.indices:

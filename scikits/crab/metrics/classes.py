@@ -22,6 +22,7 @@ from metrics import recall_score
 from metrics import f1_score
 from sampling import SplitSampling
 from scikits.learn.base import clone
+from ..models.utils import ItemNotFoundError
 
 
 #Collaborative Filtering Evaluator
@@ -63,6 +64,30 @@ def check_sampling(sampling, n):
 
 
 class CfEvaluator(RecommenderEvaluator):
+
+    def _build_recommender(self, dataset, recommender):
+        """
+        Build a clone recommender with the given dataset
+        as the training set.
+
+        Parameters
+        ----------
+
+        dataset: dict
+            The dataset with the user's preferences.
+
+        recommender: A scikits.crab.base.BaseRecommender object.
+            The given recommender to be cloned.
+
+        """
+        recommender_training = clone(recommender)
+        recommender_training.model.dataset = dataset
+        #if the recommender's model has the build_model implemented.
+        if hasattr(recommender_training.model, 'build_model'):
+            recommender_training.model.build_model()
+
+        return recommender_training
+
     def evaluate(self, recommender, metric=None, **kwargs):
         """
         Evaluates the predictor
@@ -85,9 +110,10 @@ class CfEvaluator(RecommenderEvaluator):
 
         sampling_ratings:  float or sampling, optional, default = None
             If an float is passed, it is the percentage of evaluated
-        ratings. If sampling_ratings is None, all ratings are used in the
-        evaluation. Specific sampling objects can be passed, see
-        scikits.crab.metrics.sampling module for the list of possible
+        ratings. If sampling_ratings is None, 70% will be used in the
+        training set and 30% in the test set. Specific sampling objects
+        can be passed, see scikits.crab.metrics.sampling module
+        for the list of possible objects.
 
         at: integer, optional, default = None
             This number at is the 'at' value, as in 'precision at 5'.  For
@@ -106,7 +132,8 @@ class CfEvaluator(RecommenderEvaluator):
 
         """
         sampling_users = kwargs.pop('sampling_users', None)
-        sampling_ratings = kwargs.pop('sampling_ratings', None)
+        sampling_ratings = kwargs.pop('sampling_ratings', 0.7)
+        permutation = kwargs.pop('permutation', True)
         at = kwargs.pop('at', 3)
 
         if metric not in evaluation_metrics and metric is not None:
@@ -115,7 +142,7 @@ class CfEvaluator(RecommenderEvaluator):
 
         n_users = recommender.model.users_count()
         sampling_users = check_sampling(sampling_users, n_users)
-        users_set, _ = sampling_users.split()
+        users_set, _ = sampling_users.split(permutation=permutation)
 
         training_set = {}
         testing_set = {}
@@ -125,34 +152,46 @@ class CfEvaluator(RecommenderEvaluator):
         for user_id in user_ids[users_set]:
             #Select the ratings to be evaluated.
             preferences = recommender.model.preferences_from_user(user_id)
-            sampling_ratings = check_sampling(sampling_ratings, \
+            sampling_eval = check_sampling(sampling_ratings, \
                                              len(preferences))
-            train_set, test_set = sampling_ratings.split()
-            training_set[user_id] = preferences[train_set]
-            testing_set[user_id] = preferences[test_set]
+            train_set, test_set = sampling_eval.split(indices=True,
+                                        permutation=permutation)
+            training_set[user_id] = dict((preferences[idx]
+                             for idx in train_set)) if preferences else {}
+            testing_set[user_id] = [preferences[idx]
+                             for idx in test_set] if preferences else []
 
         #Evaluate the recommender.
-        recommender_training = clone(recommender)
-        recommender_training.model = training_set
-        #if the recommender has the build_model implemented.
-        if hasattr(recommender_training, 'build_model'):
-            recommender_training.build_model()
+        recommender_training = self._build_recommender(training_set, \
+                                recommender)
 
         real_preferences = []
-        user_ids = []
-        item_ids = []
-        for user_id, preferences in testing_set:
-            user_ids.append(user_id)
-            for item_id, preference in preferences:
-                real_preferences.append(preference)
-                item_ids.append(item_id)
+        estimated_preferences = []
 
-        estimate_preferences = np.vectorize(recommender_training.estimate_preference)
-        preferences = estimate_preferences(user_ids, item_ids)
+        for user_id, preferences in testing_set.iteritems():
+            for item_id, preference in preferences:
+            #Estimate the preferences
+                try:
+                    estimated = recommender_training.estimate_preference(
+                                user_id, item_id)
+                    real_preferences.append(preference)
+                except ItemNotFoundError:
+                    # It is possible that an item exists in the test data but
+                    # not training data in which case an exception will be
+                    # throw. Just ignore it and move on
+                    continue
+                estimated_preferences.append(estimated)
+
         #Return the error results.
         if metric in ['rmse', 'mae', 'nmae']:
             eval_function = evaluation_metrics[metric]
-            return {metric: eval_function(real_preferences, preferences)}
+            if metric == 'nmae':
+                return {metric: eval_function(real_preferences,
+                                          estimated_preferences,
+                                recommender.model.maximum_preference_value(),
+                                recommender.model.minimum_preference_value())}
+            return {metric: eval_function(real_preferences,
+                                          estimated_preferences)}
 
         #IR_Statistics
         training_set = {}
