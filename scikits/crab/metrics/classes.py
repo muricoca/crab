@@ -81,8 +81,14 @@ class CfEvaluator(RecommenderEvaluator):
 
         """
         recommender_training = clone(recommender)
-        recommender_training.model.dataset = dataset
         #if the recommender's model has the build_model implemented.
+
+        if not recommender.model.has_preference_values():
+            recommender_training.model.dataset = \
+                    recommender_training.model._load_dataset(dataset.copy())
+        else:
+            recommender_training.model.dataset = dataset
+
         if hasattr(recommender_training.model, 'build_model'):
             recommender_training.model.build_model()
 
@@ -152,13 +158,22 @@ class CfEvaluator(RecommenderEvaluator):
         for user_id in user_ids[users_set]:
             #Select the ratings to be evaluated.
             preferences = recommender.model.preferences_from_user(user_id)
+
             sampling_eval = check_sampling(sampling_ratings, \
                                              len(preferences))
             train_set, test_set = sampling_eval.split(indices=True,
                                         permutation=permutation)
-            training_set[user_id] = dict((preferences[idx]
+
+            preferences = list(preferences)
+            if recommender.model.has_preference_values():
+                training_set[user_id] = dict((preferences[idx]
                              for idx in train_set)) if preferences else {}
-            testing_set[user_id] = [preferences[idx]
+                testing_set[user_id] = [preferences[idx]
+                             for idx in test_set] if preferences else []
+            else:
+                training_set[user_id] = dict(((preferences[idx], 1.0)
+                             for idx in train_set)) if preferences else {}
+                testing_set[user_id] = [(preferences[idx], 1.0)
                              for idx in test_set] if preferences else []
 
         #Evaluate the recommender.
@@ -194,7 +209,6 @@ class CfEvaluator(RecommenderEvaluator):
                                           estimated_preferences)}
 
         #IR_Statistics
-        training_set = {}
         relevant_arrays = []
         real_arrays = []
 
@@ -202,44 +216,58 @@ class CfEvaluator(RecommenderEvaluator):
         user_ids = recommender.model.user_ids()
         for user_id in user_ids[users_set]:
             preferences = recommender.model.preferences_from_user(user_id)
+            preferences = list(preferences)
             if len(preferences) < 2 * at:
                 # Really not enough prefs to meaningfully evaluate the user
                 continue
 
             # List some most-preferred items that would count as most
+            if not recommender.model.has_preference_values():
+                preferences = [(preference, 1.0) for preference in preferences]
+
             preferences = sorted(preferences, key=lambda x: x[1], reverse=True)
-            relevant_item_ids = [item_id for item_id, preference in preferences[:at]]
+            relevant_item_ids = [item_id for item_id, preference
+                                    in preferences[:at]]
 
             if len(relevant_item_ids) == 0:
                 continue
 
+            training_set = {}
             for other_user_id in recommender.model.user_ids():
-                preferences_other_user = recommender.model.preferences_from_user(other_user_id)
+                preferences_other_user = \
+                    recommender.model.preferences_from_user(other_user_id)
+
+                if not recommender.model.has_preference_values():
+                    preferences_other_user = [(preference, 1.0)
+                                     for preference in preferences_other_user]
                 if other_user_id == user_id:
-                    preferences_other_user = [pref for pref in preferences_other_user \
+                    preferences_other_user = \
+                        [pref for pref in preferences_other_user \
                             if pref[0] not in relevant_item_ids]
 
                     if preferences_other_user:
-                        training_set[other_user_id] = dict(preferences_other_user)
-            else:
-                training_set[other_user_id] = dict(preferences_other_user)
+                        training_set[other_user_id] = \
+                            dict(preferences_other_user)
+                else:
+                    training_set[other_user_id] = dict(preferences_other_user)
 
-            recommender_training.model = training_set
-            #if the recommender has the build_model implemented.
-            if hasattr(recommender_training, 'build_model'):
-                recommender_training.build_model()
+            #Evaluate the recommender
+            recommender_training = self._build_recommender(training_set, \
+                        recommender)
 
             try:
-                preferences = recommender_training.model.preferences_from_user(user_id)
+                preferences = \
+                    recommender_training.model.preferences_from_user(user_id)
+                preferences = list(preferences)
                 if not preferences:
                     continue
             except:
                 #Excluded all prefs for the user. move on.
                 continue
 
-            recommended_items = recommender.recommend(user_id, at)
-            relevant_arrays.append(relevant_item_ids)
-            real_arrays.append(recommended_items)
+            recommended_items = recommender_training.recommend(user_id, at)
+            relevant_arrays.append(list(relevant_item_ids))
+            real_arrays.append(list(recommended_items))
 
         relevant_arrays = np.array(relevant_arrays)
         real_arrays = np.array(real_arrays)
@@ -251,13 +279,16 @@ class CfEvaluator(RecommenderEvaluator):
 
         if metric is None:
             #Return all
-            mae, nmae, rmse = evaluation_error(real_preferences, preferences,
+            mae, nmae, rmse = evaluation_error(real_preferences,
+                        estimated_preferences,
                         recommender.model.maximum_preference_value(),
                         recommender.model.minimum_preference_value())
-            p, r, f = precision_recall_fscore(real_arrays, relevant_arrays)
+            f = f1_score(real_arrays, relevant_arrays)
+            r = recall_score(real_arrays, relevant_arrays)
+            p = precision_score(real_arrays, relevant_arrays)
 
             return {'mae': mae, 'nmae': nmae, 'rmse': rmse,
-                    'precision': p, 'recall': r, 'f1-score': f}
+                    'precision': p, 'recall': r, 'f1score': f}
 
     def evaluate_on_split(self, recommender, metric=None, **kwargs):
         """

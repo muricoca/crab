@@ -305,8 +305,7 @@ def precision_recall_fscore(y_real, y_pred, beta=1.0):
     y_real, y_pred = check_arrays(y_real, y_pred)
     assert(beta > 0)
 
-    n_users = y_real.size
-
+    n_users = y_real.shape[0]
     precision = np.zeros(n_users, dtype=np.double)
     recall = np.zeros(n_users, dtype=np.double)
     fscore = np.zeros(n_users, dtype=np.double)

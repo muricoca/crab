@@ -680,6 +680,26 @@ class MatrixBooleanPrefDataModel(BaseDataModel):
         self.dataset[user_id].remove(item_id)
         self.build_model()
 
+    def maximum_preference_value(self):
+        '''
+        Returns
+        ---------
+        self.max_preference:  float
+                Return the maximum preference value that is possible in the
+                 current problem domain being evaluated.
+        '''
+        return 1.0
+
+    def minimum_preference_value(self):
+        '''
+        Returns
+        ---------
+        self.min_preference:  float
+                Returns the minimum preference value that is possible in the
+                current problem domain being evaluated
+        '''
+        return 0.0
+
     def __repr__(self):
         return "<MatrixBooleanPrefDataModel (%d by %d)>" % (self.index.shape[0],
                         self.index.shape[1])
