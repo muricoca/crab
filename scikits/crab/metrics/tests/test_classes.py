@@ -123,97 +123,125 @@ def test_root_CfEvaluator_evaluate_on_split():
 
     #Test with specified metric
     rmse = evaluator.evaluate_on_split(recsys, 'rmse', permutation=False)
-    for p in rmse[0]:
+    for p in rmse[0]['error']:
         assert_true(p['rmse'] >= 0.0 and p['rmse'] <= 1.0)
-    assert_true(rmse[1]['avg']['rmse'] >= 0.0 and rmse[1]['stdev']['rmse'] <= 1.0)
+    assert_true(rmse[1]['final_error']['avg']['rmse'] >= 0.0 and
+                rmse[1]['final_error']['stdev']['rmse'] <= 1.0)
 
     mae = evaluator.evaluate_on_split(recsys, 'mae', permutation=False)
-    for p in mae[0]:
+    for p in mae[0]['error']:
         assert_true(p['mae'] >= 0.0 and p['mae'] <= 1.0)
-    assert_true(mae[1]['avg']['mae'] >= 0.0 and mae[1]['stdev']['mae'] <= 1.0)
+    assert_true(mae[1]['final_error']['avg']['mae'] >= 0.0 and
+                mae[1]['final_error']['stdev']['mae'] <= 1.0)
 
     nmae = evaluator.evaluate_on_split(recsys, 'nmae', permutation=False)
-    for p in nmae[0]:
+    for p in nmae[0]['error']:
         assert_true(p['nmae'] >= 0.0 and p['nmae'] <= 1.0)
-    assert_true(nmae[1]['avg']['nmae'] >= 0.0 and nmae[1]['stdev']['nmae'] <= 1.0)
+    assert_true(nmae[1]['final_error']['avg']['nmae'] >= 0.0 and
+                nmae[1]['final_error']['stdev']['nmae'] <= 1.0)
+
+    #Test with IR statistics
+    precision = evaluator.evaluate_on_split(recsys, 'precision', permutation=False)
+    for p in precision[0]['ir']:
+        assert_true(p['precision'] >= 0.0 and p['precision'] <= 1.0)
+    assert_true(precision[1]['final_error']['avg']['precision'] >= 0.0 and
+                precision[1]['final_error']['stdev']['precision'] <= 1.0)
+
+    recall = evaluator.evaluate_on_split(recsys, 'recall', permutation=False)
+    for p in recall[0]['ir']:
+        assert_true(p['recall'] >= 0.0 and p['recall'] <= 1.0)
+    assert_true(recall[1]['final_error']['avg']['recall'] >= 0.0 and
+                recall[1]['final_error']['stdev']['recall'] <= 1.0)
+
+    f1score = evaluator.evaluate_on_split(recsys, 'f1score', permutation=False)
+    for p in f1score[0]['ir']:
+        assert_true(p['f1score'] >= 0.0 and p['f1score'] <= 1.0)
+    assert_true(f1score[1]['final_error']['avg']['f1score'] >= 0.0 and
+                f1score[1]['final_error']['stdev']['f1score'] <= 1.0)
+
+    all_scores = evaluator.evaluate_on_split(recsys, permutation=False)
+    for p in all_scores[0]['ir']:
+        assert_true(p['f1score'] >= 0.0 and p['f1score'] <= 1.0)
+        assert_true(p['recall'] >= 0.0 and p['recall'] <= 1.0)
+        assert_true(p['precision'] >= 0.0 and p['precision'] <= 1.0)
+    for p in all_scores[0]['error']:
+        assert_true(p['mae'] >= 0.0 and p['mae'] <= 1.0)
+        assert_true(p['rmse'] >= 0.0 and p['rmse'] <= 1.0)
+        assert_true(p['nmae'] >= 0.0 and p['nmae'] <= 1.0)
+    assert_true(all_scores[1]['final_error']['avg']['f1score'] >= 0.0 and
+                all_scores[1]['final_error']['stdev']['f1score'] <= 1.0)
+    assert_true(all_scores[1]['final_error']['avg']['recall'] >= 0.0 and
+                all_scores[1]['final_error']['stdev']['recall'] <= 1.0)
+    assert_true(all_scores[1]['final_error']['avg']['precision'] >= 0.0 and
+                all_scores[1]['final_error']['stdev']['precision'] <= 1.0)
+    assert_true(all_scores[1]['final_error']['avg']['rmse'] >= 0.0 and
+                all_scores[1]['final_error']['stdev']['rmse'] <= 1.0)
+    assert_true(all_scores[1]['final_error']['avg']['mae'] >= 0.0 and
+                all_scores[1]['final_error']['stdev']['mae'] <= 1.0)
+    assert_true(all_scores[1]['final_error']['avg']['nmae'] >= 0.0 and
+                all_scores[1]['final_error']['stdev']['nmae'] <= 1.0)
 
     #Test with boolean model
+    #Test with invalid metric
     assert_raises(ValueError, evaluator.evaluate_on_split, boolean_recsys, 'rank')
 
     #Test with specified metric
     rmse = evaluator.evaluate_on_split(boolean_recsys, 'rmse', permutation=False)
-    for p in rmse[0]:
+    for p in rmse[0]['error']:
         assert_true(p['rmse'] >= 0.0 and p['rmse'] <= 1.0)
-    assert_true(rmse[1]['avg']['rmse'] >= 0.0 and rmse[1]['stdev']['rmse'] <= 1.0)
+    assert_true(rmse[1]['final_error']['avg']['rmse'] >= 0.0 and
+                rmse[1]['final_error']['stdev']['rmse'] <= 1.0)
 
     mae = evaluator.evaluate_on_split(boolean_recsys, 'mae', permutation=False)
-    for p in mae[0]:
+    for p in mae[0]['error']:
         assert_true(p['mae'] >= 0.0 and p['mae'] <= 1.0)
-    assert_true(mae[1]['avg']['mae'] >= 0.0 and mae[1]['stdev']['mae'] <= 1.0)
+    assert_true(mae[1]['final_error']['avg']['mae'] >= 0.0 and
+                mae[1]['final_error']['stdev']['mae'] <= 1.0)
 
     nmae = evaluator.evaluate_on_split(boolean_recsys, 'nmae', permutation=False)
-    for p in nmae[0]:
+    for p in nmae[0]['error']:
         assert_true(p['nmae'] >= 0.0 and p['nmae'] <= 1.0)
-    assert_true(nmae[1]['avg']['nmae'] >= 0.0 and nmae[1]['stdev']['nmae'] <= 1.0)
+    assert_true(nmae[1]['final_error']['avg']['nmae'] >= 0.0 and
+                nmae[1]['final_error']['stdev']['nmae'] <= 1.0)
 
+    #Test with IR statistics
+    precision = evaluator.evaluate_on_split(boolean_recsys, 'precision', permutation=False)
+    for p in precision[0]['ir']:
+        assert_true(p['precision'] >= 0.0 and p['precision'] <= 1.0)
+    assert_true(precision[1]['final_error']['avg']['precision'] >= 0.0 and
+                precision[1]['final_error']['stdev']['precision'] <= 1.0)
 
-    '''
-    precision = evaluator.evaluate(recsys, 'precision',
-                                permutation=False)
-    assert_true(precision['precision'] >= 0.0 and precision['precision'] <= 1.0)
+    recall = evaluator.evaluate_on_split(boolean_recsys, 'recall', permutation=False)
+    for p in recall[0]['ir']:
+        assert_true(p['recall'] >= 0.0 and p['recall'] <= 1.0)
+    assert_true(recall[1]['final_error']['avg']['recall'] >= 0.0 and
+                recall[1]['final_error']['stdev']['recall'] <= 1.0)
 
-    recall = evaluator.evaluate(recsys, 'recall', permutation=False)
-    assert_true(recall['recall'] >= 0.0 and recall['recall'] <= 1.0)
+    f1score = evaluator.evaluate_on_split(boolean_recsys, 'f1score', permutation=False)
+    for p in f1score[0]['ir']:
+        assert_true(p['f1score'] >= 0.0 and p['f1score'] <= 1.0)
+    assert_true(f1score[1]['final_error']['avg']['f1score'] >= 0.0 and
+                f1score[1]['final_error']['stdev']['f1score'] <= 1.0)
 
-    f1score = evaluator.evaluate(recsys, 'f1score', permutation=False)
-    assert_true(f1score['f1score'] >= 0.0 and f1score['f1score'] <= 1.0)
+    all_scores = evaluator.evaluate_on_split(boolean_recsys, permutation=False)
+    for p in all_scores[0]['ir']:
+        assert_true(p['f1score'] >= 0.0 and p['f1score'] <= 1.0)
+        assert_true(p['recall'] >= 0.0 and p['recall'] <= 1.0)
+        assert_true(p['precision'] >= 0.0 and p['precision'] <= 1.0)
 
-    all_scores = evaluator.evaluate(recsys, permutation=False)
-    assert_true(all_scores['f1score'] >= 0.0 and all_scores['f1score'] <= 1.0)
-    assert_true(all_scores['recall'] >= 0.0 and all_scores['recall'] <= 1.0)
-    assert_true(all_scores['precision'] >= 0.0 and all_scores['precision'] <= 1.0)
-    assert_true(all_scores['nmae'] >= 0.0 and all_scores['nmae'] <= 1.0)
-    assert_true(all_scores['mae'] >= 0.0 and all_scores['mae'] <= 1.0)
-    assert_true(all_scores['rmse'] >= 0.0 and all_scores['rmse'] <= 1.0)
-
-    #With values at sampling.
-    nmae = evaluator.evaluate(recsys, 'nmae', permutation=False,
-                    sampling_users=0.6, sampling_ratings=0.6)
-    assert_true(nmae['nmae'] >= 0.0 and nmae['nmae'] <= 1.0)
-
-    #Test with boolean recsys
-    assert_raises(ValueError, evaluator.evaluate, boolean_recsys, 'rank')
-
-    #Test with specified metric
-    rmse = evaluator.evaluate(boolean_recsys, 'rmse', permutation=False)
-    assert_true(rmse['rmse'] >= 0.0 and rmse['rmse'] <= 1.0)
-
-    mae = evaluator.evaluate(boolean_recsys, 'mae', permutation=False)
-    assert_true(mae['mae'] >= 0.0 and mae['mae'] <= 1.0)
-
-    nmae = evaluator.evaluate(boolean_recsys, 'nmae', permutation=False)
-    assert_true(nmae['nmae'] >= 0.0 and nmae['nmae'] <= 1.0)
-
-    precision = evaluator.evaluate(boolean_recsys, 'precision',
-                                permutation=False)
-    assert_true(precision['precision'] >= 0.0 and precision['precision'] <= 1.0)
-
-    recall = evaluator.evaluate(boolean_recsys, 'recall', permutation=False)
-    assert_true(recall['recall'] >= 0.0 and recall['recall'] <= 1.0)
-
-    f1score = evaluator.evaluate(boolean_recsys, 'f1score', permutation=False)
-    assert_true(f1score['f1score'] >= 0.0 and f1score['f1score'] <= 1.0)
-
-    all_scores = evaluator.evaluate(recsys, permutation=False)
-    assert_true(all_scores['f1score'] >= 0.0 and all_scores['f1score'] <= 1.0)
-    assert_true(all_scores['recall'] >= 0.0 and all_scores['recall'] <= 1.0)
-    assert_true(all_scores['precision'] >= 0.0 and all_scores['precision'] <= 1.0)
-    assert_true(all_scores['nmae'] >= 0.0 and all_scores['nmae'] <= 1.0)
-    assert_true(all_scores['mae'] >= 0.0 and all_scores['mae'] <= 1.0)
-    assert_true(all_scores['rmse'] >= 0.0 and all_scores['rmse'] <= 1.0)
-
-    #With values at sampling.
-    nmae = evaluator.evaluate(boolean_recsys, 'nmae', permutation=False,
-                    sampling_users=0.6, sampling_ratings=0.6)
-    assert_true(nmae['nmae'] >= 0.0 and nmae['nmae'] <= 1.0)
-    '''
+    for p in all_scores[0]['error']:
+        assert_true(p['mae'] >= 0.0 and p['mae'] <= 1.0)
+        assert_true(p['rmse'] >= 0.0 and p['rmse'] <= 1.0)
+        assert_true(p['nmae'] >= 0.0 and p['nmae'] <= 1.0)
+    assert_true(all_scores[1]['final_error']['avg']['f1score'] >= 0.0 and
+                all_scores[1]['final_error']['stdev']['f1score'] <= 1.0)
+    assert_true(all_scores[1]['final_error']['avg']['recall'] >= 0.0 and
+                all_scores[1]['final_error']['stdev']['recall'] <= 1.0)
+    assert_true(all_scores[1]['final_error']['avg']['precision'] >= 0.0 and
+                all_scores[1]['final_error']['stdev']['precision'] <= 1.0)
+    assert_true(all_scores[1]['final_error']['avg']['rmse'] >= 0.0 and
+                all_scores[1]['final_error']['stdev']['rmse'] <= 1.0)
+    assert_true(all_scores[1]['final_error']['avg']['mae'] >= 0.0 and
+                all_scores[1]['final_error']['stdev']['mae'] <= 1.0)
+    assert_true(all_scores[1]['final_error']['avg']['nmae'] >= 0.0 and
+                all_scores[1]['final_error']['stdev']['nmae'] <= 1.0)
