@@ -28,9 +28,6 @@ class SplitSampling(object):
     random_state : int or RandomState
         Pseudo-random number generator state used for random sampling.
 
-    Examples
-    ----------
-
     """
     def __init__(self, n, evaluation_fraction=0.7, indices=False,
             random_state=None):
