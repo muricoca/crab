@@ -89,6 +89,55 @@ def check_cv(cv, n):
 
 class CfEvaluator(RecommenderEvaluator):
 
+    """
+    Examples
+    --------
+    >>> from scikits.crab.similarities import UserSimilarity
+    >>> from scikits.crab.metrics import  euclidean_distances
+    >>> from scikits.crab.models import  MatrixPreferenceDataModel
+    >>> from scikits.crab.recommenders.knn import UserBasedRecommender
+    >>> from scikits.crab.metrics.classes import CfEvaluator
+    >>> from scikits.crab.recommenders.knn.neighborhood_strategies import NearestNeighborsStrategy
+    >>> movies = {'Marcel Caraciolo': {'Lady in the Water': 2.5, \
+    'Snakes on a Plane': 3.5, \
+    'Just My Luck': 3.0, 'Superman Returns': 3.5, 'You, Me and Dupree': 2.5, \
+    'The Night Listener': 3.0}, \
+    'Paola Pow': {'Lady in the Water': 3.0, 'Snakes on a Plane': 3.5, \
+    'Just My Luck': 1.5, 'Superman Returns': 5.0, 'The Night Listener': 3.0, \
+    'You, Me and Dupree': 3.5}, \
+    'Leopoldo Pires': {'Lady in the Water': 2.5, 'Snakes on a Plane': 3.0, \
+    'Superman Returns': 3.5, 'The Night Listener': 4.0}, \
+    'Lorena Abreu': {'Snakes on a Plane': 3.5, 'Just My Luck': 3.0, \
+    'The Night Listener': 4.5, 'Superman Returns': 4.0, \
+    'You, Me and Dupree': 2.5}, \
+    'Steve Gates': {'Lady in the Water': 3.0, 'Snakes on a Plane': 4.0, \
+    'Just My Luck': 2.0, 'Superman Returns': 3.0, 'The Night Listener': 3.0, \
+    'You, Me and Dupree': 2.0}, \
+    'Sheldom': {'Lady in the Water': 3.0, 'Snakes on a Plane': 4.0, \
+    'The Night Listener': 3.0, 'Superman Returns': 5.0, \
+    'You, Me and Dupree': 3.5}, \
+    'Penny Frewman': {'Snakes on a Plane':4.5,'You, Me and Dupree':1.0, \
+    'Superman Returns':4.0}, \
+    'Maria Gabriela': {}}
+    >>> model = MatrixPreferenceDataModel(movies)
+    >>> similarity = UserSimilarity(model, euclidean_distances)
+    >>> neighborhood = NearestNeighborsStrategy()
+    >>> recsys = UserBasedRecommender(model, similarity, neighborhood)
+    >>> evaluator = CfEvaluator()
+    >>> all_scores = evaluator.evaluate(recsys, permutation=False)
+    >>> all_scores
+    {'rmse': 0.23590725429603751, 'recall': 1.0, 'precision': 1.0, \
+    'mae': 0.21812065003607684, 'f1score': 1.0, 'nmae': 0.054530162509019209}
+    >>> rmse = evaluator.evaluate_on_split(recsys, metric='rmse', permutation=False)
+    >>> rmse
+    ({'error': [{'rmse': 0.35355339059327379}, \
+     {'rmse': 0.97109049202292397},  \
+     {'rmse': 0.39418387598407179}]},  \
+     {'final_error': {'avg': {'rmse': 0.57294258620008975}, \
+     'stdev': {'rmse': 0.28202130565981975}}})
+
+    """
+
     def _build_recommender(self, dataset, recommender):
         """
         Build a clone recommender with the given dataset
@@ -157,8 +206,6 @@ class CfEvaluator(RecommenderEvaluator):
         Returns a dictionary containing the evaluation results:
         (NMAE, MAE, RMSE, Precision, Recall, F1-Score)
 
-        Examples
-        --------
         """
         sampling_users = kwargs.pop('sampling_users', None)
         sampling_ratings = kwargs.pop('sampling_ratings', 0.7)
@@ -354,9 +401,6 @@ class CfEvaluator(RecommenderEvaluator):
 
         permutation_scores : array, shape = [n_permutations]
             The scores obtained for each permutations.
-
-        Examples
-        --------
 
         """
         sampling_users = kwargs.pop('sampling_users', 0.7)
