@@ -18,7 +18,7 @@
 
 	The engine aims to provide a rich set of components from which you can 
 	construct a customized recommender system from a set of algorithms and 
-	be usable in various contexts: ** science and engineering **.
+	be usable in various contexts: ** science and engineering ** .
 
 
 :Features:
@@ -42,8 +42,13 @@ User Guide
 
 .. toctree::
    :maxdepth: 2
-
-   Installing crab
+   :numbered:
+   
+   install
+   tutorial
+   collaborative_filtering
+   model_selection
+   datasets
 
 Example Gallery
 ===============
@@ -51,7 +56,7 @@ Example Gallery
 .. toctree::
    :maxdepth: 2
 
-   Examples
+   examples
 
 
 Development
@@ -59,6 +64,6 @@ Development
 .. toctree::
    :maxdepth: 2
 
-   Contributing
-
+   contributing
+   about
 
