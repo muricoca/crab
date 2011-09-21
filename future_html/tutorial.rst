@@ -1,22 +1,138 @@
 .. _getting_started:
-
-Getting started: an introduction to machine learning with scikits.learn
+=======================================================================
+Getting started: an introduction to recommender systems with Crab
 =======================================================================
 
 .. topic:: Section contents
 
-    In this section, we introduce the machine learning vocabulary that we
-    use through-out `scikits.learn` and give a simple learning example.
+    In this section, we introduce the idea of a recommender engine that we use through 'Crab`
+    and give a simple recommender example.
 
 
-Machine learning: the problem setting
----------------------------------------
+Introducing Recommendation Engines
+==================================
 
-In general, a learning problem considers a set of n *samples* of data and
-try to predict properties of unknown data. If each sample is more than a
-single number, and for instance a multi-dimensional entry (aka
-*multivariate* data), is it said to have several attributes, or
-*features*.
+Everyday we form opinions about things we like, don't like and even don't care about. For example,
+when you watch a television show, you either notice it because it's a funny show, or because
+it is boring or maybe don't notice it at all. It happens without we noticing and with food,
+movies, songs, hairstyles, ski resorts and so on.
+
+Our tastes vary, but we generally follow patterns. People tend to like things that are similar
+to other things they like. Because I love the  Matrix film, you can guess I would like to 
+watch Minority Report, which is mostly the same genre, action and futuristic. Likewise, people
+also tend to like things that similar people like. Just consider a design student that
+entered the design school, when he sees just every other design student using a Macintosh computer,
+he isn't surprised, since he was already a lifetime Mac user. Recommendation is all about 
+predicting these likes and dislikes, and using them to discover new and desirable things
+you didn't already know about.
+
+What is recommendation ?
+-------------------------
+
+In this tutorial, we will explore some of the ways people make recommendations and discover 
+new things -- and of course learn how those systems work in software with Crab. There are
+several strategies for creating recommendations: One could look to what people with similar
+tastes seem to like. Another approach would figure out what items are like the ones we 
+already like. Those strategies describe the two most well-known categories of recommender
+techniques: `user-based` and `item-based` recommenders and they are included in a major
+category called `Collaborative Filtering`. Before exploring them, let's explain the
+differences  between this type of filtering and the `Content-Based Filtering`, 
+another popular large recommendation category.
+
+ 
+Collaborative Filtering and Content-Based Filtering
+---------------------------------------------------
+
+The scenarios above presented are examples of `Collaborative Filtering`, which produces 
+recommendations based on the knowledge of users' relationships to items. In this category
+there is no requirement for knowledge of the properties or attributes of the items
+themselves. This recommender framework does not care whether the `items` are books,
+movies, flowers, or even people, since nothing about their attributes enters into any
+of the input.
+
+Approaches focusing on the attributes of items are usually referred to as `content-based`
+filtering recommendation techniques. For instance, consider a book recommender system,
+which recommends you Programming the Collective Intelligence because you love Artificial
+Intelligence books (you already read several books about A.I. and the system knows your
+historical records). It is clear that the recommendation is based on an attribute of the
+books: the main topic. This is something more like content-based recommendation.
+
+The Crab recommender framework does not yet implement these techniques, but is planned
+to be implemented in future releases. This tutorial will focus on `collaborative filtering`.
+
+Recommendation hit the mainstream
+---------------------------------
+
+Recommendations are quite popular. We have seen them in practice on sites such as 
+Amazon or Last.FM: based on browsing or historical records. The main goal is to
+produce a list of products that it believes may be interesting for you. These techniques has been
+a topic of research in machine learning since 1990's and has becoming more mainstream,
+demand for them has increased, and supply of open-source implementations has as well. 
+This, along with increasingly accessible and cost-effective computing power, means that
+recommender engines are becoming more accessible and widely used.
+
+Recommendation engines can also be applied to estimate the strength of associations between
+many things or even estimate which customer might like a certain item the most. 
+Even in a social network, a recommender could recommend friends to people.
+
+Running a first recommender engine
+----------------------------------
+
+`Crab` contains several recommender algorithms implemented, in fact, starting with conventional
+user-based and item-based recommenders. There is also a experimental implementation based on
+the singular value decomposition (SVD). In the upcoming sections, you will find detailed
+information about those techniques and some real-world examples. Now we will give a quick start
+at how to represent data, build a recommender engine and evaluate the effectiveness of the 
+recommendations.
+
+.. topic:: Creating the input
+
+	To explore recommendations in Crab, we need input the recommender, data on which
+	to base recommendations. This takes the form of `preferences` in Crab. Because
+	the recommender engines that are most familiar involve recommending items to users,
+	it will be convenient to talk about preferences as associations from users to items 
+	(which both could be anything).
+	Generally a preference consists of an user ID and an item ID, and usually a number 
+	expressing the strength of the user's preference for the items. The preference value
+	could be anything. Generally larger values mean stronger positive preferences. 
+	So if those values are ratings on a scale 1 to 5, the `1` could mean items that the
+	user can't stand, and `5` as favorite items.
+
+
+xxx
+
+Building a Recommender System
+-----------------------------
+Sexta
+
+Analyzing the output
+--------------------
+Sexta
+
+Evaluating a Recommender
+------------------------
+Sabado
+
+Training and Testing Data
+-------------------------
+Sabado
+
+Running a Recommender Evaluator
+-------------------------------
+Domingo
+
+Check the Result
+----------------
+Domingo
+
+Evaluating Precision and Recall
+-------------------------------
+Domingo
+
+Experimenting with other Recommenders
+-------------------------------------
+Domingo
+
 
 We can separate learning problems in a few large categories:
 

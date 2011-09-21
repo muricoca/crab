@@ -103,7 +103,7 @@ This package is also expected to work with python(x,y) as of 2.6.5.5.
 Building on windows
 -------------------
 
-To build crab on windows you will need a C/C++ compiler in
+To build Crab on windows you will need a C/C++ compiler in
 addition to numpy, scipy and setuptools. At least
 `MinGW <http://www.mingw.org>`_ (a port of GCC to Windows OS) and the
 Microsoft Visual C++ 2008 should work out of the box. To force the use
