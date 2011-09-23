@@ -2,7 +2,8 @@ import numpy as np
 from nose.tools import assert_equals, assert_almost_equals
 from ..metrics import root_mean_square_error, mean_absolute_error,\
                         normalized_mean_absolute_error, precision_recall_fscore, \
-                        precision_score, recall_score, f1_score
+                        precision_score, recall_score, f1_score, evaluation_report,\
+                        evaluation_error
 from numpy.testing import assert_array_almost_equal
 
 
@@ -42,6 +43,19 @@ def test_root_normalized_mean_absolute_error():
                 max_rating, min_rating))
 
 
+def test_evaluation_error():
+    """ Check the error evaluation """
+    max_rating = 5.0
+    min_rating = 1.0
+    y_real = np.array([0.0, 1.0, 0.0, 2.0, 3.0])
+    y_pred = np.array([0.0, 1.0, 0.0, 2.0, 3.0])
+
+    mae, nmae, rmse = evaluation_error(y_real, y_pred, max_rating, min_rating)
+    assert_equals(mae, 0.0)
+    assert_equals(nmae, 0.0)
+    assert_equals(rmse, 0.0)
+
+
 def test_precision_recall_f1_score():
     """Test Precision Recall and F1 Score """
     y_real = np.array([['a', 'b', 'c'], ['a', 'b', 'e', 'f', 'g'], ['a', 'b']])
@@ -77,3 +91,36 @@ def test_zero_precision_recall():
 
     finally:
         np.seterr(**old_error_settings)
+
+
+def test_evaluation_report():
+    """Test evaluation report"""
+    y_real = np.array([['a', 'b', 'c'], ['a', 'b', 'e', 'f', 'g'], ['a', 'b']])
+    y_pred = np.array([['a', 'b', 'c'], ['a', 'b', 'c', 'd'], ['e', 'f']])
+    labels = np.array(['user_id1', 'user_id2', 'user_id3'])
+    # print evaluation report with class names
+    expected_report = """\
+             precision    recall  f1-score
+
+   user_id1       1.00      1.00      1.00
+   user_id2       0.40      0.50      0.44
+   user_id3       0.00      0.00      0.00
+
+avg / total       0.47      0.50      0.48
+"""
+    report = evaluation_report(
+        y_real, y_pred,
+        target_names=labels)
+    assert_equals(report, expected_report)
+    # print classification report with label detection
+    expected_report = """\
+             precision    recall  f1-score
+
+          0       1.00      1.00      1.00
+          1       0.40      0.50      0.44
+          2       0.00      0.00      0.00
+
+avg / total       0.47      0.50      0.48
+"""
+    report = evaluation_report(y_real, y_pred)
+    assert_equals(report, expected_report)

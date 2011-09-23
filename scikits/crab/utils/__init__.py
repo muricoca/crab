@@ -82,3 +82,13 @@ def check_random_state(seed):
         return seed
     raise ValueError('%r cannot be used to seed a numpy.random.RandomState'
                      ' instance' % seed)
+
+
+def unique_labels(list_of_labels):
+    """Extract an ordered integer array of unique labels
+
+    This implementation ignores any occurrence of NaNs.
+
+    """
+    list_of_labels = [idx for idx, labels in enumerate(list_of_labels)]
+    return list_of_labels

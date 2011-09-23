@@ -481,7 +481,7 @@ class UserBasedRecommender(UserRecommender):
 
         '''
         n_similarity = params.pop('n_similarity', 'user_similarity')
-        distance = params.pop('distance', None)
+        distance = params.pop('distance', self.similarity.distance)
         nhood_size = params.pop('nhood_size', None)
 
         nearest_neighbors = self.neighborhood_strategy.user_neighborhood(user_id,
@@ -518,7 +518,7 @@ class UserBasedRecommender(UserRecommender):
             return preference
 
         n_similarity = params.pop('n_similarity', 'user_similarity')
-        distance = params.pop('distance', None)
+        distance = params.pop('distance', self.similarity.distance)
         nhood_size = params.pop('nhood_size', None)
 
         nearest_neighbors = self.neighborhood_strategy.user_neighborhood(user_id,
