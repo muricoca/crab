@@ -99,39 +99,136 @@ recommendations.
 	user can't stand, and `5` as favorite items.
 
 
-xxx
+`Crab` comes with a few standard datasets, for instance the `songs dataset`, or
+the `movies dataset`::
+
+	    >>> from scikits.crab import datasets
+	    >>> movies = datasets.load_sample_movies()
+	    >>> songs = datasets.load_sample_songs()
+
+A dataset is a dictionary-like object that holds all the data and some metadata about the 
+data. This data is stored in the `.data` member, which is a dictionary in the format
+{user_id:{item_id: preference, item_id2: preference, ...}, user_id2: {...}, ...}. 
+More details on	the different datasets can be found in the :ref:`dedicated section <datasets>`.
+
+For instance, in the case of the movies dataset, `movies.data` gives access to the users,
+cleverly named `1` to `7, and their preferences for the movies, which we will call `1`
+through `6``. In real-life, these might be customer IDs and product IDs from a company
+database::
+
+	    >>> print movies.data
+		{1: {1: 3.0, 2: 4.0, 3: 3.5, 4: 5.0, 5: 3.0},
+		 2: {1: 3.0, 2: 4.0, 3: 2.0, 4: 3.0, 5: 3.0, 6: 2.0},
+		 3: {2: 3.5, 3: 2.5, 4: 4.0, 5: 4.5, 6: 3.0},
+		 4: {1: 2.5, 2: 3.5, 3: 2.5, 4: 3.5, 5: 3.0, 6: 3.0},
+		 5: {2: 4.5, 3: 1.0, 4: 4.0},
+		 6: {1: 3.0, 2: 3.5, 3: 3.5, 4: 5.0, 5: 3.0, 6: 1.5},
+		 7: {1: 2.5, 2: 3.0, 4: 3.5, 5: 4.0}}
+
+
+and `movies.item_ids` \ `movies.user_ids gives the ground truth for the movies dataset, 
+that is the real user ids and real item ids in case of presenting the recommendations
+in the console::
+
+	>>> print movies.user_ids
+	{1: 'Jack Matthews',
+	 2: 'Mick LaSalle',
+	 3: 'Claudia Puig',
+	 4: 'Lisa Rose',
+	 5: 'Toby',
+	 6: 'Gene Seymour',
+	 7: 'Michael Phillips'}
+	>>>
+	>>> print movies.item_ids
+	{1: 'Lady in the Water',
+	 2: 'Snakes on a Planet',
+	 3: 'You, Me and Dupree',
+	 4: 'Superman Returns',
+	 5: 'The Night Listener',
+	 6: 'Just My Luck'}
+
+
+With some study, we notice some trends. Users 1 and 2 seem to have similar tastes. 
+They both like movie 4, like 2 a little less, and like 1 less still. The same 
+goes for users 1 and 4, as they seem to like 101 and 103 identically. On the other
+hand, users 1 and 7 have tastes that seem to run counter – 1 likes 1 while 7
+doesn't, and 1 likes 3 while 4 is just the opposite. See figure below 
+to visualize the relations, both positive and negative between users and items.
+
+``Crab`` also offers the possibility to use external datasets coming
+from simple comma-separated-value format files (.csv).Please refer to the following
+example for instructions on the dataset loader:
+:ref:`example mlcomp sparse document classification <example_mlcomp_sparse_document_classification.py>`.
+
 
 Building a Recommender System
 -----------------------------
-Sexta
+Our goal now is to recommend a movie to Toby (user 5). You already can notice that the 
+movies Snakes on a Planet (item 2), You, Me and Dupree (item 3) and Superman Returns (item 4) - 
+he already watched these movies, and recommendation is typically about discovering new things. On
+intuition we would suggest the movie 5 or movie 6 because Toby seems similar to Claudia Puig (user 3) 
+and Lisa Role (user 4). So we have now items 5 and 6 as possible recommendations. On the whole,
+item 6 seems to be the most liked of these possibilities, judging by the preference values 
+of 3.0 for both similar users. Let's go to the code:
+
+
+
+
+We will discuss each of these components in our recommender in details in the next sections, but
+we can summarize the role of each component now. The `MatrixPreferenceDataModel` implementation
+stores and provides access to all the user and item data as also the associated preferences
+needed in the computation. The `UserSimilarity` defines the notion of how similar two users are;
+this is based on one of many possible metrics or pairwise distance calculations. A `NearestNeighborhood` implementation
+defines the notion of a group of users that are most similar to a given user. At least, the `UserBasedRecommender`
+implementation pulls all these components together in order to recommend
+items to users, and related features. To help visualize the relationship between the components,
+check the figure below. Of course there is more going under Crab-based recommenders, since
+some will employ different components with different relationships. However, this diagram will give
+you a global notion of what's going on in our example.
+
 
 Analyzing the output
 --------------------
-Sexta
+If you save the code provided above in a python file (.py) and run it at  your terminal, the output
+should be: [(4,4.23550)].  We requested for the top recommendation, and the recommender engine gave us one.
+He recommended the movie Just My Luck to Toby. Furthermore, it also informed the estimated Toby's preference
+for the movie Just My Luck, which is about 4.3, and that was the highest among all the items eligible
+for recommendations. It isn't bad. We didn't get the movie, which was a possible item and we picked the 
+item 4 over 5, and this makes sense when you note that 4 is a more highly rated overall. The estimated
+preference reflects how much Toby likes the movie Just My Luck with a rating 4.34 which between 
+the users C e D expressed.
+
+Of course analyzing the data isn't so obvious even considering that the recommender engine made
+some decent sense and it returned an interesting answer. For small data sets like those, producing
+recommendations is a trivial as I described above. But in real life the data sets are huge and they
+are noisy. Producing the right recommendations for this type of data and producing quickly 
+is not even trivial. Later in the next sections it will presented the tools that Crab provides  to 
+attack these problems. We will show how to configure and customize Crab to improve performance and how
+the standard approaches may produce poor recommendations or demanding a great deal of CPU and memory.
 
 Evaluating a Recommender
 ------------------------
-Sabado
+Quinta
 
 Training and Testing Data
 -------------------------
-Sabado
+Quinta
 
 Running a Recommender Evaluator
 -------------------------------
-Domingo
+Sexta
 
 Check the Result
 ----------------
-Domingo
+Sexta
 
 Evaluating Precision and Recall
 -------------------------------
-Domingo
+Sabado
 
 Experimenting with other Recommenders
 -------------------------------------
-Domingo
+Sabado
 
 
 We can separate learning problems in a few large categories:
