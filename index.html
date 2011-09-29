@@ -1,67 +1,213 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-      <meta charset="utf-8"/>
-      <title>The Crab library by Muriçoca Labs</title>
-      <meta name="robots" content="all">
-      <link rel="stylesheet" href="screen.css">
-      <link href="http://fonts.googleapis.com/css?family=Josefin+Slab|Inconsolata|Yanone Kaffeesatz" rel="stylesheet" type="text/css">
-    </head>
-    <body>
-  <a href="http://github.com/muricoca/crab"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://assets0.github.com/img/5d21241b64dc708fcbb701f68f72f41e9f1fadd6?repo=&url=http%3A%2F%2Fs3.amazonaws.com%2Fgithub%2Fribbons%2Fforkme_left_red_aa0000.png&path=" alt="Fork the Crab on GitHub!"></a> 
-  <div id="container">
-     <div class="download"> 
-      <a href="http://github.com/muricoca/crab/zipball/master"> 
-        <img border="0" width="90" src="http://github.com/images/modules/download/zip.png"></a> 
-      <a href="http://github.com/muricoca/crab/tarball/master"> 
-        <img border="0" width="90" src="http://github.com/images/modules/download/tar.png"></a> 
-    </div> 
-     
-    <div id="logo"><a href="https://github.com/muricoca/crab"><img src="icon_crab.jpg" width=125 height=124 alt="Yes, the Crab himself"></a></div>
-    <h1 class="crab"><a class="top" href="http://muricoca.github.com/crab">Crab</a> 
-      <span class="small">by <a href="https://github.com/muricoca">Muriçoca Labs</a></span></h1> 
- 
-    <div class="description"> 
-      A recommendation engine library for Python
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Recommender Systems Framework in Python &mdash; scikit-recommender v0.1 documentation</title>
+    <link rel="stylesheet" href="static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="static/jquery.js"></script>
+    <script type="text/javascript" src="static/underscore.js"></script>
+    <script type="text/javascript" src="static/doctools.js"></script>
+    <link rel="shortcut icon" href="static/favicon.ico"/>
+    <link rel="author" title="About these documents" href="about.html" />
+    <link rel="top" title="scikit-recommender v0.1 documentation" href="#" />
+    <link rel="next" title="1. Installing Crab" href="install.html" /> 
+  </head>
+  <body>
+    <div class="header-wrapper">
+      <div class="header">
+          <p class="logo"><a href="#">
+            <img src="static/crab-logo-small.png" alt="Logo"/>
+          </a>
+          </p>
+        <h1>Crab</h1>
+        <p id="headline">A Recommender Framework in Python</p><div class="navbar">
+          <ul>
+            <li><a href="install.html">Download</a></li>
+            <li><a href="support.html">Support</a></li>
+            <li><a href="tutorial.html">User Guide</a></li>
+            <li><a href="#">Examples</a></li>
+            <li><a href="contributing.html">Contribute</a></li>
+       </ul>
+       </div> <!-- end navbar --></div>
     </div>
 
-    <br/>
-    <h2>Download</h2> 
-    <p>You can go, see and download the project in the <a href="http://github.com/muricoca/crab">official repo</a>.</p>
+    <div class="content-wrapper">
 
-    <p>You can download this project in either
-      <a href="https://github.com/muricoca/crab/zipball/master">zip</a> or
-      <a href="https://github.com/muricoca/crab/tarball/master">tar</a> formats.
-    </p> 
+    <!-- <div id="blue_tile"></div> -->
 
-    <br/>
-    <h2>About the Crab</h2>
-    <p> Crab is written in pure Python to maximize the cross-platform issue and exposes the recommendation logic to your application by easy to use API REST via Web Services.</p>
-    <p> The library is extensible, so the user can create new representations, algorithms and the design is optimized for performance.</p>
+        <div class="sphinxsidebar">
 
-    <br/>
-    <h2>History</h2>
-    <p> The project was started in 2010 by Marcel Caraciolo as a M.S.C related project, and since then many people interested joined to help in the project. </p>
-    <p> It is currently maintained by a team of volunteers, members of the Muriçoca Labs.</p>
-    
-    <br/>
-    <h2>Wiki</h2>
-    <p> The Crab project is got a <a href="https://github.com/muricoca/crab/wiki" title="Visit the Crab Wiki">Wiki</a> on GitHub where we provide all the needed documentation</p>
-    
-    <br/>
-    <h2>Collaborators</h2>
-    <p> Marcel Caraciolo (<a href="http://twitter.com/muricoca">twitter.com/muricoca</a>) - (caraciol@muricoca.com)</p>
-    <p> Bruno Melo  -  (<a href="http://twitter.com/brunomelo">twitter.com/brunomelo</a>) - (brunojm@muricoca.com)</p>
-    <p> Ricardo Caspirro -  (<a href="http://twitter.com/ricardocaspirro">twitter.com/ricardocaspirro</a>) - (ricardo.caspirro@muricoca.com)</p>
-    <p> Rodrigo Alves - (<a href="http://twitter.com/rodrigoalvieira">twitter.com/rodrigoalvieira</a>)- (rodrigo@muricoca.com)</p>
+        <h3>Participate</h3> 
 
-    <br/>
-    <h2>Feedback</h2>
-    <p> If you want to see our plan release/roadmap, please take a look at the <a href="http://github.com/muricoca/crab/issues">Issues Tracker</a>.</p>
-    
-    <br/>
-    <h2>Copyright</h2>
-    <p class="footer"> Copyright © 2011 Muriçoca Labs. Released under GPL. Read the <a href="http://github.com/muricoca/crab/">LICENSE</a> section in the README for details. </p>
-  </div>
-</body>
+        <p>Fork
+        the <a href="https://github.com/muricoca/crab">source
+        code</a>, join the
+        <a href="support.html#mailing-list">mailing
+        lists</a>, report bugs to
+        the <a href="https://github.com/muricoca/crab/issues">issue
+        tracker</a> or participate in the next
+        <a href="https://github.com/muricoca/crab/Upcoming-events">coding sprint</a>. <a href="contributing.html">Read More...</a> 
+        </p> 
+
+        <h3>Funding</h3> 
+        <p>This project is maintained
+        by <a href="http://www.muricoca.com">Muriçoca Labs</a>,
+        and others.</p> 
+        <p style="text-align: center;"><a href="http://www.muricoca.com"><img src="static/small-muricoca-logo.png"
+        alt="Muricoca"/></a></p> 
+      </div>
+
+      <div class="content">
+            
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Crab - Recommender systems in Python</h1><div class="topic">
+<p class="topic-title first">Crab - scikits.recommender: Recommender systems in Python</p>
+<p><tt class="docutils literal"><span class="pre">Crab</span></tt> as known as <tt class="docutils literal"><span class="pre">scikits.recommender</span></tt> is a Python
+framework for building recommender engines integrated with
+the world of scientific Python packages
+(<a class="reference external" href="http://www.scipy.org">numpy</a>, <a class="reference external" href="http://www.scipy.org">scipy</a>, <a class="reference external" href="http://matplotlib.sourceforge.net/">matplotlib</a>).</p>
+<p>The engine aims to provide a rich set of components from which you can
+construct a customized recommender system from a set of algorithms and
+be usable in various contexts: ** science and engineering ** .</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Features:</th><td class="field-body"><ul class="first simple">
+<li><strong>Recommender Algorithms</strong>: User-Based Filtering and Item-Based Filtering</li>
+<li><strong>Work in progress</strong>: Slope One, SVD, Evaluation of Recommenders.</li>
+<li><strong>Planed</strong>: Sparse Matrices, REST API&#8217;s.</li>
+</ul>
+</td>
+</tr>
+<tr class="field"><th class="field-name">License:</th><td class="field-body"><p class="first last">Open source, commercially usable: <strong>BSD license</strong> (3 clause)</p>
+</td>
+</tr>
+</tbody>
+</table>
+<style type="text/css">
+  div.bodywrapper blockquote {
+      margin: 0 ;
+  }
+
+  div.toctree-wrapper ul {
+      margin-top: 0 ;
+      margin-bottom: 0 ;
+      padding-left: 10px ;
+  }
+
+  li.toctree-l1 {
+      padding: 0 0 0.5em 0 ;
+      list-style-type: none;
+      font-size: 150% ;
+      font-weight: bold;
+      }
+
+  li.toctree-l1 ul {
+      padding-left: 40px ;
+  }
+
+  li.toctree-l2 {
+      font-size: 70% ;
+      list-style-type: square;
+      font-weight: normal;
+      }
+
+  li.toctree-l3 {
+      font-size: 85% ;
+      list-style-type: circle;
+      font-weight: normal;
+      }
+
+</style><div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This document describes Crab 0.1. For other
+versions and printable format, see <a class="reference internal" href="support.html#documentation-resources"><em>Documentation resources</em></a>.</p>
+</div>
+<div class="section" id="user-guide">
+<h1>User Guide<a class="headerlink" href="#user-guide" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install.html">1. Installing <cite>Crab</cite></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="install.html#installing-an-official-release">1.1. Installing an official release</a></li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#third-party-distributions-of-crab">1.2. Third party distributions of Crab</a></li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#bleeding-edge">1.3. Bleeding Edge</a></li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#testing">1.4. Testing</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">2. Getting started: an introduction to recommender systems with Crab</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#introducing-recommendation-engines">2.1. Introducing Recommendation Engines</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="collaborative_filtering.html">3. Collaborative Filtering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="model_selection.html">4. Model Selection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="datasets.html">5. Dataset loading utilities</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="development">
+<h1>Development<a class="headerlink" href="#development" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#submitting-a-bug-report">Submitting a bug report</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#retrieving-the-latest-code">Retrieving the latest code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#contributing-code">Contributing code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#other-ways-to-contribute">Other ways to contribute</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#coding-guidelines">Coding guidelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#apis-of-crab-objects">APIs of Crab objects</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="support.html">Support</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="support.html#mailing-list">Mailing List</a></li>
+<li class="toctree-l2"><a class="reference internal" href="support.html#bug-tracker">Bug tracker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="support.html#irc">IRC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="support.html#documentation-resources">Documentation resources</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="about.html">About us</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="about.html#history">History</a></li>
+<li class="toctree-l2"><a class="reference internal" href="about.html#people">People</a></li>
+<li class="toctree-l2"><a class="reference internal" href="about.html#funding">Funding</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+    <div class="footer">
+        <p style="text-align: center">This docummentation is for crab
+        version 0.1<p>
+        &copy; 2011, scikits.recommender Crab developers (BSD License).
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7. Design by <a href="http://webylimonada.com">Web y Limonada</a>
+ 	  <br>Based on the original design by <a href="http://scikit-learn.sourceforge.net/stable/">scikit-learn</a>.
+    </div>
+  </body>
 </html>

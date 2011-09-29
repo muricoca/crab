@@ -1,0 +1,366 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>2. Getting started: an introduction to recommender systems with Crab &mdash; scikit-recommender v0.1 documentation</title>
+    <link rel="stylesheet" href="static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="static/jquery.js"></script>
+    <script type="text/javascript" src="static/underscore.js"></script>
+    <script type="text/javascript" src="static/doctools.js"></script>
+    <link rel="shortcut icon" href="static/favicon.ico"/>
+    <link rel="author" title="About these documents" href="about.html" />
+    <link rel="top" title="scikit-recommender v0.1 documentation" href="index.html" />
+    <link rel="next" title="3. Collaborative Filtering" href="collaborative_filtering.html" />
+    <link rel="prev" title="1. Installing Crab" href="install.html" /> 
+  </head>
+  <body>
+    <div class="header-wrapper">
+      <div class="header">
+          <p class="logo"><a href="index.html">
+            <img src="static/crab-logo-small.png" alt="Logo"/>
+          </a>
+          </p>
+        <h1>Crab</h1>
+        <p id="headline">A Recommender Framework in Python</p><div class="navbar">
+          <ul>
+            <li><a href="install.html">Download</a></li>
+            <li><a href="support.html">Support</a></li>
+            <li><a href="tutorial.html">User Guide</a></li>
+            <li><a href="#">Examples</a></li>
+            <li><a href="contributing.html">Contribute</a></li>
+       </ul>
+       </div> <!-- end navbar --></div>
+    </div>
+
+    <div class="content-wrapper">
+
+    <!-- <div id="blue_tile"></div> -->
+
+        <div class="sphinxsidebar">
+        <div class="rel">
+          <a href="install.html" title="1. Installing Crab"
+             accesskey="P">previous</a> |
+          <a href="collaborative_filtering.html" title="3. Collaborative Filtering"
+             accesskey="N">next</a> |
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a>
+        </div>
+        
+
+        <h3>Participate</h3> 
+
+        <p>Fork
+        the <a href="https://github.com/muricoca/crab">source
+        code</a>, join the
+        <a href="support.html#mailing-list">mailing
+        lists</a>, report bugs to
+        the <a href="https://github.com/muricoca/crab/issues">issue
+        tracker</a> or participate in the next
+        <a href="https://github.com/muricoca/crab/Upcoming-events">coding sprint</a>. <a href="contributing.html">Read More...</a> 
+        </p> 
+
+        <h3>Funding</h3> 
+        <p>This project is maintained
+        by <a href="http://www.muricoca.com">Muriçoca Labs</a>,
+        and others.</p> 
+        <p style="text-align: center;"><a href="http://www.muricoca.com"><img src="static/small-muricoca-logo.png"
+        alt="Muricoca"/></a></p> 
+      </div>
+
+      <div class="content">
+            
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="getting-started-an-introduction-to-recommender-systems-with-crab">
+<h1>2. Getting started: an introduction to recommender systems with Crab<a class="headerlink" href="#getting-started-an-introduction-to-recommender-systems-with-crab" title="Permalink to this headline">¶</a></h1>
+<div class="topic">
+<p class="topic-title first">Section contents</p>
+<p>In this section, we introduce the idea of a recommender engine that we use through &#8216;Crab`
+and give a simple recommender example.</p>
+</div>
+<div class="section" id="introducing-recommendation-engines">
+<h2>2.1. Introducing Recommendation Engines<a class="headerlink" href="#introducing-recommendation-engines" title="Permalink to this headline">¶</a></h2>
+<p>Everyday we form opinions about things we like, don&#8217;t like and even don&#8217;t care about. For example,
+when you watch a television show, you either notice it because it&#8217;s a funny show, or because
+it is boring or maybe don&#8217;t notice it at all. It happens without we noticing and with food,
+movies, songs, hairstyles, ski resorts and so on.</p>
+<p>Our tastes vary, but we generally follow patterns. People tend to like things that are similar
+to other things they like. Because I love the  Matrix film, you can guess I would like to
+watch Minority Report, which is mostly the same genre, action and sci-fi. Likewise, people
+also tend to like things that similar people like. Just consider a design student that
+entered the design school, when he sees just every other design student using a Macintosh computer,
+he isn&#8217;t surprised, since he was already a lifetime Mac user. Recommendation is all about
+predicting these likes and dislikes, and using them to discover new and desirable things
+you didn&#8217;t already know about.</p>
+<div class="section" id="what-is-recommendation">
+<h3>2.1.1. What is recommendation ?<a class="headerlink" href="#what-is-recommendation" title="Permalink to this headline">¶</a></h3>
+<p>In this tutorial, we will explore some of the ways people make recommendations and discover
+new things &#8211; and of course learn how those systems work in software with Crab. There are
+several strategies for creating recommendations: One could look to what people with similar
+tastes seem to like. Another approach would figure out what items are like the ones we
+already like. Those strategies describe the two most well-known categories of recommender
+techniques: <cite>user-based</cite> and <cite>item-based</cite> recommenders and they are included in a major
+category called <cite>Collaborative Filtering</cite>. Before exploring them, let&#8217;s explain the
+differences  between this type of filtering and the <cite>Content-Based Filtering</cite>,
+another popular large recommendation category.</p>
+</div>
+<div class="section" id="collaborative-filtering-and-content-based-filtering">
+<h3>2.1.2. Collaborative Filtering and Content-Based Filtering<a class="headerlink" href="#collaborative-filtering-and-content-based-filtering" title="Permalink to this headline">¶</a></h3>
+<p>The scenarios above presented are examples of <cite>Collaborative Filtering</cite>, which produces
+recommendations based on the knowledge of users&#8217; relationships to items. In this category
+there is no requirement for knowledge of the properties or attributes of the items
+themselves. This recommender framework does not care whether the <cite>items</cite> are books,
+movies, flowers, or even people, since nothing about their attributes enters into any
+of the input.</p>
+<p>Approaches focusing on the attributes of items are usually referred to as <cite>content-based</cite>
+filtering recommendation techniques. For instance, consider a book recommender system,
+which recommends you Programming the Collective Intelligence because you love Artificial
+Intelligence books (you already read several books about A.I. and the system knows your
+historical records). It is clear that the recommendation is based on an attribute of the
+books: the main category. This is something more like content-based recommendation.</p>
+<p>The Crab recommender framework does not yet implement these techniques, but is planned
+to be implemented in future releases. This tutorial will focus on <cite>collaborative filtering</cite>.</p>
+</div>
+<div class="section" id="recommendation-hit-the-mainstream">
+<h3>2.1.3. Recommendation hit the mainstream<a class="headerlink" href="#recommendation-hit-the-mainstream" title="Permalink to this headline">¶</a></h3>
+<p>Recommendations are quite popular. We have seen them in practice on sites such as
+Amazon or Last.FM: based on browsing or historical records. The main goal is to
+produce a list of products that it believes may be interesting for you. These techniques has been
+a topic of research in machine learning since 1990&#8217;s and has becoming more mainstream,
+demand for them has increased, and supply of open-source implementations has as well.
+This, along with increasingly accessible and cost-effective computing power, means that
+recommender engines are becoming more accessible and widely used.</p>
+<p>Recommendation engines can also be applied to estimate the strength of associations between
+many things or even estimate which customer might like a certain item the most.
+Even in a social network, a recommender could recommend friends to people.</p>
+</div>
+<div class="section" id="running-a-first-recommender-engine">
+<h3>2.1.4. Running a first recommender engine<a class="headerlink" href="#running-a-first-recommender-engine" title="Permalink to this headline">¶</a></h3>
+<p><cite>Crab</cite> contains several recommender algorithms implemented, in fact, starting with conventional
+user-based and item-based recommenders. There is also a experimental implementation based on
+the singular value decomposition (SVD). In the upcoming sections, you will find detailed
+information about those techniques and some real-world examples. Now we will give a quick start
+at how to represent data, build a recommender engine and evaluate the effectiveness of the
+recommendations.</p>
+<div class="topic">
+<p class="topic-title first">Creating the input</p>
+<p>To explore recommendations in Crab, we need input the recommender, data on which
+to base recommendations. This takes the form of <cite>preferences</cite> in Crab. Because
+the recommender engines that are most familiar involve recommending items to users,
+it will be convenient to talk about preferences as associations from users to items
+(which both could be anything).
+Generally a preference consists of an user ID and an item ID, and usually a number
+expressing the strength of the user&#8217;s preference for the items. The preference value
+could be anything. Generally larger values mean stronger positive preferences.
+So if those values are ratings on a scale 1 to 5, the <cite>1</cite> could mean items that the
+user can&#8217;t stand, and <cite>5</cite> as favorite items.</p>
+</div>
+<p><cite>Crab</cite> comes with a few standard datasets, for instance the <cite>songs dataset</cite>, or
+the <cite>movies dataset</cite>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scikits.crab</span> <span class="kn">import</span> <span class="n">datasets</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">movies</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">load_sample_movies</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">songs</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">load_sample_songs</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>A dataset is a dictionary-like object that holds all the data and some metadata about the
+data. This data is stored in the <cite>.data</cite> member, which is a dictionary in the format
+{user_id:{item_id: preference, item_id2: preference, ...}, user_id2: {...}, ...}.
+More details on the different datasets can be found in the <a class="reference internal" href="datasets.html#datasets"><em>dedicated section</em></a>.</p>
+<p>For instance, in the case of the movies dataset, <cite>movies.data</cite> gives access to the users,
+cleverly named <cite>1</cite> to <cite>7, and their preferences for the movies, which we will call `1</cite>
+through <cite>6`</cite>. In real-life, these might be customer IDs and product IDs from a company
+database:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">movies</span><span class="o">.</span><span class="n">data</span>
+<span class="go">    {1: {1: 3.0, 2: 4.0, 3: 3.5, 4: 5.0, 5: 3.0},</span>
+<span class="go">     2: {1: 3.0, 2: 4.0, 3: 2.0, 4: 3.0, 5: 3.0, 6: 2.0},</span>
+<span class="go">     3: {2: 3.5, 3: 2.5, 4: 4.0, 5: 4.5, 6: 3.0},</span>
+<span class="go">     4: {1: 2.5, 2: 3.5, 3: 2.5, 4: 3.5, 5: 3.0, 6: 3.0},</span>
+<span class="go">     5: {2: 4.5, 3: 1.0, 4: 4.0},</span>
+<span class="go">     6: {1: 3.0, 2: 3.5, 3: 3.5, 4: 5.0, 5: 3.0, 6: 1.5},</span>
+<span class="go">     7: {1: 2.5, 2: 3.0, 4: 3.5, 5: 4.0}}</span>
+</pre></div>
+</div>
+<p>and <cite>movies.item_ids</cite> <a href="#id1"><span class="problematic" id="id2">`</span></a>movies.user_ids gives the ground truth for the movies dataset,
+that is the real user ids and real item ids in case of presenting the recommendations
+in the console:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">movies</span><span class="o">.</span><span class="n">user_ids</span>
+<span class="go">{1: &#39;Jack Matthews&#39;,</span>
+<span class="go"> 2: &#39;Mick LaSalle&#39;,</span>
+<span class="go"> 3: &#39;Claudia Puig&#39;,</span>
+<span class="go"> 4: &#39;Lisa Rose&#39;,</span>
+<span class="go"> 5: &#39;Toby&#39;,</span>
+<span class="go"> 6: &#39;Gene Seymour&#39;,</span>
+<span class="go"> 7: &#39;Michael Phillips&#39;}</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">movies</span><span class="o">.</span><span class="n">item_ids</span>
+<span class="go">{1: &#39;Lady in the Water&#39;,</span>
+<span class="go"> 2: &#39;Snakes on a Planet&#39;,</span>
+<span class="go"> 3: &#39;You, Me and Dupree&#39;,</span>
+<span class="go"> 4: &#39;Superman Returns&#39;,</span>
+<span class="go"> 5: &#39;The Night Listener&#39;,</span>
+<span class="go"> 6: &#39;Just My Luck&#39;}</span>
+</pre></div>
+</div>
+<p>With some study, we notice some trends. Users 1 and 2 seem to have similar tastes.
+They both like movie 4, like 2 a little less, and like 1 less still. The same
+goes for users 1 and 4, as they seem to like 101 and 103 identically. On the other
+hand, users 1 and 7 have tastes that seem to run counter – 1 likes 1 while 7
+doesn&#8217;t, and 1 likes 3 while 4 is just the opposite. See figure below
+to visualize the relations, both positive and negative between users and items.</p>
+<p><tt class="docutils literal"><span class="pre">Crab</span></tt> also offers the possibility to use external datasets coming
+from simple comma-separated-value format files (.csv).Please refer to the following
+example for instructions on the dataset loader:
+<em class="xref std std-ref">example mlcomp sparse document classification</em>.</p>
+</div>
+<div class="section" id="building-a-recommender-system">
+<h3>2.1.5. Building a Recommender System<a class="headerlink" href="#building-a-recommender-system" title="Permalink to this headline">¶</a></h3>
+<p>Our goal now is to recommend a movie to Toby (user 5). You already can notice that the
+movies Snakes on a Planet (item 2), You, Me and Dupree (item 3) and Superman Returns (item 4) -
+he already watched these movies, and recommendation is typically about discovering new things. On
+intuition we would suggest the movie 5 or movie 6 because Toby seems similar to Claudia Puig (user 3)
+and Lisa Role (user 4). So we have now items 5 and 6 as possible recommendations. On the whole,
+item 6 seems to be the most liked of these possibilities, judging by the preference values
+of 3.0 for both similar users. Let&#8217;s go to the code:</p>
+<p>We will discuss each of these components in our recommender in details in the next sections, but
+we can summarize the role of each component now. The <cite>MatrixPreferenceDataModel</cite> implementation
+stores and provides access to all the user and item data as also the associated preferences
+needed in the computation. The <cite>UserSimilarity</cite> defines the notion of how similar two users are;
+this is based on one of many possible metrics or pairwise distance calculations. A <cite>NearestNeighborhood</cite> implementation
+defines the notion of a group of users that are most similar to a given user. At least, the <cite>UserBasedRecommender</cite>
+implementation pulls all these components together in order to recommend
+items to users, and related features. To help visualize the relationship between the components,
+check the figure below. Of course there is more going under Crab-based recommenders, since
+some will employ different components with different relationships. However, this diagram will give
+you a global notion of what&#8217;s going on in our example.</p>
+</div>
+<div class="section" id="analyzing-the-output">
+<h3>2.1.6. Analyzing the output<a class="headerlink" href="#analyzing-the-output" title="Permalink to this headline">¶</a></h3>
+<p>If you save the code provided above in a python file (.py) and run it at  your terminal, the output
+should be: [(4,4.23550)].  We requested for the top recommendation, and the recommender engine gave us one.
+He recommended the movie Just My Luck to Toby. Furthermore, it also informed the estimated Toby&#8217;s preference
+for the movie Just My Luck, which is about 4.3, and that was the highest among all the items eligible
+for recommendations. It isn&#8217;t bad. We didn&#8217;t get the movie, which was a possible item and we picked the
+item 4 over 5, and this makes sense when you note that 4 is a more highly rated overall. The estimated
+preference reflects how much Toby likes the movie Just My Luck with a rating 4.34 which between
+the users C e D expressed.</p>
+<p>Of course analyzing the data isn&#8217;t so obvious even considering that the recommender engine made
+some decent sense and it returned an interesting answer. For small data sets like those, producing
+recommendations is a trivial as I described above. But in real life the data sets are huge and they
+are noisy. Producing the right recommendations for this type of data and producing quickly
+is not even trivial. Later in the next sections it will presented the tools that Crab provides  to
+attack these problems. We will show how to configure and customize Crab to improve performance and how
+the standard approaches may produce poor recommendations or demanding a great deal of CPU and memory.</p>
+</div>
+<div class="section" id="evaluating-a-recommender">
+<h3>2.1.7. Evaluating a Recommender<a class="headerlink" href="#evaluating-a-recommender" title="Permalink to this headline">¶</a></h3>
+<p>A recommender engine is a tool to produce the best recommendations for a for user. But how can we
+define exactly what is a good recommendation ? And how will we know that the recommender is producing them ?
+We know that a best possible recommender would be an engine that would predict exactly how much we
+would like every possible item that we&#8217;ve not expressed any preference for and rank them based
+on these future preferences. In fact, most recommender engines operate by trying to do this, estimating
+ratings for some or all other items. To evaluate the quality of those recommendations we will need
+tools and metrics that focus on how closely the estimated preferences match the actual preferences.</p>
+</div>
+<div class="section" id="training-and-testing-data">
+<h3>2.1.8. Training and Testing Data<a class="headerlink" href="#training-and-testing-data" title="Permalink to this headline">¶</a></h3>
+<p>Those &#8220;actual preferences&#8221; don&#8217;t exist though because nobody knows for sure how they will like some new
+items in the future. This can be simulated to a recommender engine by setting aside a small part of
+the real data set as test data. These test preferences are not present in the training data (which
+is all data except the test data.) The recommender is asked to estimate preference for the missing
+test data, and estimates are compared to the actual values. There are several metrics to generate a
+&#8220;score&#8221; for the recommender. For example, the root-mean-square (RMSE): it is the square root
+of the average of the squares of the differences between actual and estimated preference values.
+0.0 would mean perfect estimation - no difference at all between estimates and actual values.</p>
+</div>
+<div class="section" id="running-a-recommender-evaluator">
+<h3>2.1.9. Running a Recommender Evaluator<a class="headerlink" href="#running-a-recommender-evaluator" title="Permalink to this headline">¶</a></h3>
+<p>Let&#8217;s go back to the recommender we created, and evaluate it on our simple dataset:</p>
+<p>Most of the action happens in evaluate(). Inside, the CFEvaluator handles splitting the data into a training and test set,
+builds a new training DataModel and a Recommender to test, and compares its estimated preferences to the actual test data.</p>
+</div>
+<div class="section" id="check-the-result">
+<h3>2.1.10. Check the Result<a class="headerlink" href="#check-the-result" title="Permalink to this headline">¶</a></h3>
+<p>The evaluator shows the result of the evaluation:  a score indicating how well the recommender performed. In this example
+you will see : 1.0. What this value means depends on the metric we used - here, Root Mean Squared Error (RMSE). A result
+of 0.0 from this metric means that, on average, the recommender estimates perfectly the preferences compared to the actual
+preferences.</p>
+</div>
+<div class="section" id="evaluating-precision-and-recall">
+<h3>2.1.11. Evaluating Precision and Recall<a class="headerlink" href="#evaluating-precision-and-recall" title="Permalink to this headline">¶</a></h3>
+<p>There are also other metrics from classic retrieval information measures to evaluate recommenders: precision and recall.
+These metrics are typically applied to search engine and return some set of best results for a query out of many
+possible results. In fact, generally we want is an ordered list of recommendations, from best to worst without caring
+about the estimated preference values presented to the user. In case of search engines, they should not return
+irrelevant results in the top results, although it should fetch many relevant results as possible. &#8220;Precision&#8221; is
+the proportion of top results that are relevant, for some definition of relevant. &#8220;Precision at 10&#8221; would be
+this proportion judged from the top 10 results. &#8220;Recall&#8221; is the proportion of all relevant results included the top results.</p>
+<p>Considering the domain of recommender engines, precision would be defined as the proportion of the top recommendations
+that are good recommendations and recall as the proportion of good recommendations that appear in top recommendations.</p>
+<p>With Crab, it provides an easy way to compute those metrics for a Recommender:</p>
+<p>If you run the code above, the result might vary significantly due to random selection of training data and test data. In
+our example, the result is:
+0.75 1.0</p>
+<p>Precision at 2 is 0.75, on average about a three quarters of recommendations were “good.” Recall at 2 is 1.0;
+all good recommendations are among those recommended. But what exactly is a “good” recommendation here?
+Here, we actually asked the framework to decide. We didn’t give it a definition. Intuitively,
+the most highly preferred items in the test set are the good recommendations, and the rest aren’t.</p>
+<p>Look at user 5 in our simple data set again. Let’s imagine we withheld as test data the preferences for items 101, 102 and 103.
+The preference values for these are 4.0, 3.0 and 2.0. With these values missing from the training data,
+we would hope that a recommender engine recommends 101 before 102, and 102 before 103, because we know this is the
+order in which user 5 prefers these items. But would it be a good idea to recommend 103? It’s last on the list;
+user 5 doesn’t seem to like it much. Book 102 is just average. Book 101 looks reasonable as its preference value</p>
+<blockquote>
+<div>is well above average. Maybe we’d say 101 is a good recommendation; 102 and 103 are valid, but not good recommendations.</div></blockquote>
+<p>And this is the thinking that the CFEvaluator employs.</p>
+<p>When not given an explicit threshold that divides good recommendations from bad, the framework will pick a threshold, per user, that is equal to the user&#8217;s average preference value μ plus one standard deviation σ:
+threshold = μ + σ
+If you’ve forgotten your statistics, don’t worry. This says we’re taking items whose preference value is not merely a little more than average (μ), but above average by a significant amount (σ). In practice this means that about the 16% of items that are most highly preferred are considered “good” recommendations to make back to the user. The other arguments to this method are similar to those discussed before and are more fully documented in the project javadoc.</p>
+</div>
+<div class="section" id="experimenting-with-other-recommenders">
+<h3>2.1.12. Experimenting with other Recommenders<a class="headerlink" href="#experimenting-with-other-recommenders" title="Permalink to this headline">¶</a></h3>
+<p>Now that you learned how to run and evaluate a recommender, you can now experiment with other recommender algorithms available in Crab or even
+build you own Recommender extending the BaseRecommender interface. Let&#8217;s change the evaluator to test-drive the Item-Based-Filtering recommender
+on this data set.</p>
+<p>Run the evaluation again. You will see that produces an evaluation result around xxx. That&#8217;s a desirable recommender for this data set. It is important
+to notice that each algorithm has its own characteristics and properties that can interact in hard-to-predict ways with a given data set. The Item-Based
+is quick to ... where the user-based recommender we tried first could be faster and more accurate on other data sets.</p>
+<p>This tutorial brings to you how you can easily get started with recommender engines using Crab. Soon we will provide more sections covering further recommender
+algorithms and new features.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+    <div class="footer">
+        <p style="text-align: center">This docummentation is for crab
+        version 0.1<p>
+        &copy; 2011, scikits.recommender Crab developers (BSD License).
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7. Design by <a href="http://webylimonada.com">Web y Limonada</a>
+ 	  <br>Based on the original design by <a href="http://scikit-learn.sourceforge.net/stable/">scikit-learn</a>.
+    </div>
+  </body>
+</html>

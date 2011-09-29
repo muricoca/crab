@@ -1,0 +1,258 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>1. Installing Crab &mdash; scikit-recommender v0.1 documentation</title>
+    <link rel="stylesheet" href="static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="static/jquery.js"></script>
+    <script type="text/javascript" src="static/underscore.js"></script>
+    <script type="text/javascript" src="static/doctools.js"></script>
+    <link rel="shortcut icon" href="static/favicon.ico"/>
+    <link rel="author" title="About these documents" href="about.html" />
+    <link rel="top" title="scikit-recommender v0.1 documentation" href="index.html" />
+    <link rel="next" title="2. Getting started: an introduction to recommender systems with Crab" href="tutorial.html" />
+    <link rel="prev" title="User Guide" href="index.html" /> 
+  </head>
+  <body>
+    <div class="header-wrapper">
+      <div class="header">
+          <p class="logo"><a href="index.html">
+            <img src="static/crab-logo-small.png" alt="Logo"/>
+          </a>
+          </p>
+        <h1>Crab</h1>
+        <p id="headline">A Recommender Framework in Python</p><div class="navbar">
+          <ul>
+            <li><a href="install.html">Download</a></li>
+            <li><a href="support.html">Support</a></li>
+            <li><a href="tutorial.html">User Guide</a></li>
+            <li><a href="#">Examples</a></li>
+            <li><a href="contributing.html">Contribute</a></li>
+       </ul>
+       </div> <!-- end navbar --></div>
+    </div>
+
+    <div class="content-wrapper">
+
+    <!-- <div id="blue_tile"></div> -->
+
+        <div class="sphinxsidebar">
+        <div class="rel">
+          <a href="index.html" title="User Guide"
+             accesskey="P">previous</a> |
+          <a href="tutorial.html" title="2. Getting started: an introduction to recommender systems with Crab"
+             accesskey="N">next</a> |
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a>
+        </div>
+        
+
+        <h3>Participate</h3> 
+
+        <p>Fork
+        the <a href="https://github.com/muricoca/crab">source
+        code</a>, join the
+        <a href="support.html#mailing-list">mailing
+        lists</a>, report bugs to
+        the <a href="https://github.com/muricoca/crab/issues">issue
+        tracker</a> or participate in the next
+        <a href="https://github.com/muricoca/crab/Upcoming-events">coding sprint</a>. <a href="contributing.html">Read More...</a> 
+        </p> 
+
+        <h3>Funding</h3> 
+        <p>This project is maintained
+        by <a href="http://www.muricoca.com">Muriçoca Labs</a>,
+        and others.</p> 
+        <p style="text-align: center;"><a href="http://www.muricoca.com"><img src="static/small-muricoca-logo.png"
+        alt="Muricoca"/></a></p> 
+      </div>
+
+      <div class="content">
+            
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="installing-crab">
+<h1>1. Installing <cite>Crab</cite><a class="headerlink" href="#installing-crab" title="Permalink to this headline">¶</a></h1>
+<p>There are different ways to get Crab installed:</p>
+<blockquote>
+<div><ul class="simple">
+<li>Install the version of Crab provided by your
+<a class="reference internal" href="#install-by-distribution"><em>operating system distribution</em></a> . This
+is the quickest option for those who have operating systems that
+distribute Crab.</li>
+<li><a class="reference internal" href="#install-official-release"><em>Install an official release</em></a>. This
+is the best approach for users who want a stable version number
+and aren&#8217;t concerned about running a slightly older version of
+Crab.</li>
+<li><a class="reference internal" href="#install-bleeding-edge"><em>Install the latest development version</em></a>.  This is best for users who want the
+latest-and-greatest features and aren&#8217;t afraid of running
+brand-new code.</li>
+</ul>
+</div></blockquote>
+<div class="section" id="installing-an-official-release">
+<span id="install-official-release"></span><h2>1.1. Installing an official release<a class="headerlink" href="#installing-an-official-release" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="installing-from-source">
+<h3>1.1.1. Installing from source<a class="headerlink" href="#installing-from-source" title="Permalink to this headline">¶</a></h3>
+<p>Installing from source requires you to have installed numpy,
+scipy, setuptools, scikits.learn, python development headers and a working C++
+compiler. Under debian-like systems you can get all this by executing
+with root privileges:</p>
+<div class="highlight-python"><pre>sudo apt-get install python-dev python-numpy python-numpy-dev python-setuptools python-numpy-dev python-scipy libatlas-dev g++</pre>
+</div>
+<p>In Order to install the latest stable release from scikits.learn, you can
+install it by using pip or easy_install:</p>
+<div class="highlight-python"><pre>pip install -U scikits.learn</pre>
+</div>
+<p>or:</p>
+<div class="highlight-python"><pre>easy_install -U scikits.learn</pre>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>In Order to build the documentation and run the example code contains in
+this documentation you will need matplotlib:</p>
+<div class="last highlight-python"><pre>sudo apt-get install python-matplotlib</pre>
+</div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">On Ubuntu LTS (10.04) the package <cite>libatlas-dev</cite> is called <cite>libatlas-headers</cite></p>
+</div>
+<div class="section" id="easy-install">
+<h4>1.1.1.1. Easy install<a class="headerlink" href="#easy-install" title="Permalink to this headline">¶</a></h4>
+<p>This is usually the fastest way to install the latest stable
+release. If you have pip or easy_install, you can install or update
+with the command:</p>
+<div class="highlight-python"><pre>pip install -U crab</pre>
+</div>
+<p>or:</p>
+<div class="highlight-python"><pre>easy_install -U crab</pre>
+</div>
+<p>for easy_install. Note that you might need root privileges to run
+these commands.</p>
+</div>
+<div class="section" id="from-source-package">
+<h4>1.1.1.2. From source package<a class="headerlink" href="#from-source-package" title="Permalink to this headline">¶</a></h4>
+<p>Download the package from <a class="reference external" href="https://github.com/muricoca/crab/downloads">https://github.com/muricoca/crab/downloads</a>
+, unpack the sources and cd into archive.</p>
+<p>This packages uses distutils, which is the default way of installing
+python modules. The install command is:</p>
+<div class="highlight-python"><pre>python setup.py install</pre>
+</div>
+</div>
+</div>
+<div class="section" id="windows-installer">
+<h3>1.1.2. Windows installer<a class="headerlink" href="#windows-installer" title="Permalink to this headline">¶</a></h3>
+<p>You can download a windows installer from <a class="reference external" href="https://github.com/muricoca/crab/downloads">downloads</a> in the
+project&#8217;s web page. Note that must also have installed the packages
+numpy and setuptools.</p>
+<p>This package is also expected to work with python(x,y) as of 2.6.5.5.</p>
+</div>
+<div class="section" id="building-on-windows">
+<h3>1.1.3. Building on windows<a class="headerlink" href="#building-on-windows" title="Permalink to this headline">¶</a></h3>
+<p>To build Crab on windows you will need a C/C++ compiler in
+addition to numpy, scipy and setuptools. At least
+<a class="reference external" href="http://www.mingw.org">MinGW</a> (a port of GCC to Windows OS) and the
+Microsoft Visual C++ 2008 should work out of the box. To force the use
+of a particular compiler, write a file named <tt class="docutils literal"><span class="pre">setup.cfg</span></tt> in the
+source directory with the content:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">[</span><span class="n">build_ext</span><span class="p">]</span>
+<span class="n">compiler</span><span class="o">=</span><span class="n">my_compiler</span>
+
+<span class="p">[</span><span class="n">build</span><span class="p">]</span>
+<span class="n">compiler</span><span class="o">=</span><span class="n">my_compiler</span>
+</pre></div>
+</div>
+<p>where <tt class="docutils literal"><span class="pre">my_compiler</span></tt> should be one of <tt class="docutils literal"><span class="pre">mingw32</span></tt> or <tt class="docutils literal"><span class="pre">msvc</span></tt>.</p>
+<p>When the appropriate compiler has been set, and assuming Python is
+in your PATH (see
+<a class="reference external" href="http://docs.python.org/faq/windows.html">Python FAQ for windows</a>
+for more details), installation is done by
+executing the command:</p>
+<div class="highlight-python"><pre>python setup.py install</pre>
+</div>
+<p>To build a precompiled package like the ones distributed at
+<a class="reference external" href="https://github.com/muricoca/crab/downloads">the downloads section</a>,
+the command to execute is:</p>
+<div class="highlight-python"><pre>python setup.py bdist_wininst -b doc/logos/crab-logo.bmp</pre>
+</div>
+<p>This will create an installable binary under directory <tt class="docutils literal"><span class="pre">dist/</span></tt>.</p>
+</div>
+</div>
+<div class="section" id="third-party-distributions-of-crab">
+<span id="install-by-distribution"></span><h2>1.2. Third party distributions of Crab<a class="headerlink" href="#third-party-distributions-of-crab" title="Permalink to this headline">¶</a></h2>
+<p>Some third-party distributions are now providing versions of
+crab integrated with their package-management systems.</p>
+<p>These can make installation and upgrading much easier for users since
+the integration includes the ability to automatically install
+dependencies (numpy, scipy) that crab requires.</p>
+</div>
+<div class="section" id="bleeding-edge">
+<span id="install-bleeding-edge"></span><h2>1.3. Bleeding Edge<a class="headerlink" href="#bleeding-edge" title="Permalink to this headline">¶</a></h2>
+<p>See section <a class="reference internal" href="contributing.html#git-repo"><em>Retrieving the latest code</em></a> on how to get the development version.</p>
+</div>
+<div class="section" id="testing">
+<span id="id1"></span><h2>1.4. Testing<a class="headerlink" href="#testing" title="Permalink to this headline">¶</a></h2>
+<p>Testing requires having the <a class="reference external" href="http://somethingaboutorange.com/mrl/projects/nose/">nose</a> library. After
+installation, the package can be tested by executing <em>from outside</em> the
+source directory:</p>
+<div class="highlight-python"><pre>python -c "import scikits.crab as scc; scc.test()"</pre>
+</div>
+<p>This should give you a lot of output (and some warnings) but
+eventually should finish with the a text similar to:</p>
+<div class="highlight-python"><pre>Ran 101 tests in 10.920s
+OK</pre>
+</div>
+<p>otherwise please consider posting an issue into the <a class="reference external" href="https://github.com/muricoca/crab/issues">bug tracker</a> or to the
+<a class="reference internal" href="support.html#mailing-lists"><em>Mailing List</em></a>.</p>
+<p>crab can also be tested without having the package
+installed. For this you must compile the sources inplace from the
+source directory:</p>
+<div class="highlight-python"><pre>python setup.py build_ext --inplace</pre>
+</div>
+<p>Test can now be run using nosetest:</p>
+<div class="highlight-python"><pre>nosetests scikits/crab/</pre>
+</div>
+<p>If you are running the deveopment version, this is automated in the
+commands <cite>make in</cite> and <cite>make test</cite>.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Because nosetest does not play well with multiprocessing on
+windows, this last approach is not recommended on such system.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+    <div class="footer">
+        <p style="text-align: center">This docummentation is for crab
+        version 0.1<p>
+        &copy; 2011, scikits.recommender Crab developers (BSD License).
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7. Design by <a href="http://webylimonada.com">Web y Limonada</a>
+ 	  <br>Based on the original design by <a href="http://scikit-learn.sourceforge.net/stable/">scikit-learn</a>.
+    </div>
+  </body>
+</html>
