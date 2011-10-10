@@ -95,12 +95,10 @@ class ItemBasedRecommender(ItemRecommender):
     >>> recsys = ItemBasedRecommender(model, similarity, items_strategy)
     >>> #Return the recommendations for the given user.
     >>> recsys.recommend('Leopoldo Pires')
-    array(['Just My Luck', 'You, Me and Dupree'],\
-          dtype='|S18')
+    ['Just My Luck', 'You, Me and Dupree']
     >>> #Return the 2 explanations for the given recommendation.
     >>> recsys.recommended_because('Leopoldo Pires', 'Just My Luck',2)
-    array(['The Night Listener', 'Superman Returns'],\
-          dtype='|S18')
+    ['The Night Listener', 'Superman Returns']
 
     Notes
     -----------
@@ -245,21 +243,21 @@ class ItemBasedRecommender(ItemRecommender):
 
         preferences = estimate_preferences(source_id, target_ids)
 
-        preferences = preferences[~np.isnan(preferences)]
+        preference_values = preferences[~np.isnan(preferences)]
         target_ids = target_ids[~np.isnan(preferences)]
 
-        sorted_preferences = np.lexsort((preferences,))[::-1]
+        sorted_preferences = np.lexsort((preference_values,))[::-1]
 
         sorted_preferences = sorted_preferences[0:how_many] \
              if how_many and sorted_preferences.size > how_many \
                 else sorted_preferences
 
         if self.with_preference:
-            top_n_recs = np.array([(target_ids[ind], \
-                     preferences[ind]) for ind in sorted_preferences])
+            top_n_recs = [(target_ids[ind], \
+                     preferences[ind]) for ind in sorted_preferences]
         else:
-            top_n_recs = np.array([target_ids[ind]
-                 for ind in sorted_preferences])
+            top_n_recs = [target_ids[ind]
+                 for ind in sorted_preferences]
 
         return top_n_recs
 
@@ -336,11 +334,11 @@ class ItemBasedRecommender(ItemRecommender):
                  else sorted_preferences
 
         if self.with_preference:
-            top_n_recs = np.array([(item_ids[ind], \
-                     prefs[ind]) for ind in sorted_preferences])
+            top_n_recs = [(item_ids[ind], \
+                     prefs[ind]) for ind in sorted_preferences]
         else:
-            top_n_recs = np.array([item_ids[ind]
-                 for ind in sorted_preferences])
+            top_n_recs = [item_ids[ind]
+                 for ind in sorted_preferences]
 
         return top_n_recs
 
@@ -425,12 +423,10 @@ class UserBasedRecommender(UserRecommender):
     >>> recsys = UserBasedRecommender(model, similarity, nhood_strategy)
     >>> #Return the recommendations for the given user.
     >>> recsys.recommend('Leopoldo Pires')
-    array(['Just My Luck', 'You, Me and Dupree'],\
-          dtype='|S18')
+    ['Just My Luck', 'You, Me and Dupree']
     >>> #Return the 2 explanations for the given recommendation.
     >>> recsys.recommended_because('Leopoldo Pires', 'Just My Luck',2)
-    array(['Lorena Abreu', 'Marcel Caraciolo'],\
-          dtype='|S16')
+    ['Lorena Abreu', 'Marcel Caraciolo']
 
     Notes
     -----------
@@ -635,21 +631,21 @@ class UserBasedRecommender(UserRecommender):
 
         preferences = estimate_preferences(source_id, target_ids)
 
-        preferences = preferences[~np.isnan(preferences)]
+        preference_values = preferences[~np.isnan(preferences)]
         target_ids = target_ids[~np.isnan(preferences)]
 
-        sorted_preferences = np.lexsort((preferences,))[::-1]
+        sorted_preferences = np.lexsort((preference_values,))[::-1]
 
         sorted_preferences = sorted_preferences[0:how_many] \
              if how_many and sorted_preferences.size > how_many \
                 else sorted_preferences
 
         if self.with_preference:
-            top_n_recs = np.array([(target_ids[ind], \
-                     preferences[ind]) for ind in sorted_preferences])
+            top_n_recs = [(target_ids[ind], \
+                     preferences[ind]) for ind in sorted_preferences]
         else:
-            top_n_recs = np.array([target_ids[ind]
-                 for ind in sorted_preferences])
+            top_n_recs = [target_ids[ind]
+                 for ind in sorted_preferences]
 
         return top_n_recs
 
@@ -703,10 +699,10 @@ class UserBasedRecommender(UserRecommender):
                  else sorted_preferences
 
         if self.with_preference:
-            top_n_recs = np.array([(user_ids[ind], \
-                     prefs[ind]) for ind in sorted_preferences])
+            top_n_recs = [(user_ids[ind], \
+                     prefs[ind]) for ind in sorted_preferences]
         else:
-            top_n_recs = np.array([user_ids[ind]
-                 for ind in sorted_preferences])
+            top_n_recs = [user_ids[ind]
+                 for ind in sorted_preferences]
 
         return top_n_recs
