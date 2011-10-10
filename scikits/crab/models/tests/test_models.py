@@ -5,6 +5,8 @@ from nose.tools import assert_raises, assert_equals
 from ..classes import  MatrixPreferenceDataModel,  \
              MatrixBooleanPrefDataModel
 from ..utils import UserNotFoundError, ItemNotFoundError
+from ...datasets import load_sample_songs
+
 
 #Simple Movies DataSet
 movies = {'Marcel Caraciolo': {'Lady in the Water': 2.5, 'Snakes on a Plane': 3.5,
@@ -82,6 +84,24 @@ def test_basic_methods_MatrixPreferenceDataModel():
          ('Superman Returns', 3.5), ('The Night Listener', 4.0)], elements[0][1])
 
     assert("MatrixPreferenceDataModel (8 by 6)" in model.__str__())
+
+    #SampleSongs DataSet
+    songs = load_sample_songs()
+    model = MatrixPreferenceDataModel(songs.data)
+    assert_equals(model.dataset, songs.data)
+    assert_array_equal(np.array([1, 2, 3, 4, 5, 6, 7, 8]),
+      model.user_ids())
+    assert_array_equal(np.array([1, 2, 3, 4, 5, 6, 7, 8]), model.item_ids())
+    assert_equals(True, model.has_preference_values())
+    assert_equals(8, model.users_count())
+    assert_equals(8, model.items_count())
+    assert_equals(5.0, model.maximum_preference_value())
+    assert_equals(1.0, model.minimum_preference_value())
+    assert_equals([(1, 2.5), (2, 3.5), (3, 5.0), (4, 2.0), (5, 4.5), (6, 1.5), (7, 2.0)], model[1])
+    elements = [pref  for pref in model]
+    assert_array_equal([(1, 2.5), (2, 3.5), (3, 5.0), (4, 2.0), (5, 4.5), (6, 1.5), (7, 2.0)],
+            elements[0][1])
+    assert("MatrixPreferenceDataModel (8 by 8)" in model.__str__())
 
 
 def test_preferences_from_user_exists_MatrixPreferenceDataModel():
@@ -191,6 +211,11 @@ movies_boolean = {
 'Maria Gabriela': []
 }
 
+songs_boolean = {1: [1, 2, 3, 4, 5, 6, 7], 2: [1, 2, 3, 5, 6],
+                3: [1, 2, 3, 4, 5, 6], 4: [1, 3, 4, 5, 6, 7, 8],
+                5: [1, 2, 3, 4, 6, 7, 8], 6: [2, 3, 4, 6, 7, 8],
+                7: [2, 3, 4, 5, 6, 8], 8: [8, 1, 4, 5, 7]}
+
 
 def test_basic_methods_MatrixBooleanPrefDataModel():
     #Empty Dataset
@@ -221,6 +246,23 @@ def test_basic_methods_MatrixBooleanPrefDataModel():
     assert_array_equal(['Lady in the Water', 'Snakes on a Plane', \
          'Superman Returns', 'The Night Listener'], elements[0][1])
     assert("MatrixBooleanPrefDataModel (8 by 6)" in model.__str__())
+
+    songs = load_sample_songs()
+    model = MatrixBooleanPrefDataModel(songs.data)
+    assert_equals(model.dataset, songs_boolean)
+    assert_array_equal(np.array([1, 2, 3, 4, 5, 6, 7, 8]),
+      model.user_ids())
+    assert_array_equal(np.array([1, 2, 3, 4, 5, 6, 7, 8]), model.item_ids())
+    assert_equals(False, model.has_preference_values())
+    assert_equals(8, model.users_count())
+    assert_equals(8, model.items_count())
+    assert_equals(1.0, model.maximum_preference_value())
+    assert_equals(0.0, model.minimum_preference_value())
+    assert_array_equal([1, 2, 3, 4, 5, 6, 7], model[1])
+    elements = [pref  for pref in model]
+    assert_array_equal([1, 2, 3, 4, 5, 6, 7],
+            elements[0][1])
+    assert("MatrixBooleanPrefDataModel (8 by 8)" in model.__str__())
 
 
 def test_preferences_from_user_exists_MatrixBooleanPrefDataModel():

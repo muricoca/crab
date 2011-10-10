@@ -366,12 +366,12 @@ class MatrixPreferenceDataModel(BaseDataModel):
         lines = matrix.split('\n')
         headers = [repr(self)[1:-1]]
         if self._item_ids.size:
-            col_headers = [('%-8s' % item[:8]) for item in self._item_ids[:5]]
+            col_headers = [('%-8s' % unicode(item)[:8]) for item in self._item_ids[:5]]
             headers.append(' ' + ('   '.join(col_headers)))
 
         if self._user_ids.size:
             for (i, line) in enumerate(lines):
-                lines[i] = ('%-8s' % self._user_ids[i][:8]) + line
+                lines[i] = ('%-8s' % unicode(self._user_ids[i])[:8]) + line
             for (i, line) in enumerate(headers):
                 if i > 0:
                     headers[i] = ' ' * 8 + line
@@ -737,12 +737,12 @@ class MatrixBooleanPrefDataModel(BaseDataModel):
         lines = matrix.split('\n')
         headers = [repr(self)[1:-1]]
         if self._item_ids.size:
-            col_headers = [('%-8s' % item[:8]) for item in self._item_ids[:5]]
+            col_headers = [('%-8s' % unicode(item)[:8]) for item in self._item_ids[:5]]
             headers.append(' ' + ('   '.join(col_headers)))
 
         if self._user_ids.size:
             for (i, line) in enumerate(lines):
-                lines[i] = ('%-8s' % self._user_ids[i][:8]) + line
+                lines[i] = ('%-8s' % unicode(self._user_ids[i])[:8]) + line
             for (i, line) in enumerate(headers):
                 if i > 0:
                     headers[i] = ' ' * 8 + line
