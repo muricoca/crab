@@ -640,7 +640,7 @@ class MatrixBooleanPrefDataModel(BaseDataModel):
         if not item_id_loc[0].size:
             raise ItemNotFoundError('item_id in the model not found')
 
-        return 1.0 if self.index[user_id_loc, item_id_loc].flatten()[0] else 0.0
+        return 1.0 if self.index[user_id_loc, item_id_loc].flatten()[0] else np.NaN
 
     def set_preference(self, user_id, item_id, value=None):
         '''

@@ -143,18 +143,18 @@ def test_estimate_preference_MatrixFactorBasedRecommender():
         items_selection_strategy=items_strategy,
         n_features=2)
     assert_almost_equals(1.0, recsys.estimate_preference('Marcel Caraciolo', 'Superman Returns'))
-    assert_almost_equals(0.0, recsys.estimate_preference('Leopoldo Pires', 'You, Me and Dupree'))
-    assert_almost_equals(0.0,
-         recsys.estimate_preference(user_id='Leopoldo Pires', item_id='You, Me and Dupree'))
+    assert_almost_equals(0.72, recsys.estimate_preference('Leopoldo Pires', 'You, Me and Dupree'), 1)
+    assert_almost_equals(0.73,
+         recsys.estimate_preference(user_id='Leopoldo Pires', item_id='You, Me and Dupree'), 1)
 
     #With capper = False
     recsys = MatrixFactorBasedRecommender(
         model=boolean_matrix_model,
         items_selection_strategy=items_strategy,
         n_features=2, capper=False)
-    assert_almost_equals(0.0, recsys.estimate_preference('Leopoldo Pires', 'You, Me and Dupree'))
+    assert_almost_equals(0.73, recsys.estimate_preference('Leopoldo Pires', 'You, Me and Dupree'), 1)
     #Non-Preferences
-    assert_array_equal(0.0, recsys.estimate_preference('Maria Gabriela', 'You, Me and Dupree'))
+    assert_almost_equals(0.7258, recsys.estimate_preference('Maria Gabriela', 'You, Me and Dupree'), 1)
 
 
 def test_recommend_MatrixFactorBasedRecommender():
@@ -210,7 +210,7 @@ def test_recommend_MatrixFactorBasedRecommender():
         model=boolean_matrix_model,
         items_selection_strategy=items_strategy,
         n_features=2)
-    assert_array_equal(np.array(['You, Me and Dupree', 'Just My Luck']), \
+    assert_array_equal(np.array(['Just My Luck', 'You, Me and Dupree']), \
     recsys.recommend('Leopoldo Pires'))
 
     #Semi Recommendation

@@ -135,7 +135,7 @@ class MatrixFactorBasedRecommender(SVDRecommender):
         n_features=2)
     >>> #Return the recommendations for the given user.
     >>> recsys.recommend('Leopoldo Pires')
-    array(['Just My Luck', 'You, Me and Dupree'],\
+    array(['Just My Luck', 'You, Me and Dupree'], \
           dtype='|S18')
 
     Notes

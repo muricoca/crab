@@ -163,11 +163,15 @@ class ItemBasedRecommender(ItemRecommender):
         item. If a preference cannot be estimated, returns None.
         '''
         preference = self.model.preference_value(user_id, item_id)
+
         if not np.isnan(preference):
             return preference
 
         #TODO: It needs optimization
         prefs = self.model.preferences_from_user(user_id)
+
+        if not self.model.has_preference_values():
+            prefs = [(pref, 1.0) for pref in prefs]
 
         similarities = \
             np.array([self.similarity.get_similarity(item_id, to_item_id) \

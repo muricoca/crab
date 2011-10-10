@@ -129,12 +129,12 @@ def test_estimate_preference_ItemBasedRecommender():
     similarity = ItemSimilarity(boolean_matrix_model, jaccard_coefficient)
     recsys = ItemBasedRecommender(boolean_matrix_model, similarity, items_strategy)
     assert_almost_equals(1.0, recsys.estimate_preference('Marcel Caraciolo', 'Superman Returns'))
-    assert_almost_equals(0.0, recsys.estimate_preference('Leopoldo Pires', 'You, Me and Dupree'))
+    assert_almost_equals(1.0, recsys.estimate_preference('Leopoldo Pires', 'You, Me and Dupree'))
     #With capper = False
     recsys = ItemBasedRecommender(boolean_matrix_model, similarity, items_strategy, False)
-    assert_almost_equals(0.0, recsys.estimate_preference('Leopoldo Pires', 'You, Me and Dupree'))
+    assert_almost_equals(1.0, recsys.estimate_preference('Leopoldo Pires', 'You, Me and Dupree'))
     #Non-Preferences
-    assert_array_equal(0.0, recsys.estimate_preference('Maria Gabriela', 'You, Me and Dupree'))
+    assert_array_equal(np.NaN, recsys.estimate_preference('Maria Gabriela', 'You, Me and Dupree'))
 
 
 def test_estimate_preference_UserBasedRecommender():
@@ -174,16 +174,16 @@ def test_estimate_preference_UserBasedRecommender():
     similarity = UserSimilarity(boolean_matrix_model, jaccard_coefficient)
     recsys = UserBasedRecommender(boolean_matrix_model, similarity, nhood_strategy)
     assert_almost_equals(1.0, recsys.estimate_preference('Marcel Caraciolo', 'Superman Returns'))
-    assert_almost_equals(0.0, recsys.estimate_preference('Leopoldo Pires', 'You, Me and Dupree'))
-    assert_almost_equals(0.0,
+    assert_almost_equals(1.0, recsys.estimate_preference('Leopoldo Pires', 'You, Me and Dupree'))
+    assert_almost_equals(1.0,
          recsys.estimate_preference(user_id='Leopoldo Pires', item_id='You, Me and Dupree',
                 distance=jaccard_coefficient, nhood_size=3))
 
     #With capper = False
     recsys = UserBasedRecommender(boolean_matrix_model, similarity, nhood_strategy, False)
-    assert_almost_equals(0.0, recsys.estimate_preference('Leopoldo Pires', 'You, Me and Dupree'))
+    assert_almost_equals(1.0, recsys.estimate_preference('Leopoldo Pires', 'You, Me and Dupree'))
     #Non-Preferences
-    assert_array_equal(0.0, recsys.estimate_preference('Maria Gabriela', 'You, Me and Dupree'))
+    assert_array_equal(np.NaN, recsys.estimate_preference('Maria Gabriela', 'You, Me and Dupree'))
 
 
 def test_most_similar_items_ItemBasedRecommender():

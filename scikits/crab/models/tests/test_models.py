@@ -329,7 +329,7 @@ def test_preference_value__invalid_MatrixBooleanPrefDataModel():
     model = MatrixBooleanPrefDataModel(movies_boolean)
     assert_raises(UserNotFoundError, model.preference_value, 'Flavia', 'Superman Returns')
     assert_raises(ItemNotFoundError, model.preference_value, 'Marcel Caraciolo', 'Back to the future')
-    assert_array_equal(0.0, model.preference_value('Maria Gabriela', 'The Night Listener'))
+    assert_array_equal(np.NaN, model.preference_value('Maria Gabriela', 'The Night Listener'))
 
 
 def test_set_preference_value_MatrixBooleanPrefDataModel():
@@ -349,5 +349,5 @@ def test_set_preference_value_MatrixBooleanPrefDataModel():
 def test_remove_preference_value_MatrixBooleanPrefDataModel():
     model = MatrixBooleanPrefDataModel(movies_boolean)
     model.remove_preference('Maria Gabriela', 'Superman Returns')
-    assert_array_equal(0.0, model.preference_value('Maria Gabriela', 'Superman Returns'))
+    assert_array_equal(np.NaN, model.preference_value('Maria Gabriela', 'Superman Returns'))
     assert_raises(ItemNotFoundError, model.remove_preference, 'Marcel Caraciolo', 'Indiana Jones')
