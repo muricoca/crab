@@ -240,15 +240,14 @@ def test_most_similar_users_UserBasedRecommender():
             recsys.most_similar_users('Marcel Caraciolo', 4))
     #all items
     assert_array_equal(np.array(['Lorena Abreu', 'Marcel Caraciolo', 'Penny Frewman', \
-    'Steve Gates', 'Luciana Nunes', 'Sheldom', 'Maria Gabriela']), \
+    'Steve Gates', 'Luciana Nunes', 'Sheldom']), \
             recsys.most_similar_users('Leopoldo Pires'))
     #Non-existing
-    assert_array_equal(np.array(['Leopoldo Pires', 'Lorena Abreu', 'Luciana Nunes',
-       'Marcel Caraciolo', 'Penny Frewman', 'Sheldom', 'Steve Gates']), \
+    assert_array_equal(np.array([]), \
             recsys.most_similar_users('Maria Gabriela'))
     #Exceed the limit
     assert_array_equal(np.array(['Lorena Abreu', 'Marcel Caraciolo', 'Penny Frewman', \
-    'Steve Gates', 'Luciana Nunes', 'Sheldom', 'Maria Gabriela']), \
+    'Steve Gates', 'Luciana Nunes', 'Sheldom']), \
             recsys.most_similar_users('Leopoldo Pires', 20))
     #Empty
     assert_array_equal(np.array([]), \
@@ -263,15 +262,14 @@ def test_most_similar_users_UserBasedRecommender():
             recsys.most_similar_users('Marcel Caraciolo', 4))
     #all items
     assert_array_equal(np.array(['Sheldom', 'Luciana Nunes', 'Marcel Caraciolo',
-     'Steve Gates', 'Lorena Abreu', 'Penny Frewman', 'Maria Gabriela']), \
+     'Steve Gates', 'Lorena Abreu', 'Penny Frewman']), \
             recsys.most_similar_users('Leopoldo Pires'))
     #Non-existing
-    assert_array_equal(np.array(['Leopoldo Pires', 'Lorena Abreu', 'Luciana Nunes',
-       'Marcel Caraciolo', 'Penny Frewman', 'Sheldom', 'Steve Gates']), \
+    assert_array_equal(np.array([]), \
             recsys.most_similar_users('Maria Gabriela'))
     #Exceed the limit
     assert_array_equal(np.array(['Sheldom', 'Luciana Nunes', 'Marcel Caraciolo',
-     'Steve Gates', 'Lorena Abreu', 'Penny Frewman', 'Maria Gabriela']), \
+     'Steve Gates', 'Lorena Abreu', 'Penny Frewman']), \
             recsys.most_similar_users('Leopoldo Pires', 20))
     #Empty
     assert_array_equal(np.array([]), \

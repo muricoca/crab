@@ -280,7 +280,7 @@ class ItemBasedRecommender(ItemRecommender):
         self.similarity.num_best = old_how_many
 
         return np.array([item for item, pref in similarities \
-            if item != item_id])
+            if item != item_id and not np.isnan(pref)])
 
     def recommended_because(self, user_id, item_id, how_many=None, **params):
         '''
@@ -581,7 +581,7 @@ class UserBasedRecommender(UserRecommender):
         similarities = self.similarity[user_id]
         self.similarity.num_best = old_how_many
         return np.array([to_user_id for to_user_id, pref in similarities \
-            if user_id != to_user_id])
+            if user_id != to_user_id and not np.isnan(pref)])
 
     def recommend(self, user_id, how_many=None, **params):
         '''
