@@ -13,8 +13,8 @@ MAINTAINER = 'Marcel Caraciolo',
 MAINTAINER_EMAIL = 'marcel@muricoca.com',
 URL = 'http://muricoca.github.com/crab/'
 LICENSE = 'new BSD'
-DOWNLOAD_URL = "http://pypi.python.org/pypi/scikits.crab"
-VERSION = '0.0.1'
+DOWNLOAD_URL = "http://pypi.python.org/pypi/crab"
+VERSION = '0.1'
 
 from numpy.distutils.core import setup
 
@@ -44,6 +44,7 @@ if __name__ == "__main__":
     setup(configuration=configuration,
         name=DISTNAME,
         version=VERSION,
+        include_package_data=True,
         install_requires='numpy',
         namespace_packages=['scikits'],
         maintainer=MAINTAINER,
@@ -53,9 +54,17 @@ if __name__ == "__main__":
         url=URL,
         download_url=DOWNLOAD_URL,
         long_description=LONG_DESCRIPTION,
-        classifiers=['Development Status :: 1 - Planning',
-                     'Environment :: Console',
-                     'Intended Audience :: Developers',
-                     'Intended Audience :: Science/Research',
-                     'License :: OSI Approved :: BSD License',
-                     'Topic :: Scientific/Engineering'])
+        zip_safe=False,  # the package can run out of an .egg file
+          classifiers=[
+              'Intended Audience :: Science/Research',
+              'Intended Audience :: Developers',
+              'License :: OSI Approved',
+              'Programming Language :: C',
+              'Programming Language :: Python',
+              'Topic :: Software Development',
+              'Topic :: Scientific/Engineering',
+              'Operating System :: Microsoft :: Windows',
+              'Operating System :: POSIX',
+              'Operating System :: Unix',
+              'Operating System :: MacOS'
+             ])
