@@ -135,8 +135,8 @@ class MatrixFactorBasedRecommender(SVDRecommender):
         n_features=2)
     >>> #Return the recommendations for the given user.
     >>> recsys.recommend('Leopoldo Pires')
-    array(['Just My Luck', 'You, Me and Dupree'],\
-          dtype='|S18')
+    ['Just My Luck', 'You, Me and Dupree']
+
 
     Notes
     -----------
@@ -383,10 +383,10 @@ class MatrixFactorBasedRecommender(SVDRecommender):
                 else sorted_preferences
 
         if self.with_preference:
-            top_n_recs = np.array([(target_ids[ind], \
-                     preferences[ind]) for ind in sorted_preferences])
+            top_n_recs = [(target_ids[ind], \
+                     preferences[ind]) for ind in sorted_preferences]
         else:
-            top_n_recs = np.array([target_ids[ind]
-                 for ind in sorted_preferences])
+            top_n_recs = [target_ids[ind]
+                 for ind in sorted_preferences]
 
         return top_n_recs
