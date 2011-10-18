@@ -220,24 +220,44 @@ in the console:</p>
 </div>
 <p>With some study, we notice some trends. Users 1 and 2 seem to have similar tastes.
 They both like movie 4, like 2 a little less, and like 1 less still. The same
-goes for users 1 and 4, as they seem to like 101 and 103 identically. On the other
+goes for users 1 and 4, as they seem to like 2 and 4 identically. On the other
 hand, users 1 and 7 have tastes that seem to run counter – 1 likes 1 while 7
 doesn&#8217;t, and 1 likes 3 while 4 is just the opposite. See figure below
-to visualize the relations, both positive and negative between users and items.</p>
+to visualize the relations, both positive and negative between users and items.
+The heat map shows more heat to higher ratings against the lower ratings given by
+the users to the movies.</p>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="images/distribution_ratings8.png"><img alt="images/distribution_ratings8.png" src="images/distribution_ratings8.png" style="width: 400.0px; height: 300.0px;" /></a>
+</div>
 <p><tt class="docutils literal"><span class="pre">Crab</span></tt> also offers the possibility to use external datasets coming
-from simple comma-separated-value format files (.csv).Please refer to the following
-example for instructions on the dataset loader:
-<em class="xref std std-ref">example mlcomp sparse document classification</em>.</p>
+from simple comma-separated-value format files (.csv).</p>
 </div>
 <div class="section" id="building-a-recommender-system">
 <h3>2.1.5. Building a Recommender System<a class="headerlink" href="#building-a-recommender-system" title="Permalink to this headline">¶</a></h3>
 <p>Our goal now is to recommend a movie to Toby (user 5). You already can notice that the
 movies Snakes on a Planet (item 2), You, Me and Dupree (item 3) and Superman Returns (item 4) -
 he already watched these movies, and recommendation is typically about discovering new things. On
-intuition we would suggest the movie 5 or movie 6 because Toby seems similar to Claudia Puig (user 3)
-and Lisa Role (user 4). So we have now items 5 and 6 as possible recommendations. On the whole,
+intuition we would suggest the movie 5, movie 1 or movie 6 because Toby seems similar to Lisa Rose (user 4)
+and Mick LaSalle (user 2). So we have now items 1, 5 and 6 as possible recommendations. On the whole,
 item 6 seems to be the most liked of these possibilities, judging by the preference values
-of 3.0 for both similar users. Let&#8217;s go to the code:</p>
+of 3.0  for both similar users. Let&#8217;s go to the code:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scikits.crab.models</span> <span class="kn">import</span> <span class="n">MatrixPreferenceDataModel</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c">#Build the model</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">MatrixPreferenceDataModel</span><span class="p">(</span><span class="n">movies</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scikits.crab.metrics</span> <span class="kn">import</span> <span class="n">pearson_correlation</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scikits.crab.similarities</span> <span class="kn">import</span> <span class="n">UserSimilarity</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c">#Build the similarity</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">similarity</span> <span class="o">=</span> <span class="n">UserSimilarity</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">pearson_correlation</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">crab.recommenders.knn</span> <span class="kn">import</span> <span class="n">UserBasedRecommender</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c">#Build the User based recommender</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">recommender</span> <span class="o">=</span> <span class="n">UserBasedRecommender</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">similarity</span><span class="p">,</span> <span class="n">with_preference</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c">#Recommend items for the user 5 (Toby)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">recommender</span><span class="o">.</span><span class="n">recommend</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="go">[(5, 3.3477895267131013), (1, 2.8572508984333034), (6, 2.4473604699719846)]</span>
+</pre></div>
+</div>
 <p>We will discuss each of these components in our recommender in details in the next sections, but
 we can summarize the role of each component now. The <cite>MatrixPreferenceDataModel</cite> implementation
 stores and provides access to all the user and item data as also the associated preferences
@@ -249,6 +269,9 @@ items to users, and related features. To help visualize the relationship between
 check the figure below. Of course there is more going under Crab-based recommenders, since
 some will employ different components with different relationships. However, this diagram will give
 you a global notion of what&#8217;s going on in our example.</p>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="images/crab_arch3.png"><img alt="images/crab_arch3.png" src="images/crab_arch3.png" style="width: 461.6px; height: 162.4px;" /></a>
+</div>
 </div>
 <div class="section" id="analyzing-the-output">
 <h3>2.1.6. Analyzing the output<a class="headerlink" href="#analyzing-the-output" title="Permalink to this headline">¶</a></h3>

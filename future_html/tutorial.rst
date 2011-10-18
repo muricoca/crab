@@ -150,28 +150,46 @@ in the console::
 
 With some study, we notice some trends. Users 1 and 2 seem to have similar tastes. 
 They both like movie 4, like 2 a little less, and like 1 less still. The same 
-goes for users 1 and 4, as they seem to like 101 and 103 identically. On the other
+goes for users 1 and 4, as they seem to like 2 and 4 identically. On the other
 hand, users 1 and 7 have tastes that seem to run counter – 1 likes 1 while 7
 doesn't, and 1 likes 3 while 4 is just the opposite. See figure below 
 to visualize the relations, both positive and negative between users and items.
+The heat map shows more heat to higher ratings against the lower ratings given by
+the users to the movies.
+
+.. figure:: images/distribution_ratings.png
+   :scale: 50%
+   :align: center
+
 
 ``Crab`` also offers the possibility to use external datasets coming
-from simple comma-separated-value format files (.csv).Please refer to the following
-example for instructions on the dataset loader:
-:ref:`example mlcomp sparse document classification <example_mlcomp_sparse_document_classification.py>`.
-
+from simple comma-separated-value format files (.csv).
 
 Building a Recommender System
 -----------------------------
 Our goal now is to recommend a movie to Toby (user 5). You already can notice that the 
 movies Snakes on a Planet (item 2), You, Me and Dupree (item 3) and Superman Returns (item 4) - 
 he already watched these movies, and recommendation is typically about discovering new things. On
-intuition we would suggest the movie 5 or movie 6 because Toby seems similar to Claudia Puig (user 3) 
-and Lisa Role (user 4). So we have now items 5 and 6 as possible recommendations. On the whole,
+intuition we would suggest the movie 5, movie 1 or movie 6 because Toby seems similar to Lisa Rose (user 4) 
+and Mick LaSalle (user 2). So we have now items 1, 5 and 6 as possible recommendations. On the whole,
 item 6 seems to be the most liked of these possibilities, judging by the preference values 
-of 3.0 for both similar users. Let's go to the code:
+of 3.0  for both similar users. Let's go to the code:
 
-
+	>>> from scikits.crab.models import MatrixPreferenceDataModel
+	>>> #Build the model
+	>>> model = MatrixPreferenceDataModel(movies.data)
+	>>> 
+	>>> from scikits.crab.metrics import pearson_correlation
+	>>> from scikits.crab.similarities import UserSimilarity
+	>>> #Build the similarity
+	>>> similarity = UserSimilarity(model, pearson_correlation)
+	>>>
+	>>> from crab.recommenders.knn import UserBasedRecommender
+	>>> #Build the User based recommender
+	>>> recommender = UserBasedRecommender(model, similarity, with_preference=True)
+	>>> #Recommend 1 item for the user 5 (Toby)
+	>>> recommender.recommend(user_id=5, how_many=1)
+	[(5, 3.3477895267131013)]
 
 
 We will discuss each of these components in our recommender in details in the next sections, but
@@ -186,12 +204,16 @@ check the figure below. Of course there is more going under Crab-based recommend
 some will employ different components with different relationships. However, this diagram will give
 you a global notion of what's going on in our example.
 
+.. figure:: images/crab_arch.png
+   :scale: 80%
+   :align: center
 
 Analyzing the output
 --------------------
 If you save the code provided above in a python file (.py) and run it at  your terminal, the output
-should be: [(4,4.23550)].  We requested for the top recommendation, and the recommender engine gave us one.
-He recommended the movie Just My Luck to Toby. Furthermore, it also informed the estimated Toby's preference
+should be: 	[(5, 3.3477895267131013), (1, 2.8572508984333034), (6, 2.4473604699719846)]. We requested 
+for the top recommendation, and the recommender engine gave us one. He recommended the movie 
+Just My Luck to Toby. Furthermore, it also informed the estimated Toby's preference
 for the movie Just My Luck, which is about 4.3, and that was the highest among all the items eligible
 for recommendations. It isn't bad. We didn't get the movie, which was a possible item and we picked the 
 item 4 over 5, and this makes sense when you note that 4 is a more highly rated overall. The estimated
