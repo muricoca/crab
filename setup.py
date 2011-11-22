@@ -34,8 +34,8 @@ def configuration(parent_package='', top_path=None):
                 quiet=True,
     )
 
-    config.add_subpackage('scikits')
-    config.add_subpackage(DISTNAME)
+    subpackages = ['.'.join(i[0].split('/')) for i in os.walk('scikits') if '__init__.py' in i[2]]
+    [config.add_subpackage(sub_package) for sub_package in subpackages]
     config.add_data_files('scikits/__init__.py')
 
     return config
