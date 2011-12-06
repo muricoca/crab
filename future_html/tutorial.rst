@@ -211,10 +211,9 @@ you a global notion of what's going on in our example.
 Analyzing the output
 --------------------
 If you save the code provided above in a python file (.py) and run it at  your terminal, the output
-should be: 	[(5, 3.3477895267131013), (1, 2.8572508984333034), (6, 2.4473604699719846)]. We requested 
-for the top recommendation, and the recommender engine gave us one. He recommended the movie 
-Just My Luck to Toby. Furthermore, it also informed the estimated Toby's preference
-for the movie Just My Luck, which is about 4.3, and that was the highest among all the items eligible
+should be: 	[(5, 3.3477895267131013)]. We requested for the top recommendation, and the recommender engine
+ gave us one. He recommended the movie Just My Luck to Toby. Furthermore, it also informed the estimated Toby's preference
+for the movie The Night Listener, which is about 3.34, and that was the highest among all the items eligible
 for recommendations. It isn't bad. We didn't get the movie, which was a possible item and we picked the 
 item 4 over 5, and this makes sense when you note that 4 is a more highly rated overall. The estimated
 preference reflects how much Toby likes the movie Just My Luck with a rating 4.34 which between 
