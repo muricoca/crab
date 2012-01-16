@@ -237,7 +237,7 @@ class MatrixFactorBasedRecommender(SVDRecommender):
             i_f = self.item_factors[item_idx]
 
             #Compute factor updates
-            delta_u = err * u_i - self.regularization * u_f
+            delta_u = err * i_f - self.regularization * u_f
             delta_i = err * u_f - self.regularization * i_f
             #if necessary apply updates
             if update_user:
