@@ -230,14 +230,14 @@ class MatrixFactorBasedRecommender(SVDRecommender):
         for user_idx, item_idx in rating_indices:
             p = self._predict(user_idx, item_idx, False)
             err = self.model.index[user_idx, item_idx] - p
-            err_total += err
+            err_total += (err ** 2.0)
 
             #Adjust the factors
             u_f = self.user_factors[user_idx]
             i_f = self.item_factors[item_idx]
 
             #Compute factor updates
-            delta_u = err * u_f - self.regularization * u_f
+            delta_u = err * i_f - self.regularization * u_f
             delta_i = err * u_f - self.regularization * i_f
             #if necessary apply updates
             if update_user:
@@ -263,7 +263,7 @@ class MatrixFactorBasedRecommender(SVDRecommender):
 
         for index in range(self.n_interations):
             err = self._train(rating_indices, update_user, update_item)
-            rmse = sqrt((err ** 2.0) / len(rating_indices))
+            rmse = sqrt(err / len(rating_indices))
             logger.debug("Finished the interation %i with RMSE %f" %  \
                     (index, rmse))
 
