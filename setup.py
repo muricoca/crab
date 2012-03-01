@@ -25,7 +25,7 @@ def configuration(parent_package='', top_path=None):
 
     from numpy.distutils.misc_util import Configuration
     config = Configuration(None, parent_package, top_path,
-             namespace_package=['scikits'])
+             namespace_packages=['scikits'])
 
     config.set_options(
                 ignore_setup_xxx_py=True,
@@ -45,8 +45,13 @@ if __name__ == "__main__":
         name=DISTNAME,
         version=VERSION,
         include_package_data=True,
+        package_data={
+            'scikits': [
+                'crab/datasets/data/*.*',
+                'crab/datasets/descr/*.*',
+                ]
+            },
         install_requires='numpy',
-        namespace_packages=['scikits'],
         maintainer=MAINTAINER,
         maintainer_email=MAINTAINER_EMAIL,
         description=DESCRIPTION,
